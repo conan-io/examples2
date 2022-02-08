@@ -1,0 +1,163 @@
+ART_URL = 'https://conanv2beta.jfrog.io/artifactory/api/conan/conan'
+
+void cancelPrevious() {
+    stage("Cancelling previous") {
+        def buildNumber = env.BUILD_NUMBER as int
+        if (buildNumber > 1) milestone(buildNumber - 1)
+        milestone(buildNumber)
+    }
+}
+
+LINUX_CONTAINER = 'conanio/gcc10'
+LINUX_PROFILE = """\
+    [settings]
+    os=Linux
+    arch=x86_64
+    compiler=gcc
+    compiler.libcxx=libstdc++
+    compiler.version=10
+    build_type=Release
+    [options]
+    [tool_requires]
+    [env]
+    """.stripIndent()
+
+MACOS_PROFILE = """\
+    [settings]
+    os=Macos
+    arch=x86_64
+    compiler=apple-clang
+    compiler.libcxx=libc++
+    compiler.version=12.0
+    build_type=Release
+    [options]
+    [tool_requires]
+    [env]
+    """.stripIndent()
+
+WINDOWS_PROFILE = """\
+    [settings]
+    os=Windows
+    arch=x86_64
+    compiler=Visual Studio
+    compiler.runtime=MD
+    compiler.version=15
+    build_type=Release
+    [options]
+    [tool_requires]
+    [env]
+    """.stripIndent()
+
+def envInside(Map ctxt, Closure closure) {
+    String venvDirectory = isUnix() ? "${pwd()}/conanenv" : "${pwd()}\\conanenv"
+    String binPath = isUnix() ? "$venvDirectory/bin/" : "$venvDirectory\\Scripts\\"
+    String conanHome = isUnix() ? "${pwd()}/.conan" : "${pwd()}\\.conan"
+    String hookErrorLevel = RAISE_HOOKS ? '40' : '50'
+    withEnv(["PATH+EXTRA=${binPath}", "CONAN_USER_HOME=${conanHome}", "CONAN_USER_HOME_SHORT=${conanHome}", "CONAN_HOOK_ERROR_LEVEL=${hookErrorLevel}"]) {
+        // This doesn't work if running docker.inside (https://issues.jenkins.io/browse/JENKINS-49076)
+        closure()
+    }
+}
+
+def envCreate(Map ctxt) {
+    String venvDirectory = isUnix() ? "${pwd()}/conanenv" : "${pwd()}\\conanenv"
+    String binPath = isUnix() ? "$venvDirectory/bin/" : "$venvDirectory\\Scripts\\"
+    ctxt.shFunction("${ctxt.python_host} --version")
+    if (ctxt.isInsideDocker) {
+        // Alternate implementation because of https://issues.jenkins.io/browse/JENKINS-49076
+        // Always install latest pre-release
+        ctxt.shFunction("pip install conan --pre --upgrade")
+    }
+    else {
+        ctxt.shFunction("${ctxt.python_host} -m venv $venvDirectory")
+        ctxt.shFunction("${binPath}python -m pip install -U pip")
+        // Always install latest pre-release
+        ctxt.shFunction("${binPath}python -m pip install conan --pre --upgrade")
+    }
+}
+
+def runExamples(Map ctxt, List examplesToRun) {
+    try {
+        stage('Checkout SCM') {
+            checkout scm
+        }
+
+        stage('Configure environment') {
+            envCreate(ctxt)
+            envInside(ctxt) {
+                ctxt.shFunction('cmake --version')
+                ctxt.shFunction('conan --version')
+            }
+        }
+
+        for (example in examplesToRun) {
+            stage("Run example") {
+                envInside(ctxt) {
+                    // ctxt.shFunction("conan info ${recipe.folder} --profile=default")
+                    writeFile(file: 'pr_host', text: ctxt.profileHost)
+                }
+            }
+        }
+    }
+    finally {
+        stage("CleanWS") {
+            cleanWs(cleanWhenAborted: true, cleanWhenFailure: true, cleanWhenNotBuilt: true,
+                    cleanWhenSuccess: true, cleanWhenUnstable: true, disableDeferredWipeout: true, deleteDirs: true,
+                    notFailBuild: true)
+        }
+    }
+}
+
+node('Linux') {
+    
+    cancelPrevious() 
+    
+    List<String> examples = []
+    stage('Find examples') {
+        checkout scm
+        def examples = sh(script: 'find . -name run_example.\*', returnStdout: true).readLines()
+        for (example in examples) {
+            echo "Found example: ${example}"
+        }
+    }
+
+    // stage('Run examples') {
+    //     parallel(
+    //         linux: {
+    //             stage("${branch.name}") {
+    //                 docker.image(LINUX_CONTAINER).inside {
+    //                     runExamples([python_host: 'python3',
+    //                                  shFunction: { data -> sh(data) },
+    //                                  isInsideDocker: true,
+    //                                  profileHost: LINUX_PROFILE],
+    //                                  examplesToRun)
+    //                 }
+    //             }
+    //         },
+    //         macos: {
+    //              node('Macos') {
+    //                 stage("${branch.name}") {
+    //                     withEnv(['PATH+EXTRA=/usr/local/bin']) { // Required to find CMake
+    //                         runExamples([python_host: 'python3',
+    //                                      shFunction: { data -> sh(data) },
+    //                                      isInsideDocker: false,
+    //                                      profileHost: MACOS_PROFILE],
+    //                                      examplesToRun)
+    //                     }
+    //                 }
+    //              }
+    //          },
+    //          windows: {
+    //              node('Windows') {
+    //                 stage("${branch.name}") {
+    //                     runExamples([python_host: 'C:\\Python39\\python.exe',
+    //                                  shFunction: { data -> bat(data) },
+    //                                  isInsideDocker: false,
+    //                                  profileHost: WINDOWS_PROFILE],
+    //                                  examplesToRun)
+    //                 }
+    //              }
+    //          }
+    //     )
+    // }
+}

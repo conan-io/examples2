@@ -3,6 +3,9 @@
 set -e
 set -x
 
+BASEDIR=$(dirname "$0")
+pushd "$BASEDIR"
+
 rm -rf cmake-build-release
 
 conan install . --output-folder cmake-build-release

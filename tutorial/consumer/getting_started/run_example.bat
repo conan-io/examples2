@@ -1,6 +1,7 @@
 @ECHO ON
 
-RMDIR /Q /S cmake-build-release
+set BASEDIR=%~dp0
+PUSHD %BASEDIR%
 
 conan install . --output-folder cmake-build
 cmake . -G "Visual Studio 15" -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake

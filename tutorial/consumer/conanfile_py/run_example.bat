@@ -1,5 +1,8 @@
 @ECHO ON
 
+set BASEDIR=%~dp0
+PUSHD %BASEDIR%
+
 RMDIR /Q /S cmake-build-release
 
 conan install . --output-folder cmake-build
