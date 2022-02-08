@@ -4,7 +4,7 @@
 **/compressor
 **/Makefile
 **/CMakeFiles
-**/cmake-build-release
+**/cmake-build-*
 
 .DS_Store
 .vscode/
