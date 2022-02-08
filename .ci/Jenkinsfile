@@ -112,7 +112,6 @@ node('Linux') {
     
     cancelPrevious() 
     
-    List<String> examples = []
     stage('Find examples') {
         checkout scm
         def examples = sh(script: 'find . -name run_example.*', returnStdout: true).readLines()
