@@ -1,15 +1,62 @@
+**/conan-*
+**/cmake_install.cmake
+**/CMakeCache.txt
+**/compressor
+**/Makefile
+**/CMakeFiles
+**/cmake-build-release
+
 .DS_Store
-tutorial/consumer/conanfile_py/conan-*
-tutorial/consumer/getting_started/conan-*
-tutorial/consumer/conanfile_py/cmake_install.cmake
-tutorial/consumer/conanfile_py/CMakeCache.txt
-tutorial/consumer/conanfile_py/compressor
-tutorial/consumer/conanfile_py/Makefile
-tutorial/consumer/conanfile_py/CMakeFiles
-tutorial/consumer/conanfile_py/cmake-build-release
-tutorial/consumer/getting_started/cmake_install.cmake
-tutorial/consumer/getting_started/CMakeCache.txt
-tutorial/consumer/getting_started/compressor
-tutorial/consumer/getting_started/Makefile
-tutorial/consumer/getting_started/CMakeFiles
-tutorial/consumer/getting_started/cmake-build-release
+.vscode/
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Cache
+__pycache__/*
+test_package/__pycache__/*
+test_package/build/*
+build/*
+*.pyc
+tmp/
+features/package_development_flow/test_package/build/*
+features/workspace/build/*
+libraries/protobuf/serialization/build/*
+libraries/folly/basic/build/*
+libraries/poco/md5/build/*
+
+# IDE
+.idea/*
+.project
+.pydevproject
+.settings/*
+.ropeproject/*
+
+.tox
