@@ -1,0 +1,8 @@
+.DS_Store
+tutorial/consumer/conanfile_py/conan-*
+tutorial/consumer/getting_started/conan-*
+tutorial/consumer/conanfile_py/cmake_install.cmake
+tutorial/consumer/conanfile_py/CMakeCache.txt
+tutorial/consumer/conanfile_py/compressor
+tutorial/consumer/conanfile_py/Makefile
+tutorial/consumer/conanfile_py/CMakeFiles
