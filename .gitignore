@@ -6,3 +6,10 @@ tutorial/consumer/conanfile_py/CMakeCache.txt
 tutorial/consumer/conanfile_py/compressor
 tutorial/consumer/conanfile_py/Makefile
 tutorial/consumer/conanfile_py/CMakeFiles
+tutorial/consumer/conanfile_py/cmake-build-release
+tutorial/consumer/getting_started/cmake_install.cmake
+tutorial/consumer/getting_started/CMakeCache.txt
+tutorial/consumer/getting_started/compressor
+tutorial/consumer/getting_started/Makefile
+tutorial/consumer/getting_started/CMakeFiles
+tutorial/consumer/getting_started/cmake-build-release
