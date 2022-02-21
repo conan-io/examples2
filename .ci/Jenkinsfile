@@ -39,7 +39,7 @@ def envCreate(Map ctxt) {
 
 def runExamples(Map ctxt, List examplesToRun) {
     try {
-        withEnv(["CONAN_USER_HOME=${env.WORKSPACE}/conan_cache"]) {
+        withEnv(["CONAN_HOME=${env.WORKSPACE}/conan_cache"]) {
             stage('Checkout SCM') {
                 checkout scm
             }
