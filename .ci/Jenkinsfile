@@ -111,7 +111,7 @@ node('Linux') {
         parallel(
             linux: {
                 conanBranchesInstalls.each { branch ->
-                    stage('Run Linux examples') {
+                    stage("${branch.name}: Run Linux examples") {
                         docker.image(LINUX_CONTAINER).inside {
                             runExamples([python_host: 'python3',
                                         shFunction: { data -> sh(data) },
@@ -126,7 +126,7 @@ node('Linux') {
             macos: {
                  node('Macos') {
                     conanBranchesInstalls.each { branch ->
-                        stage('Run Macos examples') {
+                        stage("${branch.name}: Run Macos examples") {
                             withEnv(['PATH+EXTRA=/usr/local/bin']) { // Required to find CMake
                                 runExamples([python_host: 'python3',
                                             shFunction: { data -> sh(data) },
@@ -141,7 +141,7 @@ node('Linux') {
              },
              windows: {
                  node('Windows') {
-                    stage('Run Windows examples') {
+                    stage("${branch.name}: Run Windows examples") {
                         conanBranchesInstalls.each { branch ->
                             runExamples([python_host: 'C:\\Python39\\python.exe',
                                         shFunction: { data -> bat(data) },
