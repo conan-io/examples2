@@ -18,30 +18,31 @@ def run(cmd, error=False):
     return output
 
 
-# This is a half diamond
-#                        game1 -> engine -> math/1.0
-#                          \--------------> math/2.0 (conflict)
-# solved with force=True
+# This is a full diamond
+#                        game -> engine -> math/1.0
+#                          \----> ai -----> math/2.0 (conflict)
+# solved with override=True
 
 # Demo the conflict
 run("conan remove * -f")  # Make sure no packages from last run
 run("conan create math --version=1.0")
 run("conan create math --version=2.0")
 run("conan create engine")
-out = run("conan install game1", error=True)
-assert "ERROR: Version conflict: engine/1.0->math/1.0, game1/1.0->math/2.0" in out
+run("conan create ai")
+out = run("conan install game", error=True)
+# NOTE This output shows the downstream conflict not the immediate
+assert "ERROR: Version conflict: ai/1.0->math/2.0, game/1.0->math/1.0" in out
 
 # Add the requires "force=True" fixes it
-content = open("game1/conanfile.py").read()
-new_content = content.replace('self.requires("math/2.0")',
-                              'self.requires("math/2.0", force=True)')
-open("game1/conanfile.py", "w").write(new_content)
+content = open("game/conanfile.py").read()
+new_content = content + '        self.requires("math/2.0", override=True)\n'
+open("game/conanfile.py", "w").write(new_content)
 # The jump in major version requires building  a new engine/1.0 binary
-out = run("conan install game1", error=True)   # binary missing
+out = run("conan install game", error=True)   # binary missing
 assert "ERROR: Missing binary: engine/1.0" in out
 
 # With force=True and --build=missing, it works
-run("conan install game1 --build=missing")
+run("conan install game --build=missing")
 
 # restore the original contents:
-open("game1/conanfile.py", "w").write(content)
+open("game/conanfile.py", "w").write(content)

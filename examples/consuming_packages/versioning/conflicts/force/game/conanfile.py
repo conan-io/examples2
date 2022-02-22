@@ -1,7 +1,7 @@
 from conan import ConanFile
 
 class Pkg(ConanFile):
-    name = "game1"
+    name = "game"
     version = "1.0"
 
     def requirements(self):  

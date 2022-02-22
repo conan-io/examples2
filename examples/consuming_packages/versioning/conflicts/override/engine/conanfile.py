@@ -1,7 +1,7 @@
 from conan import ConanFile
 
 class Pkg(ConanFile):
-    name = "ai"
+    name = "engine"
     version = "1.0"
 
-    requires = "math/1.1"
+    requires = "math/1.0"
