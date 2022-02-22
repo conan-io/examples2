@@ -38,8 +38,12 @@ def envCreate(Map ctxt) {
 }
 
 def runExample(Map ctxt, String example) {
-    def command = example.contains(".py") ? "python ${example}" : "${example}"
-    ctxt.shFunction(command)
+    for (extension in ctxt.extensions) {
+        if (example.contains(extension)) {
+            def command = example.contains(".py") ? "python ${example}" : "${example}"
+            ctxt.shFunction(command)
+        }
+    }
 }
 
 def runExamples(Map ctxt) {
@@ -99,7 +103,8 @@ node('Linux') {
                         runExamples([python_host: 'python3',
                                      shFunction: { data -> sh(data) },
                                      isInsideDocker: true,
-                                     examples: examples])
+                                     examples: examples,
+                                     extensions: ['.py', '.sh']])
                     }
                 }
             },
@@ -110,7 +115,8 @@ node('Linux') {
                             runExamples([python_host: 'python3',
                                          shFunction: { data -> sh(data) },
                                          isInsideDocker: false,
-                                         examples: examples])
+                                         examples: examples,
+                                         extensions: ['.py', '.sh']])
                         }
                     }
                  }
@@ -121,7 +127,8 @@ node('Linux') {
                         runExamples([python_host: 'C:\\Python39\\python.exe',
                                      shFunction: { data -> bat(data) },
                                      isInsideDocker: false,
-                                     examples: examples])
+                                     examples: examples,
+                                     extensions: ['.py', '.bat']])
                     }
                  }
              }
