@@ -141,8 +141,8 @@ node('Linux') {
              },
              windows: {
                  node('Windows') {
-                    stage("${branch.name}: Run Windows examples") {
-                        conanBranchesInstalls.each { branch ->
+                    conanBranchesInstalls.each { branch ->
+                        stage("${branch.name}: Run Windows examples") {
                             runExamples([python_host: 'C:\\Python39\\python.exe',
                                         shFunction: { data -> bat(data) },
                                         isInsideDocker: false,
