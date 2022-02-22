@@ -98,8 +98,8 @@ node('Linux') {
                     docker.image(LINUX_CONTAINER).inside {
                         runExamples([python_host: 'python3',
                                      shFunction: { data -> sh(data) },
-                                     isInsideDocker: true],
-                                     examples: examples)
+                                     isInsideDocker: true,
+                                     examples: examples])
                     }
                 }
             },
@@ -109,8 +109,8 @@ node('Linux') {
                         withEnv(['PATH+EXTRA=/usr/local/bin']) { // Required to find CMake
                             runExamples([python_host: 'python3',
                                          shFunction: { data -> sh(data) },
-                                         isInsideDocker: false],
-                                         examples: examples)
+                                         isInsideDocker: false,
+                                         examples: examples])
                         }
                     }
                  }
@@ -120,8 +120,8 @@ node('Linux') {
                     stage('Run Windows examples') {
                         runExamples([python_host: 'C:\\Python39\\python.exe',
                                      shFunction: { data -> bat(data) },
-                                     isInsideDocker: false],
-                                     examples: examples)
+                                     isInsideDocker: false,
+                                     examples: examples])
                     }
                  }
              }
