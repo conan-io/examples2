@@ -22,8 +22,10 @@ def run(cmd, error=False):
 #                        game1 -> engine -> math/1.0
 #                          \--------------> math/2.0 (conflict)
 # solved with force=True
-run("conan create math --version=1.0")
 
+# Demo the conflict
+run("conan remove * -f")  # Make sure no packages from last run
+run("conan create math --version=1.0")
 run("conan create math --version=2.0")
 run("conan create engine")
 out = run("conan install game1", error=True)
@@ -37,9 +39,9 @@ open("game1/conanfile.py", "w").write(new_content)
 # The jump in major version requires building  a new engine/1.0 binary
 out = run("conan install game1", error=True)   # binary missing
 assert "ERROR: Missing binary: engine/1.0" in out
+
+# With force=True and --build=missing, it works
 run("conan install game1 --build=missing")
 
 # restore the original contents:
-with open("game1/conanfile.py", "w") as f:
-    print(content)
-    f.write(content)
+open("game1/conanfile.py", "w").write(content)
