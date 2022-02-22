@@ -6,4 +6,4 @@ class Pkg(ConanFile):
 
     def requirements(self):  
         self.requires("engine/1.0")
-        self.requires("math/2.0", force=True)
+        self.requires("math/2.0")
