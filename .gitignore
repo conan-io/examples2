@@ -5,6 +5,7 @@
 **/Makefile
 **/CMakeFiles
 **/cmake-build-*
+**/deactivate_conanbuildenv*
 
 .DS_Store
 .vscode/
