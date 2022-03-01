@@ -7,6 +7,7 @@ BASEDIR=$(dirname "$0")
 pushd "$BASEDIR"
 
 rm -rf cmake-build-release
+rm -rf cmake-build-debug
 
 conan install . --output-folder cmake-build-release --settings build_type=Release --build=missing
 cd cmake-build-release
