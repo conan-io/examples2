@@ -33,13 +33,13 @@ def run(cmd, error=False):
             "Cmd succeded (failure expected): {}\n{}".format(cmd, output))
     return output
 
-
-run("rm -rf cmake-build-release")
-run("conan install . --output-folder cmake-build-release --build missing")
-run("cd cmake-build-release")
-with chdir("cmake-build-release"):
+build_folder = "build" if platform.system() == "Windows" else "cmake-build-release"
+run(f"conan install . --output-folder {build_folder} --build missing")
+run(f"cd {build_folder}")
+with chdir(f"{build_folder}"):
     source_command = "" if platform.system() == "Windows" else ". ./"
     extension = ".bat" if platform.system() == "Windows" else ".sh"
+    run_exe = "Release\compressor.exe" if platform.system() == "Windows" else "./compressor"
     run(f"{source_command}conanbuild{extension} && cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake && cmake --build . && {source_command}deactivate_conanbuild{extension}")
-    out = run("./compressor")
+    out = run(run_exe)
     assert "Built with CMake version: 3.19.8" in out
