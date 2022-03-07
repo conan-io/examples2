@@ -40,6 +40,9 @@ with chdir(f"{build_folder}"):
     source_command = "" if platform.system() == "Windows" else ". ./"
     extension = ".bat" if platform.system() == "Windows" else ".sh"
     run_exe = "Release\compressor.exe" if platform.system() == "Windows" else "./compressor"
-    run(f"{source_command}conanbuild{extension} && cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake && cmake --build . && {source_command}deactivate_conanbuild{extension}")
+    cmake_win = "cmake .. -G \"Visual Studio 15 2017\" -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake && cmake --build . --config Release "
+    cmake_other = "cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake && cmake --build . "
+    cmake_cmd = cmake_win if platform.system() == "Windows" else cmake_other
+    run(f"{source_command}conanbuild{extension} && {cmake_cmd} && {source_command}deactivate_conanbuild{extension}")
     out = run(run_exe)
     assert "Built with CMake version: 3.19.8" in out
