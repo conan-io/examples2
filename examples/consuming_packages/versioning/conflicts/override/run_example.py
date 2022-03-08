@@ -4,7 +4,7 @@ import subprocess
 def run(cmd, error=False):
     # Used by tools/scm check_repo only (see if repo ok with status)
     print("Running: {}".format(cmd))
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     out, err = process.communicate()
     out = out.decode("utf-8")
     err = err.decode("utf-8")
