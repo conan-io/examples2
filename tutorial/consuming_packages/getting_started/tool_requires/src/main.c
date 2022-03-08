@@ -5,8 +5,10 @@
 #include <zlib.h>
 
 int main(void) {
-    char buffer_in [32] = {"Conan Package Manager"};
-    char buffer_out [32] = {0};
+    char buffer_in [256] = {"Conan is a MIT-licensed, Open Source package manager for C and C++ development "
+                            "for C and C++ development, allowing development teams to easily and efficiently "
+                            "manage their packages and dependencies across platforms and build systems."};
+    char buffer_out [256] = {0};
 
     z_stream defstream;
     defstream.zalloc = Z_NULL;
@@ -21,12 +23,11 @@ int main(void) {
     deflate(&defstream, Z_FINISH);
     deflateEnd(&defstream);
 
-    printf("Compressed size is: %lu\n", strlen(buffer_in));
-    printf("Compressed string is: %s\n", buffer_in);
+    printf("Uncompressed size is: %lu\n", strlen(buffer_in));
     printf("Compressed size is: %lu\n", strlen(buffer_out));
-    printf("Compressed string is: %s\n", buffer_out);
 
     printf("ZLIB VERSION: %s\n", zlibVersion());
+    printf("Built with CMake version: %s\n", CMAKE_VER);
 
     return EXIT_SUCCESS;
 }
