@@ -24,7 +24,7 @@ def run(cmd, error=False):
 # solved with force=True
 
 # Demo the conflict
-run("conan remove * -f")  # Make sure no packages from last run
+run('conan remove "*" -f')  # Make sure no packages from last run
 run("conan create math --version=1.0")
 run("conan create math --version=2.0")
 run("conan create engine")
