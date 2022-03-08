@@ -59,35 +59,27 @@ def runExample(Map ctxt, String example) {
 
 def runExamples(Map ctxt) {
     try {
-        stage('Checkout SCM') {
-            checkout scm
+        checkout scm
+
+        envCreate(ctxt)
+        envInside(ctxt) {
+            ctxt.shFunction('cmake --version')
+            ctxt.shFunction('conan --version')
         }
 
-        stage('Configure environment') {
-            envCreate(ctxt)
-            envInside(ctxt) {
-                ctxt.shFunction('cmake --version')
-                ctxt.shFunction('conan --version')
-            }
-        }
-
-        stage("Run example") {
-            envInside(ctxt) {
-                ctxt.shFunction('conan profile detect --force')
-                ctxt.shFunction('conan remote remove conancenter')
-                ctxt.shFunction("conan remote add conancenterv2 ${ART_URL}")
-                for (example in ctxt.examples) {
-                    runExample(ctxt, example)
-                }
+        envInside(ctxt) {
+            ctxt.shFunction('conan profile detect --force')
+            ctxt.shFunction('conan remote remove conancenter')
+            ctxt.shFunction("conan remote add conancenterv2 ${ART_URL}")
+            for (example in ctxt.examples) {
+                runExample(ctxt, example)
             }
         }
     }
     finally {
-        stage("CleanWS") {
-            cleanWs(cleanWhenAborted: true, cleanWhenFailure: true, cleanWhenNotBuilt: true,
-                    cleanWhenSuccess: true, cleanWhenUnstable: true, disableDeferredWipeout: true, deleteDirs: true,
-                    notFailBuild: true)
-        }
+        cleanWs(cleanWhenAborted: true, cleanWhenFailure: true, cleanWhenNotBuilt: true,
+                cleanWhenSuccess: true, cleanWhenUnstable: true, disableDeferredWipeout: true, deleteDirs: true,
+                notFailBuild: true)
     }
 }
 
