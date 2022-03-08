@@ -51,8 +51,13 @@ List<Map> getBranchesInstalls() {
 def runExample(Map ctxt, String example) {
     for (extension in ctxt.extensions) {
         if (example.contains(extension)) {
-            def command = example.contains(".py") ? "python ${example}" : "${example}"
-            ctxt.shFunction(command)
+            example = example.replace("\\","/")
+            split_path = example.split('/')
+            String script = split_path[split_path.length-1]
+            String path = example - script
+            script = isUnix() ? "./${script}" : "${script}"
+            String command = script.contains(".py") ? "python ${script}" : "${script}"
+            ctxt.shFunction("cd ${path} && ${command}")
         }
     }
 }
