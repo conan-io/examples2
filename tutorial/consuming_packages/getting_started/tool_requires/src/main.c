@@ -27,7 +27,6 @@ int main(void) {
     printf("Compressed size is: %lu\n", strlen(buffer_out));
 
     printf("ZLIB VERSION: %s\n", zlibVersion());
-    printf("Built with CMake version: %s\n", CMAKE_VER);
 
     return EXIT_SUCCESS;
 }
