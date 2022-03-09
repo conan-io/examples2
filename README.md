@@ -8,7 +8,7 @@
 
 ### [Using build tools as Conan packages](tutorial/consuming_packages/getting_started/tool_requires/)
 
-- Use Conan to install and use build tools like CMake. [Docs](https://docs.conan.io/en/2.0-alpha/tutorial/consuming_packages/getting_started/build_tools_as_conan_packages.html)
+- Use Conan to install and use build tools like CMake. [Docs](https://docs.conan.io/en/2.0-alpha/tutorial/consuming_packages/getting_started/use_tools_as_conan_packages.html)
 
 ### [Building for multiple configurations: Release, Debug, Static and Shared](tutorial/consuming_packages/getting_started/different_configurations/)
 
