@@ -7,4 +7,4 @@
   #define AI_EXPORT
 #endif
 
-AI_EXPORT void ai();
+AI_EXPORT void ai(int intelligence=0);

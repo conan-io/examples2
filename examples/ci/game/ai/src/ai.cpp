@@ -2,13 +2,15 @@
 #include "ai.h"
 #include "matrix.h"
 
-void ai(){
+void ai(int intelligence){
     matrix();
     #ifdef NDEBUG
     std::cout << "ai/" << PKG_VERSION << ": Some Artificial Intelligence for enemies (Release)!\n";
     #else
     std::cout << "ai/" << PKG_VERSION << ": Some Artificial Intelligence for enemies (Release)!\n";
     #endif
+
+    std::cout << "ai/" << PKG_VERSION << ": Intelligence level="<< intelligence << "\n";
 
     // ARCHITECTURES
     #ifdef _M_X64
