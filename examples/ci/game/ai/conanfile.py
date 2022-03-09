@@ -4,7 +4,6 @@ from conan.tools.cmake import CMakeToolchain, CMakeDeps, CMake, cmake_layout
 
 class aiRecipe(ConanFile):
     name = "ai"
-    version = "1.0"
 
     requires = "matrix/[>=1.0 <2]"
 
