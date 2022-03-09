@@ -4,7 +4,6 @@
 
 #include <zlib.h>
 
-
 int main(void) {
     char buffer_in [256] = {"Conan is a MIT-licensed, Open Source package manager for C and C++ development "
                             "for C and C++ development, allowing development teams to easily and efficiently "
@@ -19,11 +18,15 @@ int main(void) {
     defstream.next_in = (Bytef *) buffer_in;
     defstream.avail_out = (uInt) sizeof(buffer_out);
     defstream.next_out = (Bytef *) buffer_out;
+
     deflateInit(&defstream, Z_BEST_COMPRESSION);
     deflate(&defstream, Z_FINISH);
     deflateEnd(&defstream);
+
     printf("Uncompressed size is: %lu\n", strlen(buffer_in));
     printf("Compressed size is: %lu\n", strlen(buffer_out));
+
+    printf("ZLIB VERSION: %s\n", zlibVersion());
 
     #ifdef NDEBUG
     printf("Release configuration!\n");
@@ -31,6 +34,5 @@ int main(void) {
     printf("Debug configuration!\n");
     #endif
 
-    printf("ZLIB VERSION: %s\n", zlibVersion());
     return EXIT_SUCCESS;
 }
