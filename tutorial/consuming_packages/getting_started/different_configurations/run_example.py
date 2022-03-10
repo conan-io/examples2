@@ -49,3 +49,24 @@ for configuration in configurations:
         run(f"{source_command}conanbuild{extension} && {cmake_cmd} && {source_command}deactivate_conanbuild{extension}")
         out = run(run_exe)
         assert f"{configuration} configuration!" in out
+
+configuration = "Release"
+shared = 'True'
+
+build_folder = "build" if platform.system() == "Windows" else f"cmake-build-{configuration.lower()}"
+run(f"conan install . --output-folder={build_folder} --build=missing --options=zlib/1.2.11:shared={shared}")
+with chdir(f"{build_folder}"):
+    source_command = "" if platform.system() == "Windows" else ". ./"
+    extension = ".bat" if platform.system() == "Windows" else ".sh"
+    cmake_win = f"cmake .. -G \"Visual Studio 15 2017\" -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake && cmake --build . --config {configuration}"
+    cmake_other = "cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake && cmake --build . "
+    cmake_cmd = cmake_win if platform.system() == "Windows" else cmake_other
+    run(f"{source_command}conanbuild{extension} && {cmake_cmd} && {source_command}deactivate_conanbuild{extension}")
+
+    exe = f"{configuration}\compressor.exe" if platform.system() == "Windows" else "./compressor"
+    lib_tool = {
+        "Windows": "dumpbin",
+        "Darwin": "otool -l",
+        "Linux": "ldd"
+    }.get(platform.system())
+    out = run(f"{lib_tool} {run_exe}")
