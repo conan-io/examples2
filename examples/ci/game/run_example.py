@@ -1,9 +1,10 @@
+import json
 import os
 import subprocess
 import platform
 
 
-def run(cmd, error=False, env_script=None):
+def run(cmd, error=False, env_script=None, file_stdout=None):
     if env_script is not None:
         env = "{}.bat".format(env_script) if platform.system() == "Windows" else ". {}.sh".format(env_script)
         cmd = "{} && {}".format(env, cmd)
@@ -14,6 +15,9 @@ def run(cmd, error=False, env_script=None):
     out = out.decode("utf-8")
     err = err.decode("utf-8")
     ret = process.returncode
+
+    if file_stdout:
+        open(file_stdout, "w").write(out)
 
     output = err + out
     if ret != 0 and not error:
@@ -96,21 +100,64 @@ out = run("game", env_script="conanrun")
 assert "ai/1.0.1: SUPER BETTER Artificial Intelligence for enemies (Debug)!" in out
 assert "game/1.0:fun game (Debug)!" in out
 
-
 ############### Part 5 ###################################
 print("- Part 5: Change a public header, bump minor version -")
 replace("ai/include/ai.h", "intelligence=0", "intelligence=50")
 out = run("conan create ai --version=1.1.0")
-print(out)
-
+assert "ai/1.1.0: AUTONOMOUSLY EVOLVED Artificial Intelligence for enemies (Release)!" in out
+assert "ai/1.1.0: Intelligence level=50" in out
 
 ############### Part 6 ###################################
-print("- Part 6: Lets see if the minor 1.1 integrate downstream -")
+print("- Part 6: Lets see if the minor 1.1.0 integrate downstream -")
 run("conan install --requires=gameserver/1.0")  # no changes, all good and ready
-out = run("conan install --requires=game/1.0 --build=missing")
-if platform.system() == "Windows":
-    out = run("conanrun.bat && game")
-else:
-    out = run("source conanrun.sh && game")
-print(out)
+out = run("conan install --requires=game/1.0", error=True)
+assert "ERROR: Missing prebuilt package for 'game/1.0'" in out
+out = run("conan install --requires=game/1.0 --build=game/1.0", error=True)
+assert "ERROR: Missing prebuilt package for 'engine/1.0'" in out
 
+############### Part 7 ###################################
+print("- Part 7: Compute the build-order -")
+run("conan lock create --requires=game/1.0 --lockfile-out=game.lock")
+out=run("conan lock create --requires=game/1.0 -s build_type=Debug --lockfile=game.lock --lockfile-out=game.lock")
+assert "ai/1.1.0" in out
+
+out = run("conan graph build-order --requires=game/1.0 --lockfile=game.lock --build=missing --format=json", file_stdout="game_bo.json")
+out = run("conan graph build-order --requires=game/1.0 --lockfile=game.lock --build=missing -s build_type=Debug --format=json", file_stdout="game_bo_debug.json")
+out = run("conan graph build-order --requires=gameserver/1.0 --lockfile=game.lock --build=missing --format=json", file_stdout="gameserver_bo.json")
+out = run("conan graph build-order --requires=gameserver/1.0 --lockfile=game.lock --build=missing -s build_type=Debug --format=json", file_stdout="gameserver_bo_debug.json")
+
+############### Part 8 ###################################
+print("- Part 8: Aggregate build orders -")
+out = run("conan graph build-order-merge --file=game_bo.json --file=game_bo_debug.json "
+          "--format=json", file_stdout="bo.json")
+
+
+############### Part 9 ###################################
+print("- Part 9: Orchestrate the distributed build -")
+out = run("conan graph build-order-merge --file=game_bo.json --file=game_bo_debug.json "
+          "--format=json", file_stdout="bo.json")
+
+############### Part 10 ###################################
+print("- Part 10: Iterate the build-order -")
+json_file = open("bo.json").read()
+to_build = json.loads(json_file)
+
+for level in to_build:
+    for elem in level:
+        ref = elem["ref"]
+        for package in elem["packages"]:
+            binary = package["binary"]
+            if binary != "Build":
+                continue
+            # TODO: The options are not used, they should be passed too
+            filenames = package["filenames"]
+            build_type = "Debug" if "debug" in filenames[0] else "Release"
+            cmd = "conan install --requires={ref} --build={ref} --lockfile=game.lock -s build_type={bt}".format(ref=ref, bt=build_type)
+            run(cmd)
+
+out = run("game", env_script="conanrunenv-release-x86_64")
+assert "ai/1.1.0: AUTONOMOUSLY EVOLVED Artificial Intelligence for enemies (Release)!" in out
+assert "ai/1.1.0: Intelligence level=50" in out
+out = run("game", env_script="conanrunenv-debug-x86_64")
+assert "ai/1.1.0: AUTONOMOUSLY EVOLVED Artificial Intelligence for enemies (Debug)!" in out
+assert "ai/1.1.0: Intelligence level=50" in out
