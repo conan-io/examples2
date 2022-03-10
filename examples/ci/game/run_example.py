@@ -156,8 +156,10 @@ for level in to_build:
             run(cmd)
 
 out = run("game", env_script="conanrunenv-release-x86_64")
+print(out)
 assert "ai/1.1.0: AUTONOMOUSLY EVOLVED Artificial Intelligence for enemies (Release)!" in out
 assert "ai/1.1.0: Intelligence level=50" in out
 out = run("game", env_script="conanrunenv-debug-x86_64")
+print(out)
 assert "ai/1.1.0: AUTONOMOUSLY EVOLVED Artificial Intelligence for enemies (Debug)!" in out
 assert "ai/1.1.0: Intelligence level=50" in out
