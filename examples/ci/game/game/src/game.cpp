@@ -7,7 +7,7 @@ void game(){
     #ifdef NDEBUG
     std::cout << "game/" << PKG_VERSION << ":fun game (Release)!\n";
     #else
-    std::cout << "game/" << PKG_VERSION << ":fun game (Release)!\n";
+    std::cout << "game/" << PKG_VERSION << ":fun game (Debug)!\n";
     #endif
 
     // ARCHITECTURES
