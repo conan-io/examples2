@@ -5,7 +5,7 @@ from conan.tools.cmake import CMakeToolchain, CMakeDeps, CMake, cmake_layout
 class aiRecipe(ConanFile):
     name = "ai"
 
-    requires = "matrix/[>=1.0 <2]"
+    requires = "mathlib/[>=1.0 <2]"
 
     # Binary configuration
     settings = "os", "compiler", "build_type", "arch"

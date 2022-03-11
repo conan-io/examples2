@@ -1,9 +1,9 @@
 #include <iostream>
 #include "ai.h"
-#include "matrix.h"
+#include "mathlib.h"
 
 void ai(int intelligence){
-    matrix();
+    mathlib();
     #ifdef NDEBUG
     std::cout << "ai/" << PKG_VERSION << ": Some Artificial Intelligence for enemies (Release)!\n";
     #else
