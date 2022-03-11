@@ -3,7 +3,7 @@ from conan import ConanFile
 from conan.tools.build import cross_building
 
 
-class gameserverTestConan(ConanFile):
+class mapviewerTestConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
 
     def requirements(self):
@@ -11,4 +11,4 @@ class gameserverTestConan(ConanFile):
 
     def test(self):
         if not cross_building(self):
-            self.run("gameserver", env="conanrun")
+            self.run("mapviewer", env="conanrun")

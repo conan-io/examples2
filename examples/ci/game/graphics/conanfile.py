@@ -2,18 +2,23 @@ from conan import ConanFile
 from conan.tools.cmake import CMakeToolchain, CMakeDeps, CMake, cmake_layout
 
 
-class gameserverRecipe(ConanFile):
-    name = "gameserver"
-    version = ""
-    package_type = "application"
+class graphicsRecipe(ConanFile):
+    name = "graphics"
+    version = "1.0"
 
-    requires = "physx/[>=1.0 <2]"
+    requires = "mathlib/[>=1.0 <2]"
 
     # Binary configuration
     settings = "os", "compiler", "build_type", "arch"
+    options = {"shared": [True, False], "fPIC": [True, False]}
+    default_options = {"shared": False, "fPIC": True}
 
     # Sources are located in the same place as this recipe, copy them to the recipe
-    exports_sources = "CMakeLists.txt", "src/*"
+    exports_sources = "CMakeLists.txt", "src/*", "include/*"
+
+    def config_options(self):
+        if self.settings.os == "Windows":
+            del self.options.fPIC
 
     def generate(self):
         tc = CMakeToolchain(self)
@@ -21,7 +26,7 @@ class gameserverRecipe(ConanFile):
         tc.generate()
         deps = CMakeDeps(self)
         deps.generate()
-
+    
     def layout(self):
         cmake_layout(self)
 
@@ -33,3 +38,6 @@ class gameserverRecipe(ConanFile):
     def package(self):
         cmake = CMake(self)
         cmake.install()
+
+    def package_info(self):
+        self.cpp_info.libs = ["graphics"]

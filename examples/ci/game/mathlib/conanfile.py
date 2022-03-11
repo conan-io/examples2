@@ -2,8 +2,8 @@ from conan import ConanFile
 from conan.tools.cmake import CMakeToolchain, CMakeDeps, CMake, cmake_layout
 
 
-class matrixRecipe(ConanFile):
-    name = "matrix"
+class mathlibRecipe(ConanFile):
+    name = "mathlib"
 
     # Binary configuration
     settings = "os", "compiler", "build_type", "arch"
@@ -37,4 +37,4 @@ class matrixRecipe(ConanFile):
         cmake.install()
 
     def package_info(self):
-        self.cpp_info.libs = ["matrix"]
+        self.cpp_info.libs = ["mathlib"]

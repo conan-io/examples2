@@ -6,7 +6,7 @@ class engineRecipe(ConanFile):
     name = "engine"
     version = "1.0"
 
-    requires = "ai/[>=1.0 <2]", "physx/[>=1.0 <2]"
+    requires = "ai/[>=1.0 <2]", "graphics/[>=1.0 <2]"
 
     # Binary configuration
     settings = "os", "compiler", "build_type", "arch"

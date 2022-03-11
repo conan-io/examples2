@@ -2,23 +2,18 @@ from conan import ConanFile
 from conan.tools.cmake import CMakeToolchain, CMakeDeps, CMake, cmake_layout
 
 
-class physxRecipe(ConanFile):
-    name = "physx"
-    version = "1.0"
+class mapviewerRecipe(ConanFile):
+    name = "mapviewer"
+    version = ""
+    package_type = "application"
 
-    requires = "matrix/[>=1.0 <2]"
+    requires = "graphics/[>=1.0 <2]"
 
     # Binary configuration
     settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [True, False], "fPIC": [True, False]}
-    default_options = {"shared": False, "fPIC": True}
 
     # Sources are located in the same place as this recipe, copy them to the recipe
-    exports_sources = "CMakeLists.txt", "src/*", "include/*"
-
-    def config_options(self):
-        if self.settings.os == "Windows":
-            del self.options.fPIC
+    exports_sources = "CMakeLists.txt", "src/*"
 
     def generate(self):
         tc = CMakeToolchain(self)
@@ -26,7 +21,7 @@ class physxRecipe(ConanFile):
         tc.generate()
         deps = CMakeDeps(self)
         deps.generate()
-    
+
     def layout(self):
         cmake_layout(self)
 
@@ -38,6 +33,3 @@ class physxRecipe(ConanFile):
     def package(self):
         cmake = CMake(self)
         cmake.install()
-
-    def package_info(self):
-        self.cpp_info.libs = ["physx"]
