@@ -64,7 +64,7 @@ with chdir(f"{build_folder}"):
 
     exe = f"{configuration}\compressor.exe" if platform.system() == "Windows" else "./compressor"
     lib_tool = {
-        "Windows": '"C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Auxiliary\\Build\\vcvarsall.bat" && dumpbin',
+        "Windows": '"C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Auxiliary\\Build\\vcvarsall.bat" x86_amd64 && dumpbin',
         "Darwin": "otool -l",
         "Linux": "ldd"
     }.get(platform.system())
