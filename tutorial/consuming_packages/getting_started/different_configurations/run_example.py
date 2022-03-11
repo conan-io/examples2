@@ -14,13 +14,14 @@ def chdir(dir_path):
         os.chdir(current)
 
 
-def run(cmd, error=False):
+def run(cmd, error=False, decode=True):
     print("------------")
     print("Running: {}".format(cmd))
     process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     out, err = process.communicate()
-    out = out.decode("utf-8")
-    err = err.decode("utf-8")
+    if decode:
+        out = out.decode("utf-8")
+        err = err.decode("utf-8")
     ret = process.returncode
     output = err + out
     print(output)
@@ -68,4 +69,4 @@ with chdir(f"{build_folder}"):
         "Darwin": "otool -l",
         "Linux": "ldd"
     }.get(platform.system())
-    out = run(f"{lib_tool} {run_exe}")
+    out = run(f"{lib_tool} {run_exe}", decode=False)
