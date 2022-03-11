@@ -15,15 +15,14 @@ def chdir(dir_path):
 
 
 def run(cmd, error=False):
+    print("------------")
+    print("Running: {}".format(cmd))
     process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     out, err = process.communicate()
     out = out.decode("utf-8")
     err = err.decode("utf-8")
     ret = process.returncode
-
     output = err + out
-    print("------------")
-    print("Running: {}".format(cmd))
     print(output)
     print("------------")
     if ret != 0 and not error:
