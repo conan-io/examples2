@@ -62,12 +62,13 @@ with chdir(f"{build_folder}"):
     cmake_other = "cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake && cmake --build . "
     cmake_cmd = cmake_win if platform.system() == "Windows" else cmake_other
     run_exe = f"{configuration}\compressor.exe" if platform.system() == "Windows" else "./compressor"
-    run(f"{source_command}conanbuild{extension} && {cmake_cmd} && {source_command}deactivate_conanbuild{extension}")
+    run(f"{source_command}conanrun{extension} && {cmake_cmd} && {source_command}deactivate_conanrun{extension}")
 
     exe = f"{configuration}\compressor.exe" if platform.system() == "Windows" else "./compressor"
     lib_tool = {
-        "Windows": '"C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Auxiliary\\Build\\vcvarsall.bat" x86_amd64 && dumpbin /DEPENDENTS',
-        "Darwin": "otool -l",
-        "Linux": "ldd"
+        "Windows": ('"C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Auxiliary\\Build\\vcvarsall.bat" x86_amd64 && dumpbin /DEPENDENTS', "zlib1.dll"),
+        "Darwin": ("otool -l", "libz.1.dylib"),
+        "Linux": ("ldd", "libz.so.1")
     }.get(platform.system())
-    out = run(f"{lib_tool} {run_exe}")
+    out = run(f"{lib_tool[0]} {run_exe}")
+    assert lib_tool[1] in out
