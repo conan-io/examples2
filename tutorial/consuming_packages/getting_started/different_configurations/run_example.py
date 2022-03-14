@@ -61,6 +61,7 @@ with chdir(f"{build_folder}"):
     cmake_win = f"cmake .. -G \"Visual Studio 15 2017\" -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake && cmake --build . --config {configuration}"
     cmake_other = "cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake && cmake --build . "
     cmake_cmd = cmake_win if platform.system() == "Windows" else cmake_other
+    run_exe = f"{configuration}\compressor.exe" if platform.system() == "Windows" else "./compressor"
     run(f"{source_command}conanbuild{extension} && {cmake_cmd} && {source_command}deactivate_conanbuild{extension}")
 
     exe = f"{configuration}\compressor.exe" if platform.system() == "Windows" else "./compressor"
