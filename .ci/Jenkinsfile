@@ -101,6 +101,7 @@ node('Linux') {
                 examples.add(example)
             }
         }
+        echo "Examples to run:\n - ${ examples.collect({ "$it" }).join('\n - ')}"
     }
 
     stage('Run examples') {
