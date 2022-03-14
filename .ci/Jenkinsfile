@@ -65,13 +65,7 @@ def runExample(Map ctxt, String example) {
 def runExamples(Map ctxt) {
     try {
         checkout scm
-
         envCreate(ctxt)
-        envInside(ctxt) {
-            ctxt.shFunction('cmake --version')
-            ctxt.shFunction('conan --version')
-        }
-
         envInside(ctxt) {
             ctxt.shFunction('conan profile detect --force')
             ctxt.shFunction('conan remote remove conancenter')
