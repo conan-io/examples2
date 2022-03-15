@@ -9,6 +9,7 @@ class compressorRecipe(ConanFile):
 
     def requirements(self):
         self.requires("zlib/1.2.11")
+        self.tool_requires("cmake/3.19.8")
 
     # do not introduce layout method yet
     # use conan install . --output-folder cmake-build-release
