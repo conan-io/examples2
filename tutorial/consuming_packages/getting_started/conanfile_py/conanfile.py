@@ -1,7 +1,8 @@
+import os
+
 from conan import ConanFile
 from conan.tools.cmake import cmake_layout
 from conan.errors import ConanInvalidConfiguration
-
 
 class CompressorRecipe(ConanFile):
     # Binary configuration
@@ -21,8 +22,15 @@ class CompressorRecipe(ConanFile):
         else:
             self.tool_requires("cmake/3.19.8")
 
-    # do not introduce layout method yet
-    # use conan install . --output-folder cmake-build-release
-    # then explain you can use layout to pre-define that
-    # def layout(self):
-    #     cmake_layout(self)
+    def layout(self):
+        build_type = str(self.settings.build_type)
+        compiler = self.settings.get_safe("compiler")
+        
+        if compiler == "msvc":
+            # the CMake generator is multi-config
+            self.folders.build = "build"
+            self.folders.generators = self.folders.build
+        else:
+            build_type = build_type.lower()
+            self.folders.build = "cmake-build-{}".format(build_type)
+            self.folders.generators = self.folders.build
