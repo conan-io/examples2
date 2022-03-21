@@ -3,7 +3,14 @@ project(compressor C)
 
 find_package(ZLIB REQUIRED)
 
-message("Building with CMake version: ${CMAKE_VERSION}")
+if(WIN32)
+    find_package(base64 REQUIRED)
+endif()
 
 add_executable(${PROJECT_NAME} src/main.c)
-target_link_libraries(${PROJECT_NAME} ZLIB::ZLIB)
+
+if(WIN32)
+    target_link_libraries(${PROJECT_NAME} ZLIB::ZLIB)
+else()
+    target_link_libraries(${PROJECT_NAME} ZLIB::ZLIB base64::base64)
+endif()
