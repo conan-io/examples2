@@ -35,7 +35,6 @@ def run(cmd, error=False):
 
 configuration = "Release"
 build_folder = "build" if platform.system() == "Windows" else f"cmake-build-{configuration.lower()}"
-run(f"mkdir {build_folder}")
 run(f"conan install . --build missing")
 run(f"cd {build_folder}")
 with chdir(f"{build_folder}"):
