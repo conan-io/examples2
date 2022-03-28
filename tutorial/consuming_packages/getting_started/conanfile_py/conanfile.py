@@ -25,9 +25,16 @@ class CompressorRecipe(ConanFile):
     def layout(self):
         build_type = str(self.settings.build_type)
         compiler = self.settings.get_safe("compiler")
-        
-        if compiler in ("Visual Studio", "msvc"):
-            # If the compiler is msvc the CMake generator is multi-config
+
+        # We make the assumption that if the compiler is msvc the
+        # CMake generator is multi-config
+        if compiler == "msvc":
+            multi = True
+        else:
+            multi = False             
+
+        if multi:
+            # CMake multi-config, just one folder for both builds
             self.folders.build = "build"
             self.folders.generators = "build"
         else:
