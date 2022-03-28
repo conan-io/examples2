@@ -4,6 +4,10 @@
 
 #include <zlib.h>
 
+#ifdef _WIN32
+#include <libbase64.h>
+#endif
+
 int main(void) {
     char buffer_in [256] = {"Conan is a MIT-licensed, Open Source package manager for C and C++ development "
                             "for C and C++ development, allowing development teams to easily and efficiently "
@@ -27,6 +31,21 @@ int main(void) {
     printf("Compressed size is: %lu\n", strlen(buffer_out));
 
     printf("ZLIB VERSION: %s\n", zlibVersion());
+    
+    #ifdef _WIN32
+    int flags = 0;
+    const char * src = "YW55IGNhcm5hbCBwbGVhc3VyZQ==";
+    char enc[128], dec[128];
+    size_t srclen = strlen(src);
+    size_t enclen, declen;
 
+    base64_decode(src, srclen, enc, &enclen, flags);
+    enc[enclen] = '\0';
+    printf("decoded size (\"any carnal pleasure\"): %zu\n", enclen);
+    base64_encode(enc, enclen, dec, &declen, flags);
+    dec[declen] = '\0';
+    printf("%s\n", dec);
+    #endif
+    
     return EXIT_SUCCESS;
 }
