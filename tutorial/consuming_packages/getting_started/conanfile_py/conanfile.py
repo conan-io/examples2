@@ -15,8 +15,7 @@ class CompressorRecipe(ConanFile):
 
     def requirements(self):
         self.requires("zlib/1.2.11")
-        # Use the system's CMake for Windows
-        # and add base64 dependency
+        # and add base64 dependency only for Windows
         if self.settings.os == "Windows":
             self.requires("base64/0.4.0")
         if self.settings.os != "Windows":  # we need cmake 3.19 in other platforms
