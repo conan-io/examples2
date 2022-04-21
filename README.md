@@ -14,6 +14,6 @@
 
 - Learn how to build for different configurations, like Release or Debug and build shared or static libraries. [Docs](https://docs.conan.io/en/2.0-alpha/tutorial/consuming_packages/getting_started/different_configurations.html)
 
-### [Using conanfile.py vs conanfile.txt](ttutorial/consuming_packages/conanfile_py/)
+### [Using conanfile.py vs conanfile.txt](tutorial/consuming_packages/conanfile_py/)
 
 - Learn about the flexibility of using a conanfile.py instead a conanfile.txt. [Docs](https://docs.conan.io/en/2.0-alpha/tutorial/consuming_packages/getting_started/the_power_of_conanfile_py.html)
