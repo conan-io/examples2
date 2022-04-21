@@ -94,12 +94,18 @@ node('Linux') {
     List<String> examples = []
     stage('Find examples') {
         checkout scm
-        def _examples
+        def _examples = []
         if (isMain()) {
             _examples = sh(script: 'find . -name run_example.*', returnStdout: true).readLines()
         }
         else {
-            _examples = sh(script: 'git diff --name-only origin/main --diff-filter=AMR | grep run_example.*', returnStdout: true).readLines()
+            _changed_examples = sh(script: 'git diff --name-only origin/main --diff-filter=AMR | grep run_example.* || true', returnStdout: true)
+            if (!_changed_examples.isEmpty()) {
+                _examples = _changed_examples.readlines()
+            }
+            else {
+                echo "No examples changed."
+            }
         }
         for (example in _examples) {
             if (example.contains(".sh") || example.contains(".bat") || example.contains(".py")) {
@@ -109,53 +115,55 @@ node('Linux') {
         echo "Examples to run:\n - ${ examples.collect({ "$it" }).join('\n - ')}"
     }
 
-    stage('Run examples') {
-        def conanBranchesInstalls = getBranchesInstalls()
-        parallel(
-            linux: {
-                conanBranchesInstalls.each { branch ->
-                    stage("${branch.name}: Run Linux examples") {
-                        docker.image(LINUX_CONTAINER).inside {
-                            runExamples([python_host: 'python3',
-                                        shFunction: { data -> sh(data) },
-                                        isInsideDocker: true,
-                                        examples: examples,
-                                        branch: branch,
-                                        extensions: ['.py', '.sh']])
-                        }
-                    }
-                }
-            },
-            macos: {
-                 node('Macos') {
+    if (!examples.isEmpty()) {
+        stage('Run examples') {
+            def conanBranchesInstalls = getBranchesInstalls()
+            parallel(
+                linux: {
                     conanBranchesInstalls.each { branch ->
-                        stage("${branch.name}: Run Macos examples") {
-                            withEnv(['PATH+EXTRA=/usr/local/bin']) { // Required to find CMake
+                        stage("${branch.name}: Run Linux examples") {
+                            docker.image(LINUX_CONTAINER).inside {
                                 runExamples([python_host: 'python3',
                                             shFunction: { data -> sh(data) },
-                                            isInsideDocker: false,
+                                            isInsideDocker: true,
                                             examples: examples,
                                             branch: branch,
                                             extensions: ['.py', '.sh']])
                             }
                         }
                     }
-                 }
-             },
-             windows: {
-                 node('Windows') {
-                    conanBranchesInstalls.each { branch ->
-                        stage("${branch.name}: Run Windows examples") {
-                            runExamples([python_host: 'C:\\Python39\\python.exe',
-                                        shFunction: { data -> bat(data) },
-                                        isInsideDocker: false,
-                                        examples: examples,
-                                        branch: branch,
-                                        extensions: ['.py', '.bat']])
+                },
+                macos: {
+                    node('Macos') {
+                        conanBranchesInstalls.each { branch ->
+                            stage("${branch.name}: Run Macos examples") {
+                                withEnv(['PATH+EXTRA=/usr/local/bin']) { // Required to find CMake
+                                    runExamples([python_host: 'python3',
+                                                shFunction: { data -> sh(data) },
+                                                isInsideDocker: false,
+                                                examples: examples,
+                                                branch: branch,
+                                                extensions: ['.py', '.sh']])
+                                }
+                            }
                         }
                     }
-                 }
-             }
-        )
+                },
+                windows: {
+                    node('Windows') {
+                        conanBranchesInstalls.each { branch ->
+                            stage("${branch.name}: Run Windows examples") {
+                                runExamples([python_host: 'C:\\Python39\\python.exe',
+                                            shFunction: { data -> bat(data) },
+                                            isInsideDocker: false,
+                                            examples: examples,
+                                            branch: branch,
+                                            extensions: ['.py', '.bat']])
+                            }
+                        }
+                    }
+                }
+            )
+        }
     }
 }
