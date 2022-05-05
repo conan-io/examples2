@@ -61,4 +61,4 @@ libraries/poco/md5/build/*
 .ropeproject/*
 
 .tox
-**/CMakeUserPresets.json
+CMakeUserPresets.json
