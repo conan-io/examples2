@@ -12,7 +12,7 @@ run("conan install . --build missing")
 if platform.system() == "Windows":
     with chdir("build"):
         command = []
-        run("ls")
+        run("dir")
         command.append("conanbuild.bat")
         command.append("cmake .. -G \"Visual Studio 15 2017\" -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake")
         command.append("cmake --build . --config Release")
