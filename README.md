@@ -1,6 +1,8 @@
 # Conan 2.0 examples
 
-## Examples - Tutorial
+## Tutorial
+
+### Consuming packages
 
 ### [Build a simple CMake project using Conan](tutorial/consuming_packages/simple_cmake_project/)
 
