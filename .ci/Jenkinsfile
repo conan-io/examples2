@@ -14,7 +14,7 @@ def envInside(Map ctxt, Closure closure) {
     String venvDirectory = isUnix() ? "${pwd()}/conanenv" : "${pwd()}\\conanenv"
     String binPath = isUnix() ? "$venvDirectory/bin/" : "$venvDirectory\\Scripts\\"
     String conanHome = isUnix() ? "${pwd()}/.conan" : "${pwd()}\\.conan"
-    String pythonpath = isUnix() ? "${env.WORKSPACE}/examples2/test" : "${env.WORKSPACE}\\examples2\\test"
+    String pythonpath = isUnix() ? "${env.WORKSPACE}/test" : "${env.WORKSPACE}\\test"
     withEnv(["PATH+EXTRA=${binPath}", "CONAN_HOME=${conanHome}", "PYTHONPATH=${pythonpath}"]) {
         // This doesn't work if running docker.inside (https://issues.jenkins.io/browse/JENKINS-49076)
         closure()
