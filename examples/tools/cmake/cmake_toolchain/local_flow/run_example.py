@@ -63,11 +63,13 @@ with tmp_dir("tmp"):
         with chdir("build"):
             run('cmake .. -G "Visual Studio 15 2017" -DCMAKE_TOOLCHAIN_FILE=generators/conan_toolchain.cmake')
             run("cmake --build . --config Release")
-            run("Release/foo.exe")
+            output = run("Release\\foo.exe")
+            print(output)
 
             run('cmake .. -G "Visual Studio 15 2017" -DCMAKE_TOOLCHAIN_FILE=generators/conan_toolchain.cmake')
             run("cmake --build . --config Debug")
-            run("Debug/foo.exe")
+            output = run("Debug\\foo.exe")
+            print(output)
     else:
         with tmp_dir("cmake-build-release"):
             run("cmake ..  -DCMAKE_TOOLCHAIN_FILE=../build/generators/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release")
