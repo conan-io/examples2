@@ -42,7 +42,7 @@ with chdir(f"{build_folder}"):
     extension = ".bat" if platform.system() == "Windows" else ".sh"
     run_exe = f"{configuration}\compressor.exe" if platform.system() == "Windows" else "./compressor"
     cmake_win = f"cmake .. -G \"Visual Studio 15 2017\" -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake && cmake --build . --config {configuration}"
-    cmake_other = "cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake && cmake --build . "
+    cmake_other = "cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release && cmake --build . "
     cmake_cmd = cmake_win if platform.system() == "Windows" else cmake_other
     if platform.system() == "Windows":
         out = run(f"{cmake_cmd}")
