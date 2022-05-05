@@ -1,49 +1,32 @@
-import os
 import platform
-import subprocess
-from contextlib import contextmanager
+
+from examples_tools import chdir, run
 
 
-@contextmanager
-def chdir(dir_path):
-    current = os.getcwd()
-    os.chdir(dir_path)
-    try:
-        yield
-    finally:
-        os.chdir(current)
 
+if platform.system() == "Windows":
 
-def run(cmd, error=False):
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-    out, err = process.communicate()
-    out = out.decode("utf-8")
-    err = err.decode("utf-8")
-    ret = process.returncode
-
-    output = err + out
-    print("------------")
-    print("Running: {}".format(cmd))
-    print(output)
-    print("------------")
-    if ret != 0 and not error:
-        raise Exception("Failed cmd: {}\n{}".format(cmd, output))
-    if ret == 0 and error:
-        raise Exception(
-            "Cmd succeded (failure expected): {}\n{}".format(cmd, output))
-    return output
-
-configuration = "Release"
-build_folder = "build" if platform.system() == "Windows" else f"cmake-build-{configuration.lower()}"
-run(f"conan install . --output-folder {build_folder} --build missing")
-run(f"cd {build_folder}")
-with chdir(f"{build_folder}"):
-    source_command = "" if platform.system() == "Windows" else ". ./"
-    extension = ".bat" if platform.system() == "Windows" else ".sh"
-    run_exe = f"{configuration}\compressor.exe" if platform.system() == "Windows" else "./compressor"
-    cmake_win = f"cmake .. -G \"Visual Studio 15 2017\" -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake && cmake --build . --config {configuration}"
-    cmake_other = "cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release && cmake --build . "
-    cmake_cmd = cmake_win if platform.system() == "Windows" else cmake_other
-    out = run(f"{source_command}conanbuild{extension} && {cmake_cmd} && {source_command}deactivate_conanbuild{extension}")
-    assert "Building with CMake version: 3.19.8" in out
-    run(run_exe)
+    # Build for Release and Debug with static libraries
+    run("conan install . --output-folder=build --build=missing")
+    with chdir("build"):
+        command = []
+        command.append("conanbuild.bat")
+        command.append("cmake .. -G \"Visual Studio 15 2017\" -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake")
+        command.append("deactivate_conanbuild.bat")
+        command.append("cmake --build . --config Release")
+        cmd_out = run(" && ".join(command))
+        assert "Building with CMake version: 3.19.8" in cmd_out
+        cmd_out = run("Release\\compressor.exe")
+        assert "ZLIB VERSION: 1.2.11" in cmd_out
+else:
+    run("conan install . --output-folder=cmake-build-release --build=missings")
+    with chdir("cmake-build-release"):
+        command = []
+        command.append(". ./conanbuild.sh")
+        command.append("cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release")
+        command.append(". ./deactivate_conanbuild.sh")
+        command.append("cmake --build .")
+        cmd_out = run(" && ".join(command))
+        assert "Building with CMake version: 3.19.8" in cmd_out
+        cmd_out = run("./compressor")
+        assert "ZLIB VERSION: 1.2.11" in cmd_out
