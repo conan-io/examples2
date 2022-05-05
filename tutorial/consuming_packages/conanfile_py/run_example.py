@@ -15,7 +15,7 @@ if platform.system() == "Windows":
         command.append("cmake .. -G \"Visual Studio 15 2017\" -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake")
         command.append("cmake --build . --config Release")
         run(" && ".join(command))
-        cmd_out = run("Release/compressor.exe")
+        cmd_out = run("Release\\compressor.exe")
 else:
     with chdir("cmake-build-release"):
         command = []
