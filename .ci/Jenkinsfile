@@ -102,7 +102,7 @@ node('Linux') {
             else {
                 _changed_examples = sh(script: 'git diff --name-only origin/main --diff-filter=AMR | grep run_example.* || true', returnStdout: true)
                 if (!_changed_examples.isEmpty()) {
-                    _examples = _changed_examples.readlines()
+                    _examples = _changed_examples.readLines()
                 }
                 else {
                     echo "No examples changed."
