@@ -61,3 +61,5 @@ libraries/poco/md5/build/*
 .ropeproject/*
 
 .tox
+
+test_output
