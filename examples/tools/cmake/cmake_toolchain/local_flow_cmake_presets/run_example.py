@@ -54,6 +54,20 @@ def chdir(newdir):
 # ############# Example ################
 print("- Use the CMakeToolchain to work locally (local flow) using CMakePresets feature. -")
 
+output = run("cmake --version")
+cmake_version = output.splitlines()[0].split(" ")[-1]
+print(cmake_version)
+if cmake_version < "3.23.1":
+    print("SKIPPED TEST BECAUSE OF MISSING COMPATIBLE CMAKE")
+    exit(0)
+
+output = run("conan --version")
+conan_version = output.splitlines()[0].split(" ")[-1]
+print(conan_version)
+if conan_version == "2.0.0-alpha6":
+    print("SKIPPED TEST BECAUSE NOT COMPATIBLE WITH 2.0.0-alpha6")
+    exit(0)
+
 
 with tmp_dir("tmp"):
     run("conan new -d name=foo -d version=1.0 cmake_exe")
