@@ -9,6 +9,8 @@ from examples_tools import chdir, run
 
 run("conan install . --build missing")
 
+run("dir")
+
 if platform.system() == "Windows":
     with chdir("build"):
         command = []
