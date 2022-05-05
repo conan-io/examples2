@@ -42,7 +42,7 @@ if platform.system() == "Windows":
         command.append("conanrun.bat")
         command.append("Release\\compressor.exe")
         command.append("deactivate_conanrun.bat")
-        run(" && ".join(command))
+        cmd_out = run(" && ".join(command))
         assert "Release configuration!" in cmd_out
 
 else:
