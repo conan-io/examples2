@@ -52,7 +52,7 @@ def chdir(newdir):
 
 
 # ############# Example ################
-print("- Use the CMakeToolchain to work locally (local flow) -")
+print("- Use the CMakeToolchain to work locally (local flow) using CMakePresets feature. -")
 
 
 with tmp_dir("tmp"):
