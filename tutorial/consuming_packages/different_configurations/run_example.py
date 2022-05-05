@@ -15,7 +15,7 @@ if platform.system() == "Windows":
         command.append("deactivate_conanbuild.bat")
         command.append("cmake --build . --config Release")
         run(" && ".join(command))
-        cmd_out = run("Release/compressor.exe")
+        cmd_out = run("Release\\compressor.exe")
         assert "Release configuration!" in cmd_out
 
     run("conan install . --output-folder=build --build=missing -s build_type=Debug")
@@ -25,7 +25,7 @@ if platform.system() == "Windows":
         command.append("deactivate_conanbuild.bat")
         command.append("cmake --build . --config Debug")
         run(" && ".join(command))
-        cmd_out = run("Debug/compressor.exe")
+        cmd_out = run("Debug\\compressor.exe")
         assert "Debug configuration!" in cmd_out
 
     # Build for Release with shared libraries
