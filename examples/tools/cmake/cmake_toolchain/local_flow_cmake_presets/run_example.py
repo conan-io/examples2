@@ -60,18 +60,6 @@ with tmp_dir("tmp"):
     run("conan install .")
     run("conan install . -s build_type=Debug")
     if platform.system() == "Windows":
-        run("cmake --preset Release")
-        run("cmake --build --preset Release")
-        output = run("./cmake-build-release/foo")
-        print(output)
-        assert "foo/1.0: Hello World Release!" in output
-
-        run("cmake --preset Debug")
-        run("cmake --build --preset Debug")
-        output = run("./cmake-build-debug/foo")
-        print(output)
-        assert "foo/1.0: Hello World Debug!" in output
-    else:
         run("cmake --preset default")
 
         run("cmake --build --preset Release")
@@ -81,5 +69,18 @@ with tmp_dir("tmp"):
 
         run("cmake --build --preset Debug")
         output = run("build\\Debug\\foo")
+        print(output)
+        assert "foo/1.0: Hello World Debug!" in output
+
+    else:
+        run("cmake --preset Release")
+        run("cmake --build --preset Release")
+        output = run("./cmake-build-release/foo")
+        print(output)
+        assert "foo/1.0: Hello World Release!" in output
+
+        run("cmake --preset Debug")
+        run("cmake --build --preset Debug")
+        output = run("./cmake-build-debug/foo")
         print(output)
         assert "foo/1.0: Hello World Debug!" in output
