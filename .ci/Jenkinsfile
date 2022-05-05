@@ -14,6 +14,7 @@ def envInside(Map ctxt, Closure closure) {
     String venvDirectory = isUnix() ? "${pwd()}/conanenv" : "${pwd()}\\conanenv"
     String binPath = isUnix() ? "$venvDirectory/bin/" : "$venvDirectory\\Scripts\\"
     String conanHome = isUnix() ? "${pwd()}/.conan" : "${pwd()}\\.conan"
+    String cmakePath = isUnix() ? "/Users/jenkins/cmake/cmake-3.23.1/bin" : "C:\\cmake\\cmake-3.23.1-win64-x64\\bin"
     withEnv(["PATH+EXTRA=${binPath}", "CONAN_HOME=${conanHome}"]) {
         // This doesn't work if running docker.inside (https://issues.jenkins.io/browse/JENKINS-49076)
         closure()
@@ -51,6 +52,7 @@ List<Map> getBranchesInstalls() {
 def runExample(Map ctxt, String example) {
     for (extension in ctxt.extensions) {
         if (example.contains(extension)) {
+            ctxt.shFunction("cmake --version")
             example = example.replace("\\","/")
             split_path = example.split('/')
             String script = split_path[split_path.length-1]
