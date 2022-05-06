@@ -15,7 +15,8 @@ def envInside(Map ctxt, Closure closure) {
     String binPath = isUnix() ? "$venvDirectory/bin/" : "$venvDirectory\\Scripts\\"
     String conanHome = isUnix() ? "${pwd()}/.conan" : "${pwd()}\\.conan"
     String pythonpath = isUnix() ? "${env.WORKSPACE}/test" : "${env.WORKSPACE}\\test"
-    withEnv(["PATH+EXTRA=${binPath}", "CONAN_HOME=${conanHome}", "PYTHONPATH=${pythonpath}"]) {
+    String cmakePath = isUnix() ? "/Users/jenkins/cmake/cmake-3.23.1/bin" : "C:\\cmake\\cmake-3.23.1-win64-x64\\bin"
+    withEnv(["PATH+EXTRA=${binPath}", "PATH+CMAKE=${cmakePath}", "CONAN_HOME=${conanHome}", "PYTHONPATH=${pythonpath}"]) {
         // This doesn't work if running docker.inside (https://issues.jenkins.io/browse/JENKINS-49076)
         closure()
     }
@@ -68,6 +69,7 @@ def runExamples(Map ctxt) {
         checkout scm
         envCreate(ctxt)
         envInside(ctxt) {
+            ctxt.shFunction("cmake --version")
             ctxt.shFunction('conan profile detect --force')
             ctxt.shFunction('conan remote remove conancenter')
             ctxt.shFunction("conan remote add conancenterv2 ${ART_URL}")
