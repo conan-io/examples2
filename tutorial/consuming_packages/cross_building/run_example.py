@@ -22,7 +22,7 @@ if platform.system() == "Linux":
         command = []
         # in the conanfile.py we only add CMake as tool_require in Linux
         command.append(". generators/conanbuild.sh")
-        command.append("cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release")
+        command.append("cmake .. -DCMAKE_TOOLCHAIN_FILE=generators/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release")
         command.append("cmake --build .")
         command.append(". generators/deactivate_conanbuild.sh")
         run(" && ".join(command))
