@@ -4,7 +4,6 @@ from examples_tools import chdir, run
 
 
 # Run the example only in Linux where the cross-compile toolchain is available
-# mocking the raspberry profile for the moment while we install the cross-compile toolchain
 # also now working in alpha6 because of changes in cmake_layout
 
 output = run("conan --version")
