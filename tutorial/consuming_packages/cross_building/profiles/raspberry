@@ -9,11 +9,4 @@ build_type=Release
 [buildenv]
 CC=arm-linux-gnueabihf-gcc-9
 CXX=arm-linux-gnueabihf-g++-9
-CMAKE_C_COMPILER=arm-linux-gnueabihf-gcc-9
-CMAKE_CXX_COMPILER=arm-linux-gnueabihf-g++-9
-STRIP=arm-linux-gnueabihf-strip
-RANLIB=arm-linux-gnueabihf-ranlib
-AS=arm-linux-gnueabihf-as
-AR=arm-linux-gnueabihf-ar
 LD=arm-linux-gnueabihf-ld
-FC=arm-linux-gnueabihf-gfortran-9
