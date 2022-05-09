@@ -127,7 +127,14 @@ node('Linux') {
                         conanBranchesInstalls.each { branch ->
                             stage("${branch.name}: Run Linux examples") {
                                 docker.image(LINUX_CONTAINER).inside("--entrypoint=") {
-                                    sh(script: "pyenv global 3.9.2")
+                                    def sourcedir = "/home/conan/"
+                                    def pyenvdir = "${sourcedir}.pyenv"
+                                    def pythonVersion = "3.9.2"
+                                    def command = "su - conan -c \"" \
+                                                + "export PYENV_ROOT=${pyenvdir} && " \
+                                                + "export PATH=\"${pyenvdir}/versions/\$${pythonVersion}/bin:${pyenvdir}/bin:\$PATH\" && " \
+                                                + "pyenv global \$${pythonVersion}"
+                                    sh(script: command)
                                     runExamples([python_host: 'python3',
                                                 shFunction: { data -> sh(data) },
                                                 isInsideDocker: true,
