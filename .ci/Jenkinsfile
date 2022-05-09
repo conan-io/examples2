@@ -132,7 +132,7 @@ node('Linux') {
                                     def pythonVersion = "3.9.2"
                                     def command = "export PYENV_ROOT=${pyenvdir} && " \
                                                 + "export PATH=\"${pyenvdir}/versions/\${pythonVersion}/bin:${pyenvdir}/bin:\$PATH\" && " \
-                                                + "pyenv global \${pythonVersion}"
+                                                + "pyenv global ${pythonVersion}"
                                     sh(script: command)
                                     runExamples([python_host: 'python3',
                                                 shFunction: { data -> sh(data) },
