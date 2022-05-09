@@ -4,10 +4,6 @@
 
 #include <zlib.h>
 
-#ifdef _WIN32
-#include <libbase64.h>
-#endif
-
 int main(void) {
     char buffer_in [256] = {"Conan is a MIT-licensed, Open Source package manager for C and C++ development "
                             "for C and C++ development, allowing development teams to easily and efficiently "
