@@ -9,6 +9,7 @@ class CompressorRecipe(ConanFile):
 
     def requirements(self):
         self.requires("zlib/1.2.11")
+        self.tool_requires("cmake/3.19.8")
 
     def layout(self):
         cmake_layout(self)
