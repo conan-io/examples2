@@ -1,6 +1,6 @@
 import platform
 
-from examples_tools import chdir, run
+from test.examples_tools import chdir, run
 
 
 # Run the example only in Linux where the cross-compile toolchain is available
