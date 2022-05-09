@@ -1,5 +1,6 @@
 import os
 import subprocess
+import shutil
 from contextlib import contextmanager
 
 
@@ -13,9 +14,18 @@ def chdir(dir_path):
         os.chdir(current)
 
 
+@contextmanager
+def tmp_dir(newdir):
+    os.makedirs(newdir)
+    try:
+        with chdir(newdir):
+            yield
+    finally:
+        shutil.rmtree(newdir)
+
+
 def run(cmd, error=False):
-    process = subprocess.Popen(
-        cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     out, err = process.communicate()
     out = out.decode("utf-8")
     err = err.decode("utf-8")

@@ -1,8 +1,6 @@
-import os
-
 from conan import ConanFile
-from conan.tools.cmake import cmake_layout
 from conan.errors import ConanInvalidConfiguration
+
 
 class CompressorRecipe(ConanFile):
     # Binary configuration

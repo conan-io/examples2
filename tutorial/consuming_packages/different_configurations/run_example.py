@@ -1,7 +1,6 @@
 import platform
 
-from examples_tools import chdir, run
-
+from test.examples_tools import chdir, run
 
 
 if platform.system() == "Windows":
