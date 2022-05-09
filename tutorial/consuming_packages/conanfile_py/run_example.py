@@ -1,6 +1,6 @@
 import platform
 
-from examples_tools import chdir, run
+from test.examples_tools import chdir, run
 
 
 # following the cmake-layout declared in the conanfile.py
