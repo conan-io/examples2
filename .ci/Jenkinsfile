@@ -8,7 +8,7 @@ void cancelPrevious() {
     }
 }
 
-LINUX_CONTAINER = 'conanio/gcc10'
+LINUX_CONTAINER = 'conanio/ci-functional'
 
 def envInside(Map ctxt, Closure closure) {
     String venvDirectory = isUnix() ? "${pwd()}/conanenv" : "${pwd()}\\conanenv"
