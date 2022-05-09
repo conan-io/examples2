@@ -1,0 +1,11 @@
+[settings]
+arch=x86_64
+build_type=Debug
+compiler=apple-clang
+compiler.cppstd=gnu98
+compiler.libcxx=libc++
+compiler.version=13
+os=Macos
+[options]
+[tool_requires]
+[env]
