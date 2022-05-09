@@ -14,7 +14,9 @@ def envInside(Map ctxt, Closure closure) {
     String venvDirectory = isUnix() ? "${pwd()}/conanenv" : "${pwd()}\\conanenv"
     String binPath = isUnix() ? "$venvDirectory/bin/" : "$venvDirectory\\Scripts\\"
     String conanHome = isUnix() ? "${pwd()}/.conan" : "${pwd()}\\.conan"
-    withEnv(["PATH+EXTRA=${binPath}", "CONAN_HOME=${conanHome}"]) {
+    String pythonpath = isUnix() ? "${env.WORKSPACE}/test" : "${env.WORKSPACE}\\test"
+    String cmakePath = isUnix() ? "/Users/jenkins/cmake/cmake-3.23.1/bin" : "C:\\cmake\\cmake-3.23.1-win64-x64\\bin"
+    withEnv(["PATH+EXTRA=${binPath}", "PATH+CMAKE=${cmakePath}", "CONAN_HOME=${conanHome}", "PYTHONPATH=${pythonpath}"]) {
         // This doesn't work if running docker.inside (https://issues.jenkins.io/browse/JENKINS-49076)
         closure()
     }
@@ -67,6 +69,7 @@ def runExamples(Map ctxt) {
         checkout scm
         envCreate(ctxt)
         envInside(ctxt) {
+            ctxt.shFunction("cmake --version")
             ctxt.shFunction('conan profile detect --force')
             ctxt.shFunction('conan remote remove conancenter')
             ctxt.shFunction("conan remote add conancenterv2 ${ART_URL}")
@@ -89,81 +92,91 @@ def isMain() {
 
 node('Linux') {
     
-    cancelPrevious() 
-    
-    List<String> examples = []
-    stage('Find examples') {
-        checkout scm
-        def _examples = []
-        if (isMain()) {
-            _examples = sh(script: 'find . -name run_example.*', returnStdout: true).readLines()
-        }
-        else {
-            _changed_examples = sh(script: 'git diff --name-only origin/main --diff-filter=AMR | grep run_example.* || true', returnStdout: true)
-            if (!_changed_examples.isEmpty()) {
-                _examples = _changed_examples.readlines()
+    try {
+        cancelPrevious() 
+        
+        List<String> examples = []
+        stage('Find examples') {
+            checkout scm
+            def _examples = []
+            if (isMain()) {
+                _examples = sh(script: 'find . -name run_example.*', returnStdout: true).readLines()
             }
             else {
-                echo "No examples changed."
+                _changed_examples = sh(script: 'git diff --name-only origin/main --diff-filter=AMR | grep run_example.* || true', returnStdout: true)
+                if (!_changed_examples.isEmpty()) {
+                    _examples = _changed_examples.readLines()
+                }
+                else {
+                    echo "No examples changed."
+                }
             }
-        }
-        for (example in _examples) {
-            if (example.contains(".sh") || example.contains(".bat") || example.contains(".py")) {
-                examples.add(example)
+            for (example in _examples) {
+                if (example.contains(".sh") || example.contains(".bat") || example.contains(".py")) {
+                    examples.add(example)
+                }
             }
+            echo "Examples to run:\n - ${ examples.collect({ "$it" }).join('\n - ')}"
         }
-        echo "Examples to run:\n - ${ examples.collect({ "$it" }).join('\n - ')}"
-    }
 
-    if (!examples.isEmpty()) {
-        stage('Run examples') {
-            def conanBranchesInstalls = getBranchesInstalls()
-            parallel(
-                linux: {
-                    conanBranchesInstalls.each { branch ->
-                        stage("${branch.name}: Run Linux examples") {
-                            docker.image(LINUX_CONTAINER).inside {
-                                runExamples([python_host: 'python3',
-                                            shFunction: { data -> sh(data) },
-                                            isInsideDocker: true,
-                                            examples: examples,
-                                            branch: branch,
-                                            extensions: ['.py', '.sh']])
-                            }
-                        }
-                    }
-                },
-                macos: {
-                    node('Macos') {
+        if (!examples.isEmpty()) {
+            stage('Run examples') {
+                def conanBranchesInstalls = getBranchesInstalls()
+                parallel(
+                    linux: {
                         conanBranchesInstalls.each { branch ->
-                            stage("${branch.name}: Run Macos examples") {
-                                withEnv(['PATH+EXTRA=/usr/local/bin']) { // Required to find CMake
+                            stage("${branch.name}: Run Linux examples") {
+                                docker.image(LINUX_CONTAINER).inside {
                                     runExamples([python_host: 'python3',
                                                 shFunction: { data -> sh(data) },
-                                                isInsideDocker: false,
+                                                isInsideDocker: true,
                                                 examples: examples,
                                                 branch: branch,
                                                 extensions: ['.py', '.sh']])
                                 }
                             }
                         }
-                    }
-                },
-                windows: {
-                    node('Windows') {
-                        conanBranchesInstalls.each { branch ->
-                            stage("${branch.name}: Run Windows examples") {
-                                runExamples([python_host: 'C:\\Python39\\python.exe',
-                                            shFunction: { data -> bat(data) },
-                                            isInsideDocker: false,
-                                            examples: examples,
-                                            branch: branch,
-                                            extensions: ['.py', '.bat']])
+                    },
+                    macos: {
+                        node('Macos') {
+                            conanBranchesInstalls.each { branch ->
+                                stage("${branch.name}: Run Macos examples") {
+                                    withEnv(['PATH+EXTRA=/usr/local/bin']) { // Required to find CMake
+                                        runExamples([python_host: 'python3',
+                                                    shFunction: { data -> sh(data) },
+                                                    isInsideDocker: false,
+                                                    examples: examples,
+                                                    branch: branch,
+                                                    extensions: ['.py', '.sh']])
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    windows: {
+                        node('Windows') {
+                            conanBranchesInstalls.each { branch ->
+                                stage("${branch.name}: Run Windows examples") {
+                                    runExamples([python_host: 'C:\\Python39\\python.exe',
+                                                shFunction: { data -> bat(data) },
+                                                isInsideDocker: false,
+                                                examples: examples,
+                                                branch: branch,
+                                                extensions: ['.py', '.bat']])
+                                }
                             }
                         }
                     }
-                }
-            )
+                )
+            }
         }
+    }
+    catch(e){
+        if (env.BRANCH_NAME == "main") {
+            def subject = "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+            def summary = "${subject} (${env.BUILD_URL}), Conan Branch: ${env.BRANCH_NAME}"
+            slackSend (color: '#FF0000', message: summary)
+        }
+        throw e
     }
 }
