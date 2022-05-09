@@ -127,6 +127,7 @@ node('Linux') {
                         conanBranchesInstalls.each { branch ->
                             stage("${branch.name}: Run Linux examples") {
                                 docker.image(LINUX_CONTAINER).inside("--entrypoint=") {
+                                    sh(script: "pyenv global 3.9.2")
                                     runExamples([python_host: 'python3',
                                                 shFunction: { data -> sh(data) },
                                                 isInsideDocker: true,
