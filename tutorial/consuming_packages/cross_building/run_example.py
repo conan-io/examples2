@@ -15,7 +15,7 @@ if conan_version == "2.0.0-alpha6":
 
 if platform.system() == "Linux":
 
-    run("conan install . --build missing -pr:b=./profiles/ubuntu -pr:h=./profiles/raspberry")
+    run("conan install . --build missing -pr:b=default -pr:h=./profiles/raspberry")
 
     with chdir("build"):
         command = []
