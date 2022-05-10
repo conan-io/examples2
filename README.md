@@ -22,4 +22,4 @@
 
 ### [How to cross-compile your applications using Conan](tutorial/consuming_packages/cross_building/)
 
-- Learn how to cross-compiler your applications with Conan. [Docs](https://docs.conan.io/en/2.0-alpha/tutorial/consuming_packages/cross_building_with_conan.html)
+- Learn how to cross-compile your applications with Conan. [Docs](https://docs.conan.io/en/2.0-alpha/tutorial/consuming_packages/cross_building_with_conan.html)
