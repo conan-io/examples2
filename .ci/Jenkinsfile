@@ -8,7 +8,7 @@ void cancelPrevious() {
     }
 }
 
-LINUX_CONTAINER = 'conanio/gcc10'
+LINUX_CONTAINER = 'conanio/ci-functional'
 
 def envInside(Map ctxt, Closure closure) {
     String venvDirectory = isUnix() ? "${pwd()}/conanenv" : "${pwd()}\\conanenv"
@@ -126,7 +126,14 @@ node('Linux') {
                     linux: {
                         conanBranchesInstalls.each { branch ->
                             stage("${branch.name}: Run Linux examples") {
-                                docker.image(LINUX_CONTAINER).inside {
+                                docker.image(LINUX_CONTAINER).inside("--entrypoint=") {
+                                    def sourcedir = "/home/conan/"
+                                    def pyenvdir = "${sourcedir}.pyenv"
+                                    def pythonVersion = "3.9.2"
+                                    def command = "export PYENV_ROOT=${pyenvdir} && " \
+                                                + "export PATH=\"${pyenvdir}/versions/\${pythonVersion}/bin:${pyenvdir}/bin:\$PATH\" && " \
+                                                + "pyenv global ${pythonVersion}"
+                                    sh(script: command)
                                     runExamples([python_host: 'python3',
                                                 shFunction: { data -> sh(data) },
                                                 isInsideDocker: true,

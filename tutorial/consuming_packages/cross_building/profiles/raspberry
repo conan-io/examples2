@@ -1,0 +1,12 @@
+[settings]
+os=Linux
+arch=armv7hf
+compiler=gcc
+compiler.cppstd=gnu14
+compiler.libcxx=libstdc++11
+compiler.version=9
+build_type=Release
+[buildenv]
+CC=arm-linux-gnueabihf-gcc-9
+CXX=arm-linux-gnueabihf-g++-9
+LD=arm-linux-gnueabihf-ld
