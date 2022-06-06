@@ -20,5 +20,12 @@ class CompressorRecipe(ConanFile):
             self.tool_requires("cmake/3.19.8")
 
     def layout(self):
-        self.folders.build = f"build/{str(self.settings.build_type)}"
+        # We make the assumption that if the compiler is msvc the
+        # CMake generator is multi-config
+        if self.settings.get_safe("compiler") == "msvc":
+            multi = True
+        else:
+            multi = False          
+
+        self.folders.build = "build" if multi else f"build/{str(self.settings.build_type)}"
         self.folders.generators = "build"
