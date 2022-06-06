@@ -25,10 +25,12 @@ with tmp_dir("tmp"):
     run("conan new -d name=foo -d version=1.0 cmake_exe")
     run("conan install .")
     run("conan install . -s build_type=Debug")
+    
     if platform.system() == "Windows":
         run("cmake --preset default")
-
-    run("cmake --preset release")
+    else:
+        run("cmake --preset release")
+    
     run("cmake --build --preset release")
     output = run("build/Release/foo")
     print(output)
