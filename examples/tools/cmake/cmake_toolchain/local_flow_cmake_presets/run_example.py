@@ -1,3 +1,4 @@
+import os
 import platform
 
 from test.examples_tools import run, tmp_dir
@@ -32,12 +33,12 @@ with tmp_dir("tmp"):
         run("cmake --preset release")
     
     run("cmake --build --preset release")
-    output = run("build/Release/foo")
+    output = run(str(os.path.join("build", "Release", "foo")))
     print(output)
     assert "foo/1.0: Hello World Release!" in output
 
     run("cmake --preset debug")
     run("cmake --build --preset debug")
-    output = run("build/Debug/foo")
+    output = run(str(os.path.join("build", "Debug", "foo")))
     print(output)
     assert "foo/1.0: Hello World Debug!" in output
