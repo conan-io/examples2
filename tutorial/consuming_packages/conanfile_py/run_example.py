@@ -5,7 +5,6 @@ from test.examples_tools import chdir, run
 
 # following the cmake-layout declared in the conanfile.py
 # it will install the conan generated files in 'build' folder
-# for Windows and 'cmake-build-<configuration>' folder for Linux and Macos
 
 run("conan install . --build missing")
 
@@ -17,7 +16,7 @@ if platform.system() == "Windows":
         run(" && ".join(command))
         cmd_out = run("Release\\compressor.exe")
 else:
-    with chdir("cmake-build-release"):
+    with chdir("build"):
         command = []
         # in the conanfile.py we only add CMake as tool_require in Linux
         command.append(". ./conanbuild.sh")

@@ -45,8 +45,8 @@ if platform.system() == "Windows":
         assert "Release configuration!" in cmd_out
 
 else:
-    run("conan install . --output-folder=cmake-build-release --build=missing -s build_type=Release")
-    with chdir("cmake-build-release"):
+    run("conan install . --output-folder=build --build=missing -s build_type=Release")
+    with chdir("build"):
         command = []
         command.append(". ./conanbuild.sh")
         command.append("cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release")
@@ -56,8 +56,8 @@ else:
         cmd_out = run("./compressor")
         assert "Release configuration!" in cmd_out
 
-    run("conan install . --output-folder=cmake-build-debug --build=missing -s build_type=Debug")
-    with chdir("cmake-build-debug"):
+    run("conan install . --output-folder=build --build=missing -s build_type=Debug")
+    with chdir("build"):
         command = []
         command.append(". ./conanbuild.sh")
         command.append("cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Debug")
@@ -68,8 +68,8 @@ else:
         assert "Debug configuration!" in cmd_out
 
     # Build for Release with shared libraries
-    run("conan install . --output-folder=cmake-build-release --build=missing -s build_type=Release --options=zlib/1.2.11:shared=True")
-    with chdir("cmake-build-release"):
+    run("conan install . --output-folder=build --build=missing -s build_type=Release --options=zlib/1.2.11:shared=True")
+    with chdir("build"):
         command = []
         command.append(". ./conanbuild.sh")
         command.append("cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release")

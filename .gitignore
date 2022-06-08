@@ -63,3 +63,4 @@ libraries/poco/md5/build/*
 .tox
 CMakeUserPresets.json
 **/generators/**
+**/build/**
