@@ -23,3 +23,9 @@
 ### [How to cross-compile your applications using Conan](tutorial/consuming_packages/cross_building/)
 
 - Learn how to cross-compile your applications with Conan. [Docs](https://docs.conan.io/en/2.0-alpha/tutorial/consuming_packages/cross_building_with_conan.html)
+
+### Creating packages
+
+### [How to create your first Conan package](tutorial/creating_packages/first_package/)
+
+- Learn how to create a simple "Hello World" Conan package using the ``conan new`` command. [Docs](https://docs.conan.io/en/2.0-alpha/tutorial/creating_packages/create_your_first_package.html)
