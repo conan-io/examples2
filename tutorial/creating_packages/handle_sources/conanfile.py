@@ -20,7 +20,10 @@ class helloRecipe(ConanFile):
     default_options = {"shared": False, "fPIC": True}
 
     def source(self):
-        get(self, "https://github.com/czoido/hello/archive/refs/heads/update_source.zip", strip_root=True)
+        # FIXME: this is just to start testing the PR, have to change this when we merge changes
+        # in hello repo
+        get(self, "https://github.com/czoido/hello/archive/refs/heads/update_source.zip", 
+                  strip_root=True)
 
     def config_options(self):
         if self.settings.os == "Windows":
