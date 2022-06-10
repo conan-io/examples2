@@ -52,6 +52,7 @@ features/workspace/build/*
 libraries/protobuf/serialization/build/*
 libraries/folly/basic/build/*
 libraries/poco/md5/build/*
+**/test_package/**
 
 # IDE
 .idea/*
