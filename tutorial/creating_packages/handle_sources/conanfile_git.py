@@ -1,6 +1,6 @@
 from conan import ConanFile
 from conan.tools.cmake import CMakeToolchain, CMake, cmake_layout
-from conan.tools.files import get
+from conan.tools.scm import Git
 
 
 class helloRecipe(ConanFile):
@@ -20,8 +20,8 @@ class helloRecipe(ConanFile):
     default_options = {"shared": False, "fPIC": True}
 
     def source(self):
-        get(self, "https://github.com/conan-io/libhello/archive/refs/heads/main.zip", 
-                  strip_root=True)
+        git = Git(self)
+        git.clone(url="https://github.com/conan-io/libhello.git", target=".")
 
     def config_options(self):
         if self.settings.os == "Windows":
