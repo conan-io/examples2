@@ -26,8 +26,8 @@ print("- Clone sources from git repo -")
 run("conan remove 'hello*' -f ")
 
 run("conan create conanfile_git.py")
-run("conan create . -s build_type=Debug")
-run("conan create . -o hello/1.0:shared=True")
+run("conan create conanfile_git.py -s build_type=Debug")
+run("conan create conanfile_git.py -o hello/1.0:shared=True")
 
 output = run("conan list recipes hello")
 
