@@ -29,3 +29,9 @@
 ### [How to create your first Conan package](tutorial/creating_packages/first_package/)
 
 - Learn how to create a simple "Hello World" Conan package using the ``conan new`` command. [Docs](https://docs.conan.io/en/2.0-alpha/tutorial/creating_packages/create_your_first_package.html)
+
+### [How to handle external sources in recipes](tutorial/creating_packages/handle_sources/)
+
+- Learn how to modify the previous example to bring source files form a zip file located
+  in a remote server or from a git repository.
+  [Docs](https://docs.conan.io/en/2.0-alpha/tutorial/creating_packages/handle_sources_in_packages.html)
