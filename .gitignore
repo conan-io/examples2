@@ -45,7 +45,6 @@ __pycache__/*
 build/*
 *.pyc
 tmp/
-**/test_package/**
 
 # IDE
 .idea/*
