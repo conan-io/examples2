@@ -7,4 +7,4 @@ print("- Download sources from zip file -")
 
 run("conan remove 'hello*' -f ")
 
-run("conan create .")
+run("conan create . --build=missing -s compiler.cppstd=gnu11")
