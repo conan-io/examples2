@@ -1,10 +1,13 @@
-from test.examples_tools import run, tmp_dir
+import platform
+from test.examples_tools import run
 
 print("- Handle external sources -")
 
 
 print("- Download sources from zip file -")
 
-run("conan remove 'hello*' -f ")
+run("conan remove 'hello/1.0*' -f ")
 
-run("conan create . --build=missing -s compiler.cppstd=gnu11")
+add_standard = "-s compiler.cppstd=11" if platform.system()!="Windows" else ""
+
+run(f"conan create . --build=missing {add_standard}")
