@@ -28,7 +28,7 @@ class helloRecipe(ConanFile):
     def source(self):
         git = Git(self)
         # FIXME: point to conan-io repo before merging
-        git.clone(url="https://github.com/czoido/libhello.git", target=".")
+        git.clone(url="https://github.com/conan-io/libhello.git", target=".")
         git.checkout("require_fmt")
 
     def requirements(self):
