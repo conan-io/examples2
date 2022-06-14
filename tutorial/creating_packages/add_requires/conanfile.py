@@ -1,6 +1,7 @@
 from conan import ConanFile
 from conan.tools.cmake import CMakeToolchain, CMake, cmake_layout
 from conan.tools.scm import Git
+from conan.tools.build import check_min_cppstd
 
 
 class helloRecipe(ConanFile):
@@ -20,6 +21,9 @@ class helloRecipe(ConanFile):
     default_options = {"shared": False, "fPIC": True}
 
     generators = "CMakeDeps", "CMakeToolchain"
+
+    def validate(self):
+        check_min_cppstd(self, "11")
 
     def source(self):
         git = Git(self)
