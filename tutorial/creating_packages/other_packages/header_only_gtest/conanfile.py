@@ -35,13 +35,3 @@ class SumConan(ConanFile):
 
     def package_id(self):
         self.info.header_only()
-        # Equivalent to
-        # self.settings.clear()
-        # self.options.clear()
-        # self.requires.clear()
-        # Or:
-        # del self.info.settings.os
-        # del self.info.settings.arch
-        # del self.info.settings.build_type
-        # del self.info.settings.compiler
-        # self.info.requires.clear()
