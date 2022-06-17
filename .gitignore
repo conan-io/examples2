@@ -42,16 +42,9 @@
 
 # Cache
 __pycache__/*
-test_package/__pycache__/*
-test_package/build/*
 build/*
 *.pyc
 tmp/
-features/package_development_flow/test_package/build/*
-features/workspace/build/*
-libraries/protobuf/serialization/build/*
-libraries/folly/basic/build/*
-libraries/poco/md5/build/*
 
 # IDE
 .idea/*
