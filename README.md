@@ -29,3 +29,11 @@
 ### [How to create your first Conan package](tutorial/creating_packages/first_package/)
 
 - Learn how to create a simple "Hello World" Conan package using the ``conan new`` command. [Docs](https://docs.conan.io/en/2.0-alpha/tutorial/creating_packages/create_your_first_package.html)
+
+### [How to create a Conan package for a header-only library](tutorial/creating_packages/header_only/)
+
+- Learn how to create a Conan package for a simple header-only library. [Docs](https://docs.conan.io/en/2.0-alpha/tutorial/creating_packages/other_types_of_packages/header_only_packages.html)
+
+### [How to create a Conan package for a header-only library but testing the library](tutorial/creating_packages/header_only_gtest/)
+
+- Learn how to create a Conan package for a simple header-only library that requires the settings to build a test. [Docs](https://docs.conan.io/en/2.0-alpha/tutorial/creating_packages/other_types_of_packages/header_only_packages.html#header-only-library-with-tests)
