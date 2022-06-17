@@ -34,4 +34,4 @@ class SumConan(ConanFile):
         copy(self, "*.h", self.source_folder, self.package_folder)
 
     def package_id(self):
-        self.info.header_only()
+        self.info.clear()
