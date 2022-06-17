@@ -8,7 +8,7 @@ class CompressorRecipe(ConanFile):
     generators = "CMakeToolchain", "CMakeDeps"
 
     def validate(self):
-        if self.settings.os == "Macos" and self.settings.arch == "armv8":
+        if self.info.settings.os == "Macos" and self.info.settings.arch == "armv8":
             raise ConanInvalidConfiguration("ARM v8 not supported")
 
     def requirements(self):
