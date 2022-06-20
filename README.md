@@ -35,3 +35,9 @@
 - Learn how to modify the previous example to bring source files form a zip file located
   in a remote server or from a git repository.
   [Docs](https://docs.conan.io/en/2.0-alpha/tutorial/creating_packages/handle_sources_in_packages.html)
+
+### [How to create a Conan package for a header-only library](tutorial/creating_packages/header_only/)
+
+- Learn how to create a Conan package for a simple header-only library. [Docs](https://docs.conan.io/en/2.0-alpha/tutorial/creating_packages/other_types_of_packages/header_only_packages.html)
+
+### [How to create a Conan package for a header-only library but testing the library](tutorial/creating_packages/header_only_gtest/)
