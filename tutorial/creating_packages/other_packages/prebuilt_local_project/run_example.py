@@ -1,10 +1,7 @@
 import os
 import platform
-import shutil
 
 from test.examples_tools import run, chdir
-
-shutil.rmtree("build")
 
 # Let's generate and package a Release library
 run("conan install . -s build_type=Release")
@@ -47,7 +44,6 @@ assert ("Packaged 1 '.a' file: libfoo.a" in cmd_out or "Packaged 1 '.lib' file: 
 cmd_out = run("conan test test_package/conanfile.py foo/0.1 -s build_type=Debug")
 assert "foo/0.1: Hello World Debug!" in cmd_out
 
-shutil.rmtree("build")
 
 # Using CMakePresets, needed CMake > 3.23
 if platform.system() == "Darwin":
