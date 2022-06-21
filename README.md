@@ -41,3 +41,18 @@
 - Learn how to create a Conan package for a simple header-only library. [Docs](https://docs.conan.io/en/2.0-alpha/tutorial/creating_packages/other_types_of_packages/header_only_packages.html)
 
 ### [How to create a Conan package for a header-only library but testing the library](tutorial/creating_packages/header_only_gtest/)
+
+- Learn how to create a Conan package for a simple header-only library that needs the settings. [Docs](https://docs.conan.io/en/2.0-alpha/tutorial/creating_packages/other_types_of_packages/header_only_packages.html#header-only-library-with-tests)
+
+### [How to create a Conan package for binaries built locally](tutorial/creating_packages/prebuilt_local_project/)
+
+- Learn how to create a Conan package when we are building our project with our IDE and we want to directly package 
+  the binaries without calling "conan create". [Docs](https://docs.conan.io/en/2.0-alpha/tutorial/creating_packages/other_types_of_packages/package_prebuilt_binaries.html#locally-building-binaries)
+
+### [How to create a Conan package for prebuilt binaries](tutorial/creating_packages/prebuilt_binaries/)
+
+- Learn how to create a Conan package when we have prebuilt libraries (like third-party vendors). [Docs](https://docs.conan.io/en/2.0-alpha/tutorial/creating_packages/other_types_of_packages/package_prebuilt_binaries.html#packaging-already-pre-built-binaries)
+
+### [How to create a Conan package for prebuilt binaries in a remote](tutorial/creating_packages/prebuilt_remote_binaries/)
+
+- Learn how to create a Conan package when we have prebuilt libraries located in a remote repository. [Docs](https://docs.conan.io/en/2.0-alpha/tutorial/creating_packages/other_types_of_packages/package_prebuilt_binaries.html#downloading-and-packaging-pre-built-binaries)

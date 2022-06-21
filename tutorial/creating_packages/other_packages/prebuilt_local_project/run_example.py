@@ -2,6 +2,7 @@ import os
 
 from test.examples_tools import run, chdir
 
+run("rm -rf build")
 
 # Let's generate and package a Release library
 run("conan install . -s build_type=Release")
@@ -57,4 +58,4 @@ cmd_out = run("conan test test_package/conanfile.py foo/0.1 -s build_type=Debug"
 assert "foo/0.1: Hello World Debug!" in cmd_out
 
 
-run("rm -rf build")
+

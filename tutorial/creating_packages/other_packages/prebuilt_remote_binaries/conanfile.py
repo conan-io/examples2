@@ -1,25 +1,21 @@
 import os
-from conan.tools.files import download, copy
+from conan.tools.files import get, copy
 from conan import ConanFile
 
 
 class HelloConan(ConanFile):
-    name = "hello"
+    name = "foo"
     version = "0.1"
-    settings = "os", "compiler", "build_type", "arch"
+    settings = "os", "arch"
 
     def build(self):
-        base_url = "https://raw.githubusercontent.com/lasote/examples2/feature/prebuilt_binaries/tutorial" \
-                   "/creating_packages/other_packages/prebuilt_binaries/vendor_foo_library"
+        base_url = "https://github.com/conan-io/examples2/raw/assets/tutorial/other_packages/" \
+                   "prebuilt_remote_binaries/vendor_foo_library"
 
         _os = str(self.settings.os).lower()
         _arch = str(self.settings.arch).lower()
-        libname = "libfoo.a" if _os != "windows" else "foo.lib"
-        url = "{}/{}/{}/{}".format(base_url, _os, _arch, libname)
-        download(self, url, libname)
-
-        url = "{}/{}/{}/include/foo.h".format(base_url, _os, _arch)
-        download(self, url, "foo.h")
+        url = "{}/{}/{}/library.tgz".format(base_url, _os, _arch)
+        get(self, url)
 
     def package(self):
         copy(self, "*.h", self.build_folder, os.path.join(self.package_folder, "include"))
