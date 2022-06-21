@@ -17,11 +17,11 @@ with chdir("build/Release"):
 
 cmd_out = run("conan export-pkg . -s build_type=Release")
 
-assert "Packaged 1 '.h' file: foo.h" in cmd_out
-assert ("Packaged 1 '.a' file: libfoo.a" in cmd_out or "Packaged 1 '.lib' file: foo.lib" in cmd_out)
+assert "Packaged 1 '.h' file: hello.h" in cmd_out
+assert ("Packaged 1 '.a' file: libhello.a" in cmd_out or "Packaged 1 '.lib' file: hello.lib" in cmd_out)
 
-cmd_out = run("conan test test_package/conanfile.py foo/0.1 -s build_type=Release")
-assert "foo/0.1: Hello World Release!" in cmd_out
+cmd_out = run("conan test test_package/conanfile.py hello/0.1 -s build_type=Release")
+assert "hello/0.1: Hello World Release!" in cmd_out
 
 
 # Let's generate and package a Debug library
@@ -38,11 +38,11 @@ with chdir("build/Debug"):
 
 cmd_out = run("conan export-pkg . -s build_type=Debug")
 
-assert "Packaged 1 '.h' file: foo.h" in cmd_out
-assert ("Packaged 1 '.a' file: libfoo.a" in cmd_out or "Packaged 1 '.lib' file: foo.lib" in cmd_out)
+assert "Packaged 1 '.h' file: hello.h" in cmd_out
+assert ("Packaged 1 '.a' file: libhello.a" in cmd_out or "Packaged 1 '.lib' file: hello.lib" in cmd_out)
 
-cmd_out = run("conan test test_package/conanfile.py foo/0.1 -s build_type=Debug")
-assert "foo/0.1: Hello World Debug!" in cmd_out
+cmd_out = run("conan test test_package/conanfile.py hello/0.1 -s build_type=Debug")
+assert "hello/0.1: Hello World Debug!" in cmd_out
 
 
 # Using CMakePresets, needed CMake > 3.23
@@ -53,16 +53,16 @@ if platform.system() == "Darwin":
     run("cmake --build --preset release")
 
     run("conan export-pkg .")
-    cmd_out = run("conan test test_package/conanfile.py foo/0.1")
-    assert "foo/0.1: Hello World Release!" in cmd_out
+    cmd_out = run("conan test test_package/conanfile.py hello/0.1")
+    assert "hello/0.1: Hello World Release!" in cmd_out
 
     run("conan install . -s build_type=Debug")
     run("cmake . --preset debug")
     run("cmake --build --preset debug")
 
     run("conan export-pkg . -s build_type=Debug")
-    cmd_out = run("conan test test_package/conanfile.py foo/0.1 -s build_type=Debug")
-    assert "foo/0.1: Hello World Debug!" in cmd_out
+    cmd_out = run("conan test test_package/conanfile.py hello/0.1 -s build_type=Debug")
+    assert "hello/0.1: Hello World Debug!" in cmd_out
 
 
 

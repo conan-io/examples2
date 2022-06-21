@@ -4,8 +4,8 @@ from conan.tools.files import copy
 from conan.tools.cmake import cmake_layout
 
 
-class fooRecipe(ConanFile):
-    name = "foo"
+class helloRecipe(ConanFile):
+    name = "hello"
     version = "0.1"
     settings = "os", "compiler", "build_type", "arch"
     generators = "CMakeToolchain", "CMakeDeps"
@@ -21,4 +21,4 @@ class fooRecipe(ConanFile):
         copy(self, "*.a", local_lib_folder, os.path.join(self.package_folder, "lib"), keep_path=False)
 
     def package_info(self):
-        self.cpp_info.libs = ["foo"]
+        self.cpp_info.libs = ["hello"]

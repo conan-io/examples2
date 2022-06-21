@@ -4,17 +4,16 @@ from conan import ConanFile
 
 
 class HelloConan(ConanFile):
-    name = "foo"
+    name = "hello"
     version = "0.1"
     settings = "os", "arch"
 
     def build(self):
-        base_url = "https://github.com/conan-io/examples2/raw/assets/tutorial/other_packages/" \
-                   "prebuilt_remote_binaries/vendor_foo_library"
+        base_url = "https://github.com/conan-io/libhello/releases/download/0.0.1/"
 
-        _os = str(self.settings.os).lower()
+        _os = {"Windows": "win", "Linux": "linux", "Macos": "macos"}.get(str(self.settings.os))
         _arch = str(self.settings.arch).lower()
-        url = "{}/{}/{}/library.tgz".format(base_url, _os, _arch)
+        url = "{}/{}_{}.tgz".format(base_url, _os, _arch)
         get(self, url)
 
     def package(self):
@@ -23,4 +22,4 @@ class HelloConan(ConanFile):
         copy(self, "*.a", self.build_folder, os.path.join(self.package_folder, "lib"))
 
     def package_info(self):
-        self.cpp_info.libs = ["foo"]
+        self.cpp_info.libs = ["hello"]
