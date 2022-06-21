@@ -1,16 +1,22 @@
 import os
+import platform
+import shutil
 
 from test.examples_tools import run, chdir
 
-run("rm -rf build")
+shutil.rmtree("build")
 
 # Let's generate and package a Release library
 run("conan install . -s build_type=Release")
 os.mkdir("build/Release")
 
 with chdir("build/Release"):
-    run("cmake ../.. -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../generators/conan_toolchain.cmake")
-    run("cmake --build .")
+    if platform.system() != "Windows":
+        run("cmake ../.. -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../generators/conan_toolchain.cmake")
+        run("cmake --build .")
+    else:
+        run("cmake ../.. -DCMAKE_TOOLCHAIN_FILE=../generators/conan_toolchain.cmake")
+        run("cmake --build . --config Release")
 
 cmd_out = run("conan export-pkg . -s build_type=Release")
 
@@ -26,8 +32,12 @@ run("conan install . -s build_type=Debug")
 os.mkdir("build/Debug")
 
 with chdir("build/Debug"):
-    run("cmake ../.. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=../generators/conan_toolchain.cmake")
-    run("cmake --build .")
+    if platform.system() != "Windows":
+        run("cmake ../.. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=../generators/conan_toolchain.cmake")
+        run("cmake --build .")
+    else:
+        run("cmake ../.. -DCMAKE_TOOLCHAIN_FILE=../generators/conan_toolchain.cmake")
+        run("cmake --build . --config Debug")
 
 cmd_out = run("conan export-pkg . -s build_type=Debug")
 
@@ -37,25 +47,26 @@ assert ("Packaged 1 '.a' file: libfoo.a" in cmd_out or "Packaged 1 '.lib' file: 
 cmd_out = run("conan test test_package/conanfile.py foo/0.1 -s build_type=Debug")
 assert "foo/0.1: Hello World Debug!" in cmd_out
 
-run("rm -rf build")
+shutil.rmtree("build")
 
-# Using CMakePresets
+# Using CMakePresets, needed CMake > 3.23
+if platform.system() == "Darwin":
 
-run("conan install .")
-run("cmake . --preset release")
-run("cmake --build --preset release")
+    run("conan install .")
+    run("cmake . --preset release")
+    run("cmake --build --preset release")
 
-run("conan export-pkg .")
-cmd_out = run("conan test test_package/conanfile.py foo/0.1")
-assert "foo/0.1: Hello World Release!" in cmd_out
+    run("conan export-pkg .")
+    cmd_out = run("conan test test_package/conanfile.py foo/0.1")
+    assert "foo/0.1: Hello World Release!" in cmd_out
 
-run("conan install . -s build_type=Debug")
-run("cmake . --preset debug")
-run("cmake --build --preset debug")
+    run("conan install . -s build_type=Debug")
+    run("cmake . --preset debug")
+    run("cmake --build --preset debug")
 
-run("conan export-pkg . -s build_type=Debug")
-cmd_out = run("conan test test_package/conanfile.py foo/0.1 -s build_type=Debug")
-assert "foo/0.1: Hello World Debug!" in cmd_out
+    run("conan export-pkg . -s build_type=Debug")
+    cmd_out = run("conan test test_package/conanfile.py foo/0.1 -s build_type=Debug")
+    assert "foo/0.1: Hello World Debug!" in cmd_out
 
 
 
