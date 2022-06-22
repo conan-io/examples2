@@ -9,12 +9,13 @@ run("conan new cmake_lib -d name=hello -d version=0.1 --force")
 run("conan install . -s build_type=Release")
 os.mkdir("build/Release")
 
-with chdir("build/Release"):
-    if platform.system() != "Windows":
+if platform.system() != "Windows":
+    with chdir("build/Release"):
         run("cmake ../.. -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../generators/conan_toolchain.cmake")
         run("cmake --build .")
-    else:
-        run("cmake ../.. -DCMAKE_TOOLCHAIN_FILE=../generators/conan_toolchain.cmake")
+else:
+    with chdir("build"):
+        run("cmake .. -DCMAKE_TOOLCHAIN_FILE=generators/conan_toolchain.cmake")
         run("cmake --build . --config Release")
 
 cmd_out = run("conan export-pkg . -s build_type=Release")
@@ -30,12 +31,13 @@ assert "hello/0.1: Hello World Release!" in cmd_out
 run("conan install . -s build_type=Debug")
 os.mkdir("build/Debug")
 
-with chdir("build/Debug"):
-    if platform.system() != "Windows":
+if platform.system() != "Windows":
+    with chdir("build/Debug"):
         run("cmake ../.. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=../generators/conan_toolchain.cmake")
         run("cmake --build .")
-    else:
-        run("cmake ../.. -DCMAKE_TOOLCHAIN_FILE=../generators/conan_toolchain.cmake")
+else:
+    with chdir("build"):
+        run("cmake .. -DCMAKE_TOOLCHAIN_FILE=generators/conan_toolchain.cmake")
         run("cmake --build . --config Debug")
 
 cmd_out = run("conan export-pkg . -s build_type=Debug")
