@@ -1,7 +1,12 @@
 import os
 import platform
+import shutil
 
 from test.examples_tools import run, chdir
+
+
+run("conan new cmake_lib -d name=hello -d version=1.0")
+shutil.copy("conanfile_modified.py", "conanfile.py")
 
 # Let's generate and package a Release library
 run("conan install . -s build_type=Release")
