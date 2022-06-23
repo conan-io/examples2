@@ -17,13 +17,20 @@ class helloRecipe(ConanFile):
 
     # Binary configuration
     settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [True, False], "fPIC": [True, False]}
-    default_options = {"shared": False, "fPIC": True}
+
+    options = {"shared": [True, False], 
+               "fPIC": [True, False],
+               "with_fmt": [True, False]}
+
+    default_options = {"shared": False, 
+                       "fPIC": True,
+                       "with_fmt": True}
 
     generators = "CMakeDeps"
 
     def validate(self):
-        check_min_cppstd(self, "11")
+        if self.info.options.with_fmt:
+            check_min_cppstd(self, "11")
 
     def source(self):
         git = Git(self)
@@ -32,7 +39,8 @@ class helloRecipe(ConanFile):
         git.checkout("optional_fmt")
 
     def requirements(self):
-        self.requires("fmt/8.1.1")
+        if self.options.with_fmt:
+            self.requires("fmt/8.1.1")
 
     def config_options(self):
         if self.settings.os == "Windows":
@@ -43,7 +51,8 @@ class helloRecipe(ConanFile):
 
     def generate(self):
         tc = CMakeToolchain(self)
-
+        if self.options.with_fmt:
+            tc.variables["WITH_FMT"] = True
         tc.generate()
 
     def build(self):
