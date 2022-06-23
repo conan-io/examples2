@@ -13,4 +13,4 @@ class MyConsumer(ConanFile):
             self.run("echo MYVAR=$MYVAR")
         else:
             self.run("say_hello.bat")
-            self.run("echo MYVAR=%MYVAR%")
+            self.run("set MYVAR")
