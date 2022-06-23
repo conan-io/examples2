@@ -34,8 +34,7 @@ class helloRecipe(ConanFile):
 
     def source(self):
         git = Git(self)
-        # TODO: change the repo to conan-io
-        git.clone(url="https://github.com/czoido/libhello.git", target=".")
+        git.clone(url="https://github.com/conan-io/libhello.git", target=".")
         git.checkout("optional_fmt")
 
     def requirements(self):
