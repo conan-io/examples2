@@ -110,7 +110,8 @@ node('Linux') {
                     _examples = _changed_examples.readLines()
                 }
                 else {
-                    echo "No examples changed."
+                    echo "No examples changed. Running all examples."
+                    _examples = sh(script: 'find . -name run_example.*', returnStdout: true).readLines()
                 }
             }
             for (example in _examples) {
