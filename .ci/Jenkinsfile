@@ -11,9 +11,10 @@ void cancelPrevious() {
 LINUX_CONTAINER = 'conanio/ci-functional'
 
 def envInside(Map ctxt, Closure closure) {
+    String randDir = UUID.randomUUID().toString()
     String venvDirectory = isUnix() ? "${pwd()}/conanenv" : "${pwd()}\\conanenv"
     String binPath = isUnix() ? "$venvDirectory/bin/" : "$venvDirectory\\Scripts\\"
-    String conanHome = isUnix() ? "${pwd()}/.conan" : "${pwd()}\\.conan"
+    String conanHome = isUnix() ? "${pwd()}/${randDir}/.conan" : "${pwd()}\\${randDir}\\.conan"
     String pythonpath = "${env.WORKSPACE}"
     String cmakePath = isUnix() ? "/Users/jenkins/cmake/cmake-3.23.1/bin" : "C:\\cmake\\cmake-3.23.1-win64-x64\\bin"
     withEnv(["PATH+EXTRA=${binPath}", "PATH+CMAKE=${cmakePath}", "CONAN_HOME=${conanHome}", "PYTHONPATH=${pythonpath}"]) {
@@ -43,9 +44,9 @@ String pipConanBranchInstall(String branch, String fork='conan-io') {
     return "-e git+https://github.com/${fork}/conan.git@${branch}#egg=conan"
 }
 
-// Run on develop2 and latest alpha
+// Run on develop2 and latest pre-release version
 List<Map> getBranchesInstalls() {
-    def branches = [['name': 'latest Conan 2.0-alpha', 'branchInstall': 'conan --pre']]
+    def branches = [['name': 'latest Conan 2.0 pre-release', 'branchInstall': 'conan --pre']]
     branches.add(0, ['name': 'develop Conan 2.0', 'branchInstall': pipConanBranchInstall('develop2')])
     return branches
 }
@@ -68,12 +69,13 @@ def runExamples(Map ctxt) {
     try {
         checkout scm
         envCreate(ctxt)
-        envInside(ctxt) {
-            ctxt.shFunction("cmake --version")
-            ctxt.shFunction('conan profile detect --force')
-            ctxt.shFunction('conan remote remove conancenter')
-            ctxt.shFunction("conan remote add conancenterv2 ${ART_URL}")
-            for (example in ctxt.examples) {
+        for (example in ctxt.examples) {
+            envInside(ctxt) {
+                ctxt.shFunction("cmake --version")
+                ctxt.shFunction('conan profile detect --force')
+                ctxt.shFunction('conan remote remove conancenter')
+                ctxt.shFunction("conan remote add conancenterv2 ${ART_URL}")
+                echo "Running examples with CONAN_HOME: ${env.CONAN_HOME}"
                 runExample(ctxt, example)
             }
         }
@@ -108,7 +110,8 @@ node('Linux') {
                     _examples = _changed_examples.readLines()
                 }
                 else {
-                    echo "No examples changed."
+                    echo "No examples changed. Running all examples."
+                    _examples = sh(script: 'find . -name run_example.*', returnStdout: true).readLines()
                 }
             }
             for (example in _examples) {
