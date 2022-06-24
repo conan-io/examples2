@@ -37,7 +37,6 @@ install_clean_command()
 # 1. Check the custom command is appearing in conan help
 output = run("conan -h")
 assert "Custom commands\nclean" in output.replace("\r\n", "\n")
-
 # 2. Create several packages
 with tmp_dir("clean_hello"):
     # Library (changing PREV each time)
@@ -56,14 +55,10 @@ with tmp_dir("clean_other"):
     run("conan create .")  # different RREV (this is the latest one)
 
 # 3. Run "conan clean" command: Cleaning all the non-latest RREVs (and its packages) and PREVs
-output = run("conan clean --force")
-assert "Keeping latest PREV: clean_hello/1.0#" in output
-assert "Keeping latest PREV: clean_other/1.0#" in output
-assert "Removed PREV: clean_hello/1.0#" in output  # removing earlier PREV from clean_hello
-assert "Removed RREV: clean_other/1.0#" in output  # removing earlier RREV from clean_other
+output = run("conan clean")
+assert "Removed package revision: clean_hello/1.0#" in output  # removing earlier PREV from clean_hello
+assert "Removed recipe revision: clean_other/1.0#" in output  # removing earlier RREV from clean_other
 # Now, it should have removed nothing
-output = run("conan clean --force")
-assert "Keeping latest PREV: clean_hello/1.0#" in output
-assert "Keeping latest PREV: clean_other/1.0#" in output
-assert "Removed RREV: clean_other/1.0#" not in output
-assert "Removed PREV: clean_hello/1.0#" not in output
+output = run("conan clean")
+assert "Removed recipe revision: clean_other/1.0#" not in output
+assert "Removed package revision: clean_hello/1.0#" not in output
