@@ -1,12 +1,7 @@
 import platform
 from test.examples_tools import run
 
-print("- Handle external sources -")
-
-
-print("- Download sources from zip file -")
-
-run("conan remove 'hello/1.0*' -f ")
+print("- Add requirements to packages -")
 
 add_standard = "-s compiler.cppstd=11" if platform.system()!="Windows" else ""
 

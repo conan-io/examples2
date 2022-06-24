@@ -45,6 +45,11 @@
 - Learn how to add requirements to a Conan package.
   [Docs](https://docs.conan.io/en/2.0/tutorial/creating_packages/add_dependencies_to_packages.html)
 
+#### [How to use the generate() method to prepare the Conan package build](tutorial/creating_packages/preparing_the_build/)
+
+- Learn how to configure the toolchain in the generate() method.
+  [Docs](https://docs.conan.io/en/2.0/tutorial/creating_packages/preparing_the_build.html)
+
 ### Creating packages: other types of packages
 
 #### [How to create a Conan package for a header-only library](tutorial/creating_packages/other_packages/header_only/)
