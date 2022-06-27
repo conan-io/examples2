@@ -39,13 +39,12 @@ def clean(conan_api: ConanAPIV2, parser, *args):
         for rrev in all_rrevs:
             if rrev != latest_rrev:
                 conan_api.remove.recipe(rrev, remote=remote)
-                out.writeln(f"Removed recipe revision: {rrev.repr_notime()} [{output_remote}] "
-                            f"and all package revisions", fg=removed_color)
+                out.writeln(f"Removed recipe revision: {rrev.repr_notime()} "
+                            f"and all its package revisions [{output_remote}]", fg=removed_color)
             else:
                 all_prevs = conan_api.search.package_revisions(f"{rrev.repr_notime()}:*#*", remote=remote)
                 latest_prev = all_prevs[0] if all_prevs else None
                 for prev in all_prevs:
                     if prev != latest_prev:
                         conan_api.remove.package(prev, remote=remote)
-                        out.writeln(f"Removed package revision: {prev.repr_notime()} [{output_remote}] "
-                                    f"from recipe revision: {rrev.repr_notime()} [{output_remote}]", fg=removed_color)
+                        out.writeln(f"Removed package revision: {prev.repr_notime()} [{output_remote}]", fg=removed_color)
