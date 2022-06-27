@@ -1,5 +1,4 @@
 from conan import ConanFile
-from conan.tools.build import cross_building
 
 
 class secure_scannerTestConan(ConanFile):
