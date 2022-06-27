@@ -6,7 +6,7 @@ class secure_scannerTestConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
 
     def requirements(self):
-        self.test_requires(self.tested_reference_str)
+        self.tool_requires(self.tested_reference_str)
 
     def test(self):
         if not cross_building(self):
