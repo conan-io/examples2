@@ -9,6 +9,5 @@ class secure_scannerTestConan(ConanFile):
         self.tool_requires(self.tested_reference_str)
 
     def test(self):
-        if not cross_building(self):
-            extension = ".exe" if self.settings_build.os == "Windows" else ""
-            self.run("secure_scanner{} mypath".format(extension))
+        extension = ".exe" if self.settings_build.os == "Windows" else ""
+        self.run("secure_scanner{} mypath".format(extension))

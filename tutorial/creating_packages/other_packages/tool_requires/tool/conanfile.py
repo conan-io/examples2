@@ -28,7 +28,9 @@ class secure_scannerRecipe(ConanFile):
         cmake.build()
 
     def package(self):
-        copy(self, "secure_scanner*", self.build_folder, os.path.join(self.package_folder, "bin"), keep_path=False)
+        extension = ".exe" if self.settings_build.os == "Windows" else ""
+        copy(self, "*secure_scanner{}".format(extension),
+             self.build_folder, os.path.join(self.package_folder, "bin"), keep_path=False)
 
     def package_info(self):
         self.buildenv_info.define("MY_VAR", "23")
