@@ -1,1 +1,0 @@
-. "/Users/luism/workspace/examples2/tutorial/creating_packages/other_packages/tool_requires/consumer/conanbuildenv-release-x86_64.sh"
