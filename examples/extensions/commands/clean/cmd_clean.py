@@ -1,6 +1,7 @@
 from conan.api.conan_api import ConanAPIV2
 from conans.cli.command import conan_command, OnceArgument
 from conans.cli.output import Color, ConanOutput
+from conans.client.userio import UserInput
 
 recipe_color = Color.BRIGHT_BLUE
 removed_color = Color.BRIGHT_YELLOW
@@ -14,12 +15,23 @@ def clean(conan_api: ConanAPIV2, parser, *args):
     """
     parser.add_argument('-r', '--remote', action=OnceArgument,
                         help='Will remove from the specified remote')
+    parser.add_argument('--force', default=False, action='store_true',
+                        help='Remove without requesting a confirmation')
     args = parser.parse_args(*args)
+
+    def confirmation(message):
+        return args.force or ui.request_boolean(message)
+
+    ui = UserInput(non_interactive=False)
     out = ConanOutput()
     remote = conan_api.remotes.get(args.remote) if args.remote else None
     output_remote = remote or "Local cache"
+
     # Getting all the recipes
     recipes = conan_api.search.recipes("*/*", remote=remote)
+    if recipes and not confirmation("Do you want to remove all the recipes revisions and their packages ones, "
+                                    "except the latest package revision from the latest recipe one?"):
+        return
     for recipe in recipes:
         out.writeln(f"{str(recipe)}", fg=recipe_color)
         all_rrevs = conan_api.list.recipe_revisions(recipe, remote=remote)

@@ -55,10 +55,10 @@ with tmp_dir("clean_other"):
     run("conan create .")  # different RREV (this is the latest one)
 
 # 3. Run "conan clean" command: Cleaning all the non-latest RREVs (and its packages) and PREVs
-output = run("conan clean")
+output = run("conan clean --force")
 assert "Removed package revision: clean_hello/1.0#" in output  # removing earlier PREV from clean_hello
 assert "Removed recipe revision: clean_other/1.0#" in output  # removing earlier RREV from clean_other
 # Now, it should have removed nothing
-output = run("conan clean")
+output = run("conan clean --force")
 assert "Removed recipe revision: clean_other/1.0#" not in output
 assert "Removed package revision: clean_hello/1.0#" not in output
