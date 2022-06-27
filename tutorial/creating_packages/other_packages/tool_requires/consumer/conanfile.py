@@ -12,5 +12,5 @@ class MyConsumer(ConanFile):
         if self.settings_build.os != "Windows":
             self.run("echo MY_VAR=$MY_VAR")
         else:
-            self.run("echo MY_VAR=%MY_VAR%")
+            self.run("set MY_VAR")
 
