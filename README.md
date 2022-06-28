@@ -72,3 +72,11 @@
 #### [How to create a Conan package for prebuilt binaries in a remote](tutorial/creating_packages/other_packages/prebuilt_remote_binaries/)
 
 - Learn how to create a Conan package when we have prebuilt libraries located in a remote repository. [Docs](https://docs.conan.io/en/2.0/tutorial/creating_packages/other_types_of_packages/package_prebuilt_binaries.html#downloading-and-packaging-pre-built-binaries)
+
+## Examples
+
+### [Use custom commands in your Conan CLI](examples/extensions/commands/)
+
+- Learn how to create custom commands in Conan. [Docs](https://docs.conan.io/en/2.0/reference/commands/custom_commands.html)
+
+    * ``conan clean`` [command](examples/extensions/commands/clean/cmd_clean.py): Deletes (from local cache or remotes) all recipe and package revisions but the latest package revision from the latest recipe revision. [Docs](https://docs.conan.io/en/2.0/examples/extensions/commands/clean/custom_command_clean_revisions.html)
