@@ -72,6 +72,6 @@
 
 ### [Use custom commands in your Conan CLI](examples/extensions/commands/)
 
-- Learn how to create custom commands in Conan. [Docs](https://docs.conan.io/en/2.0-alpha/reference/commands/custom_commands.html)
+- Learn how to create custom commands in Conan. [Docs](https://docs.conan.io/en/2.0/reference/commands/custom_commands.html)
 
-    * ``conan clean`` [command](examples/extensions/commands/clean/cmd_clean.py): Deletes (from local cache or remotes) all recipe and package revisions but the latest package revision from the latest recipe revision. [Docs](https://docs.conan.io/en/2.0-alpha/examples/extensions/commands/clean/custom_command_clean_revisions.html)
+    * ``conan clean`` [command](examples/extensions/commands/clean/cmd_clean.py): Deletes (from local cache or remotes) all recipe and package revisions but the latest package revision from the latest recipe revision. [Docs](https://docs.conan.io/en/2.0/examples/extensions/commands/clean/custom_command_clean_revisions.html)
