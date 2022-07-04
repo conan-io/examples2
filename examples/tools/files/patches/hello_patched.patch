@@ -1,0 +1,14 @@
+--- a/src/hello.cpp
++++ b/src/hello.cpp
+@@ -3,9 +3,9 @@
+ 
+ void hello(){
+     #ifdef NDEBUG
+-    std::cout << "hello/1.0: Hello World Release!\n";
++    std::cout << "hello/1.0: Hello Patched World Release!\n";
+     #else
+-    std::cout << "hello/1.0: Hello World Debug!\n";
++    std::cout << "hello/1.0: Hello Patched World Debug!\n";
+     #endif
+ 
+     // ARCHITECTURES
