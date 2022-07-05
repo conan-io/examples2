@@ -1,0 +1,3 @@
+ patches:
+    "1.0":
+      - patch_file: "hello_patched.patch"
