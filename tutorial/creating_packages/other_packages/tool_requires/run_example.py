@@ -12,7 +12,6 @@ with chdir("consumer"):
 
 
 with chdir("tool"):
-    cmd_out = run('conan create conanfile_package_id.py')
-    assert "Package '82339cc4d6db7990c1830d274cd12e7c91ab18a1' created" in cmd_out
-    cmd_out = run('conan create conanfile_package_id.py -s build_type=Debug')
-    assert "Package '82339cc4d6db7990c1830d274cd12e7c91ab18a1' created" in cmd_out
+    run('conan create conanfile_package_id.py')
+    run('conan create conanfile_package_id.py -s build_type=Debug --build missing')
+    assert "secure_scanner/1.0: Already installed!" in cmd_out
