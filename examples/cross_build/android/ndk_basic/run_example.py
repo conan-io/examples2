@@ -8,7 +8,6 @@ print("- Use the Android NDK to cross-build a package -")
 
 
 profile = """
-include(default)
 
 [settings]
 os=Android
@@ -18,6 +17,7 @@ compiler=clang
 compiler.version=12
 compiler.libcxx=c++_static
 compiler.cppstd=14
+build_type=Debug
 
 [conf]
 tools.android:ndk_path={}
