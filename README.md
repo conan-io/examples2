@@ -80,3 +80,7 @@
 - Learn how to create custom commands in Conan. [Docs](https://docs.conan.io/en/2.0/reference/commands/custom_commands.html)
 
     * ``conan clean`` [command](examples/extensions/commands/clean/cmd_clean.py): Deletes (from local cache or remotes) all recipe and package revisions but the latest package revision from the latest recipe revision. [Docs](https://docs.conan.io/en/2.0/examples/extensions/commands/clean/custom_command_clean_revisions.html)
+
+### [Use Android NDK to cross-build](examples/cross_build/android/ndk_basic)
+
+- Learn how to cross-build packages for Android. [Docs](https://docs.conan.io/en/2.0/examples/cross_build/android.html)
