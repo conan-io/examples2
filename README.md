@@ -50,6 +50,11 @@
 - Learn how to configure the toolchain in the generate() method.
   [Docs](https://docs.conan.io/en/2.0/tutorial/creating_packages/preparing_the_build.html)
 
+#### [Configure settings and options in recipes](tutorial/creating_packages/configure_options_settings/)
+
+- Learn how to configure settings and options and how Conan models binary compatibility.
+  [Docs](https://docs.conan.io/en/2.0/tutorial/creating_packages/configure_options_settings.html)
+
 ### Creating packages: other types of packages
 
 #### [How to create a Conan package for a header-only library](tutorial/creating_packages/other_packages/header_only/)
