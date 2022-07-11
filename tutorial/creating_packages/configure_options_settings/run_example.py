@@ -5,7 +5,7 @@ print("- Configure settings and options in recipes -")
 
 add_standard = "-s compiler.cppstd=11" if platform.system()!="Windows" else ""
 
-ret_error = True if platform.system()!="Windows" else False
+ret_error = platform.system()=="Windows"
 
 out = run(f"conan create . --build=missing {add_standard} -s build_type=Release -o shared=True -o fPIC=True -tf=None", error=ret_error)
 
