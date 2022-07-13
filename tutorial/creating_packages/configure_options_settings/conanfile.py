@@ -32,6 +32,14 @@ class helloRecipe(ConanFile):
         if self.info.options.with_fmt:
             check_min_cppstd(self, "11")
 
+    def config_options(self):
+        if self.settings.os == "Windows":
+            del self.options.fPIC
+
+    def configure(self):
+        if self.options.shared:
+            del self.options.fPIC
+
     def source(self):
         git = Git(self)
         git.clone(url="https://github.com/conan-io/libhello.git", target=".")
@@ -42,10 +50,6 @@ class helloRecipe(ConanFile):
     def requirements(self):
         if self.options.with_fmt:
             self.requires("fmt/8.1.1")
-
-    def config_options(self):
-        if self.settings.os == "Windows":
-            del self.options.fPIC
 
     def layout(self):
         cmake_layout(self)
