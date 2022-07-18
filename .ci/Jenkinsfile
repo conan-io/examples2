@@ -100,20 +100,7 @@ node('Linux') {
         List<String> examples = []
         stage('Find examples') {
             checkout scm
-            def _examples = []
-            if (isMain()) {
-                _examples = sh(script: 'find . -name run_example.*', returnStdout: true).readLines()
-            }
-            else {
-                _changed_examples = sh(script: 'git diff --name-only origin/main --diff-filter=AMR | grep run_example.* || true', returnStdout: true)
-                if (!_changed_examples.isEmpty()) {
-                    _examples = _changed_examples.readLines()
-                }
-                else {
-                    echo "No examples changed. Running all examples."
-                    _examples = sh(script: 'find . -name run_example.*', returnStdout: true).readLines()
-                }
-            }
+            def _examples = sh(script: 'find . -name run_example.*', returnStdout: true).readLines()
             for (example in _examples) {
                 if (example.contains(".sh") || example.contains(".bat") || example.contains(".py")) {
                     examples.add(example)
