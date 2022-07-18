@@ -1,4 +1,3 @@
-import os
 import platform
 
 from test.examples_tools import run, tmp_dir
