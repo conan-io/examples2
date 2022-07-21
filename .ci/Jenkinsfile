@@ -38,7 +38,6 @@ def envCreate(Map ctxt) {
         ctxt.shFunction("${binPath}python -m pip install -U pip")
         // Always install latest pre-release
         ctxt.shFunction("${binPath}python -m pip install ${ctxt.branch.branchInstall} --upgrade")
-        ctxt.shFunction("${binPath}python -m pip install meson")
     }
 }
 
