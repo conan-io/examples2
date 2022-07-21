@@ -31,14 +31,15 @@ def envCreate(Map ctxt) {
         // Alternate implementation because of https://issues.jenkins.io/browse/JENKINS-49076
         // Always install latest pre-release
         ctxt.shFunction("pip install ${ctxt.branch.branchInstall} --upgrade")
+        ctxt.shFunction("pip install meson")
     }
     else {
         ctxt.shFunction("${ctxt.python_host} -m venv $venvDirectory")
         ctxt.shFunction("${binPath}python -m pip install -U pip")
         // Always install latest pre-release
         ctxt.shFunction("${binPath}python -m pip install ${ctxt.branch.branchInstall} --upgrade")
+        ctxt.shFunction("${binPath}python -m pip install meson")
     }
-    ctxt.shFunction("${binPath}python -m pip install meson")
 }
 
 String pipConanBranchInstall(String branch, String fork='conan-io') {
