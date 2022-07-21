@@ -38,6 +38,7 @@ def envCreate(Map ctxt) {
         // Always install latest pre-release
         ctxt.shFunction("${binPath}python -m pip install ${ctxt.branch.branchInstall} --upgrade")
     }
+    ctxt.shFunction("pip install meson")
 }
 
 String pipConanBranchInstall(String branch, String fork='conan-io') {
