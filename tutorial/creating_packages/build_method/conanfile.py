@@ -1,3 +1,5 @@
+import os
+
 from conan import ConanFile
 from conan.tools.cmake import CMakeToolchain, CMake, cmake_layout
 from conan.tools.scm import Git
@@ -42,14 +44,15 @@ class helloRecipe(ConanFile):
 
     def source(self):
         git = Git(self)
-        git.clone(url="https://github.com/conan-io/libhello.git", target=".")
+        git.clone(url="https://github.com/czoido/libhello.git", target=".")
         # Please, be aware that using the head of the branch instead of an inmutable tag
         # or commit is not a good practice in general
-        git.checkout("optional_fmt")
+        git.checkout("with_tests")
 
     def requirements(self):
         if self.options.with_fmt:
             self.requires("fmt/8.1.1")
+        self.test_requires("gtest/1.11.0")
 
     def layout(self):
         cmake_layout(self)
@@ -58,12 +61,16 @@ class helloRecipe(ConanFile):
         tc = CMakeToolchain(self)
         if self.options.with_fmt:
             tc.variables["WITH_FMT"] = True
+        if not self.conf.get("tools.build:skip_test", default=False):
+            tc.variables["BUILD_TESTS"] = True
         tc.generate()
 
     def build(self):
         cmake = CMake(self)
         cmake.configure()
         cmake.build()
+        if not self.conf.get("tools.build:skip_test", default=False):
+            self.run(os.path.join(self.cpp.build.bindirs[0], "tests", "test_hello"))
 
     def package(self):
         cmake = CMake(self)
