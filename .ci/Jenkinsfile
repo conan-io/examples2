@@ -77,6 +77,9 @@ def runExamples(Map ctxt) {
                 ctxt.shFunction('conan remote remove conancenter')
                 ctxt.shFunction("conan remote add conancenterv2 ${ART_URL}")
                 echo "Running examples with CONAN_HOME: ${env.CONAN_HOME}"
+                println "#" * 40 
+                echo "# Running: ${example}"
+                println "#" * 40 
                 runExample(ctxt, example)
             }
         }
