@@ -61,8 +61,6 @@ class helloRecipe(ConanFile):
         tc = CMakeToolchain(self)
         if self.options.with_fmt:
             tc.variables["WITH_FMT"] = True
-        if not self.conf.get("tools.build:skip_test", default=False):
-            tc.variables["BUILD_TESTS"] = True
         tc.generate()
 
     def build(self):
