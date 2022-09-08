@@ -67,6 +67,9 @@ class helloRecipe(ConanFile):
         cmake = CMake(self)
         cmake.configure()
         cmake.build()
+        # this check is not needed if using CTest instead of gtest
+        # in that case just call to cmake.test() and it will be skipped
+        # if tools.build:skip_test=True
         if not self.conf.get("tools.build:skip_test", default=False):
             self.run(os.path.join(self.cpp.build.bindirs[0], "tests", "test_hello"))
 
