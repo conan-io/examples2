@@ -20,11 +20,11 @@ class helloRecipe(ConanFile):
     # Binary configuration
     settings = "os", "compiler", "build_type", "arch"
 
-    options = {"shared": [True, False], 
+    options = {"shared": [True, False],
                "fPIC": [True, False],
                "with_fmt": [True, False]}
 
-    default_options = {"shared": False, 
+    default_options = {"shared": False,
                        "fPIC": True,
                        "with_fmt": True}
 
@@ -71,7 +71,10 @@ class helloRecipe(ConanFile):
         # in that case just call to cmake.test() and it will be skipped
         # if tools.build:skip_test=True
         if not self.conf.get("tools.build:skip_test", default=False):
-            self.run(os.path.join(self.cpp.build.bindirs[0], "tests", "test_hello"))
+            test_folder = os.path.join(self.cpp.build.bindirs[0], "tests")
+            if self.info.settings.os == "Windows":
+                test_folder = os.path.join(test_folder, self.info.settings.build_type)
+            self.run(os.path.join(test_folder, "test_hello"))
 
     def package(self):
         cmake = CMake(self)
