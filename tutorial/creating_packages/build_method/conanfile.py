@@ -73,7 +73,7 @@ class helloRecipe(ConanFile):
         if not self.conf.get("tools.build:skip_test", default=False):
             test_folder = os.path.join(self.cpp.build.bindirs[0], "tests")
             if self.info.settings.os == "Windows":
-                test_folder = os.path.join(str(self.info.settings.build_type), "tests")
+                test_folder = os.path.join("tests", str(self.info.settings.build_type))
             print("- test_folder -->", test_folder)
             self.run(os.path.join(test_folder, "test_hello"))
 
