@@ -74,6 +74,7 @@ class helloRecipe(ConanFile):
             test_folder = os.path.join(self.cpp.build.bindirs[0], "tests")
             if self.info.settings.os == "Windows":
                 test_folder = os.path.join(test_folder, str(self.info.settings.build_type))
+            print(test_folder)
             self.run(os.path.join(test_folder, "test_hello"))
 
     def package(self):
