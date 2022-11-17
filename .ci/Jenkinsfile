@@ -149,7 +149,7 @@ node('Linux') {
                         }
                     },
                     macos: {
-                        node('Macos') {
+                        node('M1Macos') {
                             conanBranchesInstalls.each { branch ->
                                 stage("${branch.name}: Run Macos examples") {
                                     withEnv(['PATH+EXTRA=/usr/local/bin']) { // Required to find CMake
