@@ -152,7 +152,7 @@ node('Linux') {
                         node('M1Macos') {
                             conanBranchesInstalls.each { branch ->
                                 stage("${branch.name}: Run Macos examples") {
-                                    withEnv(['PATH+EXTRA=/usr/local/bin']) { // Required to find CMake
+                                    withEnv(['PATH+EXTRA=/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin']) { // Required to find CMake
                                         runExamples([python_host: 'python3',
                                                     shFunction: { data -> sh(data) },
                                                     isInsideDocker: false,
