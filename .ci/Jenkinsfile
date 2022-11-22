@@ -153,7 +153,7 @@ node('Linux') {
                             conanBranchesInstalls.each { branch ->
                                 stage("${branch.name}: Run Macos examples") {
                                 withEnv(["PYENV_ROOT=/Users/jenkins/.pyenv", "PATH+EXTRA=/Users/jenkins/.pyenv/shims:/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin"]) {
-                                        runExamples([python_host: '/Users/jenkins/.pyenv/versions/3.9.0/bin/python',
+                                        runExamples([python_host: '/Users/jenkins/.pyenv/versions/3.9.11/bin/python',
                                                     shFunction: { data -> sh(data) },
                                                     isInsideDocker: false,
                                                     examples: examples,
