@@ -149,11 +149,11 @@ node('Linux') {
                         }
                     },
                     macos: {
-                        node('Macos') {
+                        node('M1Macos') {
                             conanBranchesInstalls.each { branch ->
                                 stage("${branch.name}: Run Macos examples") {
-                                    withEnv(['PATH+EXTRA=/usr/local/bin']) { // Required to find CMake
-                                        runExamples([python_host: 'python3',
+                                withEnv(["PYENV_ROOT=/Users/jenkins/.pyenv", "PATH+EXTRA=/Users/jenkins/.pyenv/shims:/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin"]) {
+                                        runExamples([python_host: '/Users/jenkins/.pyenv/versions/3.9.0/bin/python',
                                                     shFunction: { data -> sh(data) },
                                                     isInsideDocker: false,
                                                     examples: examples,
