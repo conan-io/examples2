@@ -44,10 +44,10 @@ class helloRecipe(ConanFile):
 
     def source(self):
         git = Git(self)
-        git.clone(url="https://github.com/conan-io/libhello.git", target=".")
+        git.clone(url="https://github.com/czoido/libhello.git", target=".")
         # Please, be aware that using the head of the branch instead of an inmutable tag
         # or commit is not a good practice in general
-        git.checkout("with_tests")
+        git.checkout("package_info")
 
     def requirements(self):
         if self.options.with_fmt:
@@ -81,25 +81,7 @@ class helloRecipe(ConanFile):
         cmake.install()
 
     def package_info(self):
-        self.cpp_info.libs = ["hello"]
-
-        #print(self.cpp_info.includedirs)  # Ordered list of include paths
-        #print(self.cpp_info.srcdirs)  # Ordered list of source paths
-        #print(self.cpp_info.libdirs)  # Directories to find libraries
-        #print(self.cpp_info.resdirs)  # Directories to find resources, data, etc
-        print(self.cpp_info.bindirs)  # Directories to find executables and shared libs
-        print(self.cpp_info.builddirs)
-        print(self.cpp_info.frameworkdirs)
-
-        print(self.cpp_info.system_libs)  # Ordered list of system libraries
-        print(self.cpp_info.frameworks)  # Macos .framework
-        print(self.cpp_info.libs)  # The libs to link against
-        print(self.cpp_info.defines)  # preprocessor definitions
-        print(self.cpp_info.cflags)  # pure C flags
-        print(self.cpp_info.cxxflags)  # C++ compilation flags
-        print(self.cpp_info.sharedlinkflags)  # linker flags
-        print(self.cpp_info.exelinkflags)  # linker flags
-        print(self.cpp_info.objects)  # objects to link
-
-        print(self.cpp_info.sysroot)
-        print(self.cpp_info.requires)
+        if self.options.shared:
+            self.cpp_info.libs = ["hello-shared"]
+        else:
+            self.cpp_info.libs = ["hello-static"]
