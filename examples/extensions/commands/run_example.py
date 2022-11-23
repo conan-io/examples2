@@ -36,7 +36,7 @@ install_clean_command()
 
 # 1. Check the custom command is appearing in conan help
 output = run("conan -h")
-assert "Custom commands\nclean" in output.replace("\r\n", "\n")
+assert "Custom commands commands\nclean" in output.replace("\r\n", "\n")
 # 2. Create several packages
 with tmp_dir("clean_hello"):
     # Library (changing PREV each time)
