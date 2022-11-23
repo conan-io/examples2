@@ -12,11 +12,11 @@ LINUX_CONTAINER = 'conanio/ci-functional'
 
 def envInside(Map ctxt, Closure closure) {
     String randDir = UUID.randomUUID().toString()
-    String venvDirectory = isUnix() ? "${pwd()}/conanenv" : "${pwd()}\\conanenv"
-    String binPath = isUnix() ? "$venvDirectory/bin/" : "$venvDirectory\\Scripts\\"
-    String conanHome = isUnix() ? "${pwd()}/${randDir}/.conan" : "${pwd()}\\${randDir}\\.conan"
+    String venvDirectory = ctxt.runningUnix ? "${pwd()}/conanenv" : "${pwd()}\\conanenv"
+    String binPath = ctxt.runningUnix ? "$venvDirectory/bin/" : "$venvDirectory\\Scripts\\"
+    String conanHome = ctxt.runningUnix ? "${pwd()}/${randDir}/.conan" : "${pwd()}\\${randDir}\\.conan"
     String pythonpath = "${env.WORKSPACE}"
-    String cmakePath = isUnix() ? "/Users/jenkins/cmake/cmake-3.23.1/bin" : "C:\\cmake\\cmake-3.23.1-win64-x64\\bin"
+    String cmakePath = ctxt.runningUnix ? "/Users/jenkins/cmake/cmake-3.23.1/bin" : "C:\\cmake\\cmake-3.23.1-win64-x64\\bin"
     withEnv(["PATH+EXTRA=${binPath}", "PATH+CMAKE=${cmakePath}", "CONAN_HOME=${conanHome}", "PYTHONPATH=${pythonpath}"]) {
         // This doesn't work if running docker.inside (https://issues.jenkins.io/browse/JENKINS-49076)
         closure()
@@ -24,8 +24,8 @@ def envInside(Map ctxt, Closure closure) {
 }
 
 def envCreate(Map ctxt) {
-    String venvDirectory = isUnix() ? "${pwd()}/conanenv" : "${pwd()}\\conanenv"
-    String binPath = isUnix() ? "$venvDirectory/bin/" : "$venvDirectory\\Scripts\\"
+    String venvDirectory = ctxt.runningUnix ? "${pwd()}/conanenv" : "${pwd()}\\conanenv"
+    String binPath = ctxt.runningUnix ? "$venvDirectory/bin/" : "$venvDirectory\\Scripts\\"
     ctxt.shFunction("${ctxt.python_host} --version")
     if (ctxt.isInsideDocker) {
         // Alternate implementation because of https://issues.jenkins.io/browse/JENKINS-49076
@@ -59,7 +59,7 @@ def runExample(Map ctxt, String example) {
             split_path = example.split('/')
             String script = split_path[split_path.length-1]
             String path = example - script
-            script = isUnix() ? "./${script}" : "${script}"
+            script = ctxt.runningUnix ? "./${script}" : "${script}"
             String command = script.contains(".py") ? "python ${script}" : "${script}"
             ctxt.shFunction("cd ${path} && ${command}")
         }
@@ -141,6 +141,7 @@ node('Linux') {
                                     runExamples([python_host: 'python3',
                                                 shFunction: { data -> sh(data) },
                                                 isInsideDocker: true,
+                                                runningUnix: isUnix(),
                                                 examples: examples,
                                                 branch: branch,
                                                 extensions: ['.py', '.sh']])
@@ -156,6 +157,7 @@ node('Linux') {
                                         runExamples([python_host: '/Users/jenkins/.pyenv/versions/3.9.11/bin/python',
                                                     shFunction: { data -> sh(data) },
                                                     isInsideDocker: false,
+                                                    runningUnix: isUnix(),
                                                     examples: examples,
                                                     branch: branch,
                                                     extensions: ['.py', '.sh']])
@@ -171,6 +173,7 @@ node('Linux') {
                                     runExamples([python_host: 'C:\\Python39\\python.exe',
                                                 shFunction: { data -> bat(data) },
                                                 isInsideDocker: false,
+                                                runningUnix: isUnix(),
                                                 examples: examples,
                                                 branch: branch,
                                                 extensions: ['.py', '.bat']])
