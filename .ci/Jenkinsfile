@@ -143,7 +143,7 @@ node('Linux') {
                                     runExamples([python_host: 'python3',
                                                 shFunction: { data -> sh(data) },
                                                 isInsideDocker: true,
-                                                runningUnix: isUnix(),
+                                                runningUnix: true,
                                                 examples: examples,
                                                 branch: branch,
                                                 extensions: ['.py', '.sh']])
@@ -159,7 +159,7 @@ node('Linux') {
                                         runExamples([python_host: '/Users/jenkins/.pyenv/versions/3.9.11/bin/python',
                                                     shFunction: { data -> sh(data) },
                                                     isInsideDocker: false,
-                                                    runningUnix: isUnix(),
+                                                    runningUnix: true,
                                                     examples: examples,
                                                     branch: branch,
                                                     extensions: ['.py', '.sh']])
@@ -175,7 +175,7 @@ node('Linux') {
                                     runExamples([python_host: 'C:\\Python39\\python.exe',
                                                 shFunction: { data -> bat(data) },
                                                 isInsideDocker: false,
-                                                runningUnix: isUnix(),
+                                                runningUnix: false,
                                                 examples: examples,
                                                 branch: branch,
                                                 extensions: ['.py', '.bat']])
