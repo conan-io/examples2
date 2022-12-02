@@ -1,14 +1,15 @@
-from conan.api.conan_api import ConanAPIV2
+from conan.api.conan_api import ConanAPI
 from conan.api.output import ConanOutput, Color
 from conan.cli.command import OnceArgument, conan_command
 from conans.client.userio import UserInput
+
 
 recipe_color = Color.BRIGHT_BLUE
 removed_color = Color.BRIGHT_YELLOW
 
 
 @conan_command(group="Custom commands")
-def clean(conan_api: ConanAPIV2, parser, *args):
+def clean(conan_api: ConanAPI, parser, *args):
     """
     Deletes (from local cache or remotes) all recipe and package revisions but
     the latest package revision from the latest recipe revision.
@@ -42,9 +43,11 @@ def clean(conan_api: ConanAPIV2, parser, *args):
                 out.writeln(f"Removed recipe revision: {rrev.repr_notime()} "
                             f"and all its package revisions [{output_remote}]", fg=removed_color)
             else:
-                all_prevs = conan_api.search.package_revisions(f"{rrev.repr_notime()}:*#*", remote=remote)
-                latest_prev = all_prevs[0] if all_prevs else None
-                for prev in all_prevs:
-                    if prev != latest_prev:
-                        conan_api.remove.package(prev, remote=remote)
-                        out.writeln(f"Removed package revision: {prev.repr_notime()} [{output_remote}]", fg=removed_color)
+                packages = conan_api.list.packages_configurations(rrev, remote=remote)
+                for package_ref in packages:
+                    all_prevs = conan_api.list.package_revisions(package_ref, remote=remote)
+                    latest_prev = all_prevs[0] if all_prevs else None
+                    for prev in all_prevs:
+                       if prev != latest_prev:
+                           conan_api.remove.package(prev, remote=remote)
+                           out.writeln(f"Removed package revision: {prev.repr_notime()} [{output_remote}]", fg=removed_color)
