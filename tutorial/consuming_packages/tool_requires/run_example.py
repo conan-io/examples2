@@ -19,7 +19,7 @@ if platform.system() == "Windows":
         cmd_out = run("Release\\compressor.exe")
         assert "ZLIB VERSION: 1.2.11" in cmd_out
 else:
-    run("conan install . --output-folder=cmake-build-release --build=missing -s:h compiler.cppstd=11 -s:b compiler.cppstd=11")
+    run("conan install . --output-folder=cmake-build-release --build=missing")
     with chdir("cmake-build-release"):
         command = []
         command.append(". ./conanbuild.sh")
