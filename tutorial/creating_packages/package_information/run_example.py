@@ -1,14 +1,24 @@
 import platform
+import os
+
 from test.examples_tools import run
 
-print("- Building and running tests in the build() method -")
+print("- Define information for consumers depending on settings or options -")
 
-add_standard = "-s compiler.cppstd=11" if platform.system()!="Windows" else ""
+out = run(f"conan create . --build=missing")
 
-out = run(f"conan create . {add_standard} --build=missing")
+libname = "hello-static.lib" if platform.system()=="Windows" else "libhello-static.a"
 
-assert "Running 1 test from 1 test suite." in out
+assert f"Linking CXX static library {libname}" in out
 
-out = run(f"conan create . {add_standard} --build=missing -c tools.build:skip_test=True")
+print("- Properties model: setting information for specific generators -")
 
-assert "Running 1 test from 1 test suite." not in out
+os.rename("conanfile.py", "conanfile_.py")
+os.rename("conanfile_properties.py", "conanfile.py")
+
+os.rename(os.path.join("test_package", "CMakeLists.txt"), os.path.join("test_package", "CMakeLists_.txt"))
+os.rename(os.path.join("test_package", "CMakeLists_properties.txt"), os.path.join("test_package", "CMakeLists.txt"))
+
+out = run(f"conan create . --build=missing")
+
+assert "Target declared 'hellotarget'" in out
