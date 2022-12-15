@@ -7,9 +7,9 @@ print("- Define information for consumers depending on settings or options -")
 
 out = run(f"conan create . --build=missing")
 
-libname = "hello-static.lib" if platform.system()=="Windows" else "libhello-static.a"
+assertion = "Packaged 1 '.lib' file: hello-static.lib" if platform.system()=="Windows" else "Packaged 1 '.a' file: libhello-static.a"
 
-assert f"Linking CXX static library {libname}" in out
+assert assertion in out
 
 print("- Properties model: setting information for specific generators -")
 
