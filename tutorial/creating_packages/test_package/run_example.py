@@ -1,12 +1,9 @@
-import platform
 from test.examples_tools import run
 
-print("- Building and running tests in the build() method -")
+print("- Testing Conan packages: the test() method -")
 
-out = run(f"conan create . --build=missing")
+out = run(f"conan create . --build=missing -tf=None")
 
-assert "Running 1 test from 1 test suite." in out
+out = run(f"conan test test_package hello/1.0")
 
-out = run(f"conan create . --build=missing -c tools.build:skip_test=True")
-
-assert "Running 1 test from 1 test suite." not in out
+assert "hello/1.0: Hello World Release! (with color!)" in out
