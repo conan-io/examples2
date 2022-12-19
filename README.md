@@ -57,7 +57,7 @@
 
 #### [Testing Conan packages: the test() method](tutorial/creating_packages/testing_packages/)
 
-- LUse a *test_package* to test that the Conan package can be consumed correctly.
+- Use a *test_package* to test that the Conan package can be consumed correctly.
   [Docs](https://docs.conan.io/en/2.0/tutorial/creating_packages/test_conan_packages.html)
 
 ### Creating packages: other types of packages
