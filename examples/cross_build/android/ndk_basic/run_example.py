@@ -23,7 +23,7 @@ build_type=Debug
 tools.android:ndk_path={}
 """
 
-ndk_path = {"Darwin": "/usr/local/share/android-ndk", "Linux": "/opt/android-ndk-r23c"}.get(platform.system())
+ndk_path = {"Darwin": "/opt/homebrew/share/android-ndk", "Linux": "/opt/android-ndk-r23c"}.get(platform.system())
 
 if ndk_path:
     profile = profile.format(ndk_path)

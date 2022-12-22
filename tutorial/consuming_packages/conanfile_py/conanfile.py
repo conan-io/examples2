@@ -7,10 +7,6 @@ class CompressorRecipe(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     generators = "CMakeToolchain", "CMakeDeps"
 
-    def validate(self):
-        if self.info.settings.os == "Macos" and self.info.settings.arch == "armv8":
-            raise ConanInvalidConfiguration("ARM v8 not supported")
-
     def requirements(self):
         self.requires("zlib/1.2.11")
         # Add base64 dependency only for Windows
