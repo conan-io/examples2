@@ -57,7 +57,7 @@
 
 #### [Build packages: the build() method](tutorial/creating_packages/build_method/)
 
-- Learn how to build and run tests, conditionally patch the sources and select the build system conditionally.
+- Learn how to build and run tests, conditionally patch the sources and select the build system.
   [Docs](https://docs.conan.io/en/2.0/tutorial/creating_packages/creating_packages/build_packages.html)
 
 #### [Package files: the package() method](tutorial/creating_packages/package_method/)
