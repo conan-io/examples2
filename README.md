@@ -55,7 +55,22 @@
 - Learn how to configure settings and options and how Conan models binary compatibility.
   [Docs](https://docs.conan.io/en/2.0/tutorial/creating_packages/configure_options_settings.html)
 
-#### [Testing Conan packages: the test() method](tutorial/creating_packages/testing_packages/)
+#### [Build packages: the build() method](tutorial/creating_packages/build_method/)
+
+- Learn how to build and run tests, conditionally patch the sources and select the build system.
+  [Docs](https://docs.conan.io/en/2.0/tutorial/creating_packages/creating_packages/build_packages.html)
+
+#### [Package files: the package() method](tutorial/creating_packages/package_method/)
+
+- Learn to copy package files into the Conan local cache.
+  [Docs](https://docs.conan.io/en/2.0/tutorial/creating_packages/package_method.html)
+
+#### [Define the package information for consumers: the package_info() method](tutorial/creating_packages/package_information/)
+
+- Define the information that consumers of a package need to build.
+  [Docs](https://docs.conan.io/en/2.0/tutorial/creating_packages/define_package_information.html)
+
+#### [Testing Conan packages](tutorial/creating_packages/testing_packages/)
 
 - Use a *test_package* to test that the Conan package can be consumed correctly.
   [Docs](https://docs.conan.io/en/2.0/tutorial/creating_packages/test_conan_packages.html)
