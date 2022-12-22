@@ -8,12 +8,12 @@ with tmp_dir("tmp"):
     run("conan create . -s build_type=Debug")
     run("conan create . -o hello/1.0:shared=True")
 
-    output = run("conan list recipes hello")
+    output = run("conan list hello")
 
     # check the package recipe is in the cache
     assert "hello/1.0" in output
 
-    output = run("conan list packages hello/1.0#latest")
+    output = run("conan list hello/1.0#:*")
 
     # assert that there are 3 binaries in the cache
-    assert output.count("hello/1.0#") == 3
+    assert output.count("PID: ") == 3
