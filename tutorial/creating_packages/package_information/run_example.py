@@ -21,4 +21,4 @@ os.rename(os.path.join("test_package", "CMakeLists_properties.txt"), os.path.joi
 
 out = run(f"conan create . --build=missing")
 
-assert "Target declared 'hellotarget'" in out
+assert "Target declared 'hello::myhello'" in out

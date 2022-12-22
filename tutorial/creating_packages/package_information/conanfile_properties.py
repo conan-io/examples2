@@ -86,4 +86,4 @@ class helloRecipe(ConanFile):
         else:
             self.cpp_info.libs = ["hello-static"]
 
-        self.cpp_info.set_property("cmake_target_name", "hellotarget")
+        self.cpp_info.set_property("cmake_target_name", "hello::myhello")
