@@ -70,6 +70,11 @@
 - Define the information that consumers of a package need to build.
   [Docs](https://docs.conan.io/en/2.0/tutorial/creating_packages/define_package_information.html)
 
+#### [Testing Conan packages](tutorial/creating_packages/testing_packages/)
+
+- Use a *test_package* to test that the Conan package can be consumed correctly.
+  [Docs](https://docs.conan.io/en/2.0/tutorial/creating_packages/test_conan_packages.html)
+
 ### Creating packages: other types of packages
 
 #### [How to create a Conan package for a header-only library](tutorial/creating_packages/other_packages/header_only/)
