@@ -15,7 +15,7 @@ if platform.system() != "Windows":
         run("cmake --build .")
 else:
     with chdir("build"):
-        run("cmake .. -DCMAKE_TOOLCHAIN_FILE=generators/conan_toolchain.cmake")
+        run("cmake .. -DCMAKE_TOOLCHAIN_FILE=Release/generators/conan_toolchain.cmake")
         run("cmake --build . --config Release")
 
 cmd_out = run("conan export-pkg . -s build_type=Release")
@@ -33,11 +33,11 @@ os.mkdir("build/Debug")
 
 if platform.system() != "Windows":
     with chdir("build/Debug"):
-        run("cmake ../.. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=../generators/conan_toolchain.cmake")
+        run("cmake ../.. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=../Debug/generators/conan_toolchain.cmake")
         run("cmake --build .")
 else:
     with chdir("build"):
-        run("cmake .. -DCMAKE_TOOLCHAIN_FILE=generators/conan_toolchain.cmake")
+        run("cmake .. -DCMAKE_TOOLCHAIN_FILE=Debug/generators/conan_toolchain.cmake")
         run("cmake --build . --config Debug")
 
 cmd_out = run("conan export-pkg . -s build_type=Debug")
