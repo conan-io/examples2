@@ -30,7 +30,7 @@ assert "hello/0.1: Hello World Release!" in cmd_out
 
 # Let's generate and package a Debug library
 run("conan install . -s build_type=Debug")
-os.mkdir("build/Debug")
+os.makedirs("build/Debug", exist_ok=True)
 
 if platform.system() != "Windows":
     with chdir("build/Debug"):
