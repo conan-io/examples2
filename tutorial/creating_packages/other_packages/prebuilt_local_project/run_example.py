@@ -8,8 +8,7 @@ run("conan new cmake_lib -d name=hello -d version=0.1 --force")
 # Let's generate and package a Release library
 run("conan install . -s build_type=Release")
 
-try:
-    os.makedirs("build/Release", exist_ok=True)
+os.makedirs("build/Release", exist_ok=True)
 
 if platform.system() != "Windows":
     with chdir("build/Release"):
