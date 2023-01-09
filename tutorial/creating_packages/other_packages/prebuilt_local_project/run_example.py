@@ -3,6 +3,9 @@ import platform
 
 from test.examples_tools import run, chdir
 
+from conan import conan_version
+
+
 run("conan new cmake_lib -d name=hello -d version=0.1 --force")
 
 # Let's generate and package a Release library
@@ -10,9 +13,13 @@ run("conan install . -s build_type=Release")
 
 os.makedirs("build/Release", exist_ok=True)
 
+# FIXME: remove when beta8 is out
+generators_folder_release = "Release/generators" if conan_version == "2.0.0-dev" else "generators"
+generators_folder_debug = "Debug/generators" if conan_version == "2.0.0-dev" else "generators"
+
 if platform.system() != "Windows":
     with chdir("build/Release"):
-        run("cmake ../.. -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../Release/generators/conan_toolchain.cmake")
+        run(f"cmake ../.. -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../{generators_folder_release}/conan_toolchain.cmake")
         run("cmake --build .")
 else:
     with chdir("build"):
@@ -34,11 +41,11 @@ os.makedirs("build/Debug", exist_ok=True)
 
 if platform.system() != "Windows":
     with chdir("build/Debug"):
-        run("cmake ../.. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=../Debug/generators/conan_toolchain.cmake")
+        run(f"cmake ../.. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=../{generators_folder_debug}/conan_toolchain.cmake")
         run("cmake --build .")
 else:
     with chdir("build"):
-        run("cmake .. -DCMAKE_TOOLCHAIN_FILE=Debug/generators/conan_toolchain.cmake")
+        run("cmake .. -DCMAKE_TOOLCHAIN_FILE=generators/conan_toolchain.cmake")
         run("cmake --build . --config Debug")
 
 cmd_out = run("conan export-pkg . -s build_type=Debug")
