@@ -9,8 +9,7 @@ if platform.system() == "Linux":
 
     run("conan install . --build missing -pr:b=default -pr:h=./profiles/raspberry")
 
-    # FIXME: remove when beta8 is out
-    generators_folder = "Release/generators" if conan_version == "2.0.0-dev" else "generators"
+    generators_folder = "Release/generators"
 
     with chdir("build"):
         command = []

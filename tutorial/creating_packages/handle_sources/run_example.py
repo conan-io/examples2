@@ -19,7 +19,7 @@ assert "hello/1.0" in output
 output = run("conan list hello/1.0#:*")
 
 # assert that there are 3 binaries in the cache
-assert output.count("PID: ") == 3
+assert output.count("arch: ") == 3
 
 print("- Clone sources from git repo -")
 
@@ -37,7 +37,8 @@ assert "hello/1.0" in output
 output = run("conan list hello/1.0#:*")
 
 # assert that there are 3 binaries in the cache
-assert output.count("PID: ") == 3
+#TODO: better do this parsing the json, this is too fragile
+assert output.count("arch: ") == 3
 
 
 print("- Download sources from zip file but using conandata.yml -")
