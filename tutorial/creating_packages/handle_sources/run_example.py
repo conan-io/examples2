@@ -37,7 +37,7 @@ assert "hello/1.0" in output
 output = run("conan list hello/1.0#:*")
 
 # assert that there are 3 binaries in the cache
-TODO: better do this parsing the json, this is too fragile
+#TODO: better do this parsing the json, this is too fragile
 assert output.count("arch: ") == 3
 
 
