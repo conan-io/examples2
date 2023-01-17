@@ -13,9 +13,8 @@ run("conan install . -s build_type=Release")
 
 os.makedirs("build/Release", exist_ok=True)
 
-# FIXME: remove when beta8 is out
-generators_folder_release = "Release/generators" if conan_version == "2.0.0-dev" else "generators"
-generators_folder_debug = "Debug/generators" if conan_version == "2.0.0-dev" else "generators"
+generators_folder_release = "Release/generators"
+generators_folder_debug = "Debug/generators"
 
 if platform.system() != "Windows":
     with chdir("build/Release"):
