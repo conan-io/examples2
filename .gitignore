@@ -57,3 +57,7 @@ tmp/
 CMakeUserPresets.json
 **/generators/**
 **/build/**
+conanbuild*
+conanrun*
+deactivate_conanbuild*
+deactivate_conanrun*
