@@ -1,5 +1,3 @@
-ART_URL = 'https://conanv2beta.jfrog.io/artifactory/api/conan/conan'
-
 void cancelPrevious() {
     stage("Cancelling previous") {
         def buildNumber = env.BUILD_NUMBER as int
@@ -80,8 +78,6 @@ def runExamples(Map ctxt) {
                 profile_path = sh(script: 'conan profile path default', returnStdout: true)
                 sh(script: "sed -i -e 's/gnu98/11/g' ${profile_path}")   
             }
-            ctxt.shFunction('conan remote remove conancenter')
-            ctxt.shFunction("conan remote add conancenterv2 ${ART_URL}")
             echo "Running examples with CONAN_HOME: ${env.CONAN_HOME}"
             for (example in ctxt.examples) {
                 runExample(ctxt, example)
@@ -108,20 +104,7 @@ node('Linux') {
         List<String> examples = []
         stage('Find examples') {
             checkout scm
-            def _examples = []
-            if (isMain()) {
-                _examples = sh(script: 'find . -name run_example.*', returnStdout: true).readLines()
-            }
-            else {
-                _changed_examples = sh(script: 'git diff --name-only origin/main --diff-filter=AMR | grep run_example.* || true', returnStdout: true)
-                if (!_changed_examples.isEmpty()) {
-                    _examples = _changed_examples.readLines()
-                }
-                else {
-                    echo "No examples changed. Running all examples."
-                    _examples = sh(script: 'find . -name run_example.*', returnStdout: true).readLines()
-                }
-            }
+            def _examples = sh(script: 'find . -name run_example.*', returnStdout: true).readLines()
             for (example in _examples) {
                 if (example.contains(".sh") || example.contains(".bat") || example.contains(".py")) {
                     examples.add(example)
@@ -143,7 +126,8 @@ node('Linux') {
                                     def pythonVersion = "3.9.2"
                                     def command = "export PYENV_ROOT=${pyenvdir} && " \
                                                 + "export PATH=\"${pyenvdir}/versions/\${pythonVersion}/bin:${pyenvdir}/bin:\$PATH\" && " \
-                                                + "pyenv global ${pythonVersion}"
+                                                + "pyenv global ${pythonVersion} && " \
+                                                + "sudo /home/conan/select_cmake.sh 3.16.9"
                                     sh(script: command)
                                     runExamples([python_host: 'python3',
                                                 shFunction: { data -> sh(data) },
