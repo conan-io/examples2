@@ -52,3 +52,8 @@ def replace(file_path, text, replace):
     assert content != content2
     with open(file_path, "w") as f:
         f.write(content2)
+
+def load(file_path):
+    with open(file_path, "r") as f:
+        content = f.read()
+    return content
