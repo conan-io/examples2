@@ -164,7 +164,7 @@ node('Linux') {
                                     // Because of the problema that we have to build CMake
                                     // At some point CMake will try to find MFC's if the file association
                                     // with .vcproj is set and that will make the build fail in ci
-                                    bat("reg delet Computer\HKEY_CLASSES_ROOT\.vcproj")
+                                    bat("reg delet Computer\\HKEY_CLASSES_ROOT\\.vcproj")
                                     runExamples([python_host: 'C:\\Python39\\python.exe',
                                                 shFunction: { data -> bat(data) },
                                                 isInsideDocker: false,
