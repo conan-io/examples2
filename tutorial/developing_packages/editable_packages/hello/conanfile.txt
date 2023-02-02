@@ -1,0 +1,9 @@
+[requires]
+say/0.1@user/channel
+
+[generators]
+CMakeToolchain
+CMakeDeps
+
+[layout]
+cmake_layout
