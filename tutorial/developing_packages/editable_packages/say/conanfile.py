@@ -1,18 +1,10 @@
-from conans import ConanFile
-from conan.tools.cmake import CMakeToolchain, CMake
-from conan.tools.layout import cmake_layout
+from conan import ConanFile
+from conan.tools.cmake import CMakeToolchain, CMake, cmake_layout
 
 
 class SayConan(ConanFile):
     name = "say"
     version = "0.1"
-
-    # Optional metadata
-    license = "<Put the package license here>"
-    author = "<Put your name here> <And your email here>"
-    url = "<Package recipe repository url here, for issues about the package>"
-    description = "<Description of Say here>"
-    topics = ("<Put some tag here>", "<here>", "<and here>")
 
     # Binary configuration
     settings = "os", "compiler", "build_type", "arch"
