@@ -13,7 +13,7 @@ assertion = ("hello/1.0: Package" in out) if platform.system()!="Windows" else (
 
 assert assertion
 
-out = run(f"conan create . --build=missing {add_standard} -s build_type=Release -o shared=True -o fPIC=False -tf=None", error=ret_error)
+out = run(f"conan create . --build=missing {add_standard} -s build_type=Release -o shared=True -o fPIC=False", error=ret_error)
 
 assertion = ("hello/1.0: Already installed!" in out) if platform.system()!="Windows" else ("ERROR: option 'fPIC' doesn't exist" in out)
 
