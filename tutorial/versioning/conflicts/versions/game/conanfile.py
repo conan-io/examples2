@@ -8,3 +8,4 @@ class Game(ConanFile):
     def requirements(self):
         self.requires("engine/1.0")
         self.requires("intro/1.0")
+        self.requires("matrix/1.2", force=True)
