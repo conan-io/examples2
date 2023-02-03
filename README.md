@@ -98,6 +98,10 @@
 
 - Learn how to create a Conan package when we have prebuilt libraries located in a remote repository. [Docs](https://docs.conan.io/en/2.0/tutorial/creating_packages/other_types_of_packages/package_prebuilt_binaries.html#downloading-and-packaging-pre-built-binaries)
 
+#### [Packages in editable mode](tutorial/developing_packages/editable_packages/)
+
+- Learn how to consume libraries while you are developing them. [Docs](https://docs.conan.io/en/2.0/tutorial/developing_packages/editable_packages.html)
+
 ## Examples
 
 ### [Use custom commands in your Conan CLI](examples/extensions/commands/)
