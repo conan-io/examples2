@@ -11,3 +11,4 @@ class BasicConanfile(ConanFile):
         # Each call to self.requires() will add the corresponding requirement
         # to the current list of requirements
         self.requires("zlib/1.2.13")
+        self.requires("mcap/0.5.0")
