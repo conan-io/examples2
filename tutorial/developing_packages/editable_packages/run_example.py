@@ -1,6 +1,9 @@
-import platform 
+import platform
+import os
+
 
 from test.examples_tools import run, chdir, replace
+
 
 print("- Editable packages -")
 
