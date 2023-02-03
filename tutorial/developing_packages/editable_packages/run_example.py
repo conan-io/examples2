@@ -48,7 +48,6 @@ with chdir("say"):
         run("cmake --build --preset release")
 
 with chdir("hello"):
-    replace(os.path.join("src", "say.cpp"), "Hello World", "Bye World")
     if platform.system() == "Windows":        
         run("cmake --build --preset release")
         run("cmake --build --preset debug")
