@@ -1,6 +1,6 @@
 import platform 
 
-from test.examples_tools import run, chdir, replace_in_file
+from test.examples_tools import run, chdir, replace
 
 print("- Editable packages -")
 
@@ -37,7 +37,7 @@ with chdir("hello"):
         assert "say/1.0: Hello World Release!" in cmd_out
 
 with chdir("say"):
-    replace_in_file("say.cpp", "Hello World", "Bye World")
+    replace(os.path.join("src", "say.cpp"), "Hello World", "Bye World")
     if platform.system() == "Windows":        
         run("cmake --build --preset release")
         run("cmake --build --preset debug")

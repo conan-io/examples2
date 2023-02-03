@@ -14,6 +14,20 @@ def chdir(dir_path):
         os.chdir(current)
 
 
+def replace(file_path, text, replace):
+    with open(file_path, "r") as f:
+        content = f.read()
+    content2 = content.replace(text, replace)
+    assert content != content2
+    with open(file_path, "w") as f:
+        f.write(content2)
+
+
+def load(file_path):
+    with open(file_path, "r") as f:
+        content = f.read()
+    return content
+
 @contextmanager
 def tmp_dir(newdir):
     os.makedirs(newdir)
@@ -22,16 +36,6 @@ def tmp_dir(newdir):
             yield
     finally:
         shutil.rmtree(newdir)
-
-
-def replace_in_file(filename, source, target):
-    with open(filename, 'r') as file :
-        filedata = file.read()
-
-    filedata = filedata.replace(source, target)
-
-    with open(filename, 'w') as file:
-        file.write(filedata)
 
 
 def run(cmd, error=False):
