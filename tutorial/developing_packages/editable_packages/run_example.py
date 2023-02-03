@@ -44,6 +44,14 @@ with chdir("say"):
     if platform.system() == "Windows":        
         run("cmake --build --preset release")
         run("cmake --build --preset debug")
+    else:
+        run("cmake --build --preset release")
+
+with chdir("hello"):
+    replace(os.path.join("src", "say.cpp"), "Hello World", "Bye World")
+    if platform.system() == "Windows":        
+        run("cmake --build --preset release")
+        run("cmake --build --preset debug")
         cmd_out = run("build\Release\hello.exe")
         assert "say/1.0: Bye World Release!" in cmd_out
         cmd_out = run("build\Debug\hello.exe")
