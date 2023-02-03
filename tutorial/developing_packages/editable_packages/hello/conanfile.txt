@@ -1,5 +1,5 @@
 [requires]
-say/0.1@user/channel
+say/1.0
 
 [generators]
 CMakeToolchain

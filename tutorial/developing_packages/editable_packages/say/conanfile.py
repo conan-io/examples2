@@ -4,7 +4,7 @@ from conan.tools.cmake import CMakeToolchain, CMake, cmake_layout
 
 class SayConan(ConanFile):
     name = "say"
-    version = "0.1"
+    version = "1.0"
 
     # Binary configuration
     settings = "os", "compiler", "build_type", "arch"

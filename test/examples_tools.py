@@ -24,6 +24,16 @@ def tmp_dir(newdir):
         shutil.rmtree(newdir)
 
 
+def replace_in_file(filename, source, target):
+    with open(filename, 'r') as file :
+        filedata = file.read()
+
+    filedata = filedata.replace(source, target)
+
+    with open(filename, 'w') as file:
+        file.write(filedata)
+
+
 def run(cmd, error=False):
     process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     out, err = process.communicate()
