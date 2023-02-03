@@ -49,3 +49,5 @@ with chdir("say"):
         run("cmake --build --preset release")
         cmd_out = run("./build/Release/hello")
         assert "say/1.0: Bye World Release!" in cmd_out
+
+run("conan editable remove say/1.0")
