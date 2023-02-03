@@ -1,9 +1,0 @@
-[requires]
-say/1.0
-
-[generators]
-CMakeToolchain
-CMakeDeps
-
-[layout]
-cmake_layout
