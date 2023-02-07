@@ -43,7 +43,6 @@ class SayConan(ConanFile):
 
         # this information is relative to the build folder that is './build/<build_type>', so it will 
         self.cpp.build.libdirs = ["."]  # map to ./build/<build_type> for libdirs
-        self.cpp.build.bindirs = ["bin"]  # map to ./build/<build_type>/bin for bindirs
 
     def generate(self):
         tc = CMakeToolchain(self)
