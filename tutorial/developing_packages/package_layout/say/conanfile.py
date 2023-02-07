@@ -21,20 +21,19 @@ class SayConan(ConanFile):
             del self.options.fPIC
 
     def layout(self):
-        self.folders.source = "."
-        build_type = str(self.settings.build_type)
-        build_folder = os.path.join("build", build_type)
-        self.folders.build = build_folder
 
+        ## define project folder structure
+        self.folders.source = "."
+        self.folders.build = os.path.join("build", str(self.settings.build_type))
         self.folders.generators = os.path.join(self.folders.build, "generators")
 
         ## cpp.package information is for consumers to find the package contents in the Conan cache
 
         self.cpp.package.libs = ["say"]
         self.cpp.package.includedirs = ["include"] # includedirs is already set to 'include' by
-                                                   # default, but declared for completion
+                                                    # default, but declared for completion
         self.cpp.package.libdirs = ["lib"]         # libdirs is already set to 'lib' by
-                                                   # default, but declared for completion
+                                                    # default, but declared for completion
 
         ## cpp.source and cpp.build information is specifically designed for editable packages:
 
