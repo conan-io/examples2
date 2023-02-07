@@ -27,6 +27,9 @@ with chdir("say"):
     run("conan create . -s build_type=Release")
 
 with chdir("hello"):
+    # we have to install again as it's in another folder in the cache
+    run("conan install . -s build_type=Release")
+    run(f"cmake --preset {configure_preset}")
     run("cmake --build --preset release")
     cmd_out = run(executable_binary)
     assert "say/1.0: Bye World Release!" in cmd_out
