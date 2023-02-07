@@ -1,7 +1,7 @@
 import os
 
 from conan import ConanFile
-from conan.tools.cmake import CMakeToolchain, CMake, cmake_layout
+from conan.tools.cmake import CMakeToolchain, CMake
 
 
 class SayConan(ConanFile):
@@ -29,8 +29,12 @@ class SayConan(ConanFile):
         self.folders.generators = os.path.join(self.folders.build, "generators")
 
         self.cpp.package.libs = ["say"]
-        self.cpp.package.includedirs = ["include"] # includedirs is already set to this value by
-                                                    # default, but declared for completion
+        self.cpp.package.includedirs = ["include"] # includedirs is already set to 'include' by
+                                                   # default, but declared for completion
+        self.cpp.package.libdirs = ["lib"]         # libdirs is already set to 'lib' by
+                                                   # default, but declared for completion
+
+        ## cpp.source and cpp.build information is specifically designed for editable packages:
 
         # this information is relative to the source folder that is '.'
         self.cpp.source.includedirs = ["include"] # maps to ./include
