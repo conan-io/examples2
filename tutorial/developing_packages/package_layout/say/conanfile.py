@@ -23,6 +23,7 @@ class SayConan(ConanFile):
     def layout(self):
 
         ## define project folder structure
+
         self.folders.source = "."
         self.folders.build = os.path.join("build", str(self.settings.build_type))
         self.folders.generators = os.path.join(self.folders.build, "generators")
