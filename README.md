@@ -102,6 +102,10 @@
 
 - Learn how to consume libraries while you are developing them. [Docs](https://docs.conan.io/en/2.0/tutorial/developing_packages/editable_packages.html)
 
+#### [Understanding the Conan Package layout](tutorial/developing_packages/package_layout/)
+
+- Learn how to declare information in the layout() for package creation and local developement. [Docs](https://docs.conan.io/en/2.0/tutorial/developing_packages/package_layout.html)
+
 ## Examples
 
 ### [Use custom commands in your Conan CLI](examples/extensions/commands/)
