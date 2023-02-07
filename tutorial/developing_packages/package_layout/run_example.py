@@ -5,7 +5,7 @@ import os
 from test.examples_tools import run, chdir, replace
 
 
-print("- Editable packages -")
+print("- Understanding the package layout -")
 
 # not in editable mode
 
