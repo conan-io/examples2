@@ -28,6 +28,8 @@ class SayConan(ConanFile):
 
         self.folders.generators = os.path.join(self.folders.build, "generators")
 
+        ## cpp.package information is for consumers to find the package contents in the Conan cache
+
         self.cpp.package.libs = ["say"]
         self.cpp.package.includedirs = ["include"] # includedirs is already set to 'include' by
                                                    # default, but declared for completion
@@ -51,8 +53,6 @@ class SayConan(ConanFile):
         cmake = CMake(self)
         cmake.configure()
         cmake.build()
-        # we can also know where the executable we are building is
-        self.run(os.path.join(self.build_folder, self.cpp.build.bindir, "hello"))
 
     def package(self):
         cmake = CMake(self)
