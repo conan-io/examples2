@@ -37,6 +37,9 @@ with chdir("hello"):
 
 # use editable mode
 
+# restore again the original say.cpp
+replace(os.path.join("src", "say.cpp"), "Bye World", "Hello World")
+
 run("conan editable add say say/1.0")
 
 with chdir("say"):
