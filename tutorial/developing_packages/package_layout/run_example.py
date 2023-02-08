@@ -19,8 +19,7 @@ with chdir("say"):
 with chdir("hello"):
     run("conan install . -s build_type=Release")
     cmd_out = run(f"cmake --preset {configure_preset} --log-level=VERBOSE")
-    folder = "\\p\\lib\\" if platform.system() == "Windows" else "/p/lib/"
-    assert f"{folder}{lib_name}" in cmd_out
+    assert f"/p/lib/{lib_name}" in cmd_out
     run("cmake --build --preset release")
     cmd_out = run(executable_binary)
     assert "say/1.0: Hello World Release!" in cmd_out
@@ -38,8 +37,7 @@ with chdir("say"):
 with chdir("hello"):
     run("conan install . -s build_type=Release")
     cmd_out = run(f"cmake --preset {configure_preset} --log-level=VERBOSE")
-    folder = "say\\build\\Release\\" if platform.system() == "Windows" else "say/build/Release/"
-    assert f"{folder}{lib_name}" in cmd_out
+    assert f"say/build/Release/{lib_name}" in cmd_out
     run("cmake --build --preset release")
     cmd_out = run(executable_binary)
     assert "say/1.0: Hello World Release!" in cmd_out
