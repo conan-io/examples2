@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.15)
+project(bye CXX)
+add_executable(bye bye.cpp)
+target_include_directories(bye PUBLIC "include")
+include(${CMAKE_CURRENT_LIST_DIR}/../common/myutils.cmake)
