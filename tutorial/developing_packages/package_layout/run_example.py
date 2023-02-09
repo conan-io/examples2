@@ -1,5 +1,6 @@
 import platform
 import os
+import shutil
 
 
 from test.examples_tools import run, chdir, replace
@@ -35,6 +36,7 @@ with chdir("say"):
     run("cmake --build --preset release")
 
 with chdir("hello"):
+    shutil.rmtree("./build")
     run("conan install . -s build_type=Release")
     cmd_out = run(f"cmake --preset {configure_preset} --log-level=VERBOSE")
     assert f"say/build/Release/{lib_name}" in cmd_out
