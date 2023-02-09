@@ -108,6 +108,12 @@
 
 ## Examples
 
+### [layout() examples](examples/conanfile/layout/)
+
+- layout() when you have the conanfile.py in a subfolder. [Docs](https://docs.conan.io/en/2.0/examples/conanfile/layout/conanfile_in_subfolder.html)
+- layout() when you want to handle multiple subprojects that some code. [Docs](https://docs.conan.io/en/2.0/examples/conanfile/layout/multiple_subprojects.html)
+- layout() when you package third-party libraries. [Docs](https://docs.conan.io/en/2.0/examples/conanfile/layout/export_sources_folder.html)
+
 ### [Use custom commands in your Conan CLI](examples/extensions/commands/)
 
 - Learn how to create custom commands in Conan. [Docs](https://docs.conan.io/en/2.0/reference/commands/custom_commands.html)
