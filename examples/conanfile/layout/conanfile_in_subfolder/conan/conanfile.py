@@ -7,6 +7,7 @@ from conan.tools.cmake import CMake
 class PkgSay(ConanFile):
     name = "say"
     version = "1.0"
+    settings = "os", "compiler", "build_type", "arch"
     generators = "CMakeToolchain"
 
     def layout(self):
@@ -20,7 +21,8 @@ class PkgSay(ConanFile):
         # The path of the CMakeLists.txt and sources we want to export are one level above
         folder = os.path.join(self.recipe_folder, "..")
         copy(self, "*.txt", folder, self.export_sources_folder)
-        copy(self, "*.cpp", folder, self.export_sources_folder)
+        copy(self, "src/*.cpp", folder, self.export_sources_folder)
+        copy(self, "include/*.h", folder, self.export_sources_folder)
     
     def source(self):
         # Check that we can see that the CMakeLists.txt is inside the source folder
