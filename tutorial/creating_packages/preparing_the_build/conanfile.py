@@ -29,7 +29,7 @@ class helloRecipe(ConanFile):
     generators = "CMakeDeps"
 
     def validate(self):
-        if self.info.options.with_fmt:
+        if self.options.with_fmt:
             check_min_cppstd(self, "11")
 
     def source(self):

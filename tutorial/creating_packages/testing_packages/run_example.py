@@ -2,7 +2,7 @@ from test.examples_tools import run
 
 print("- Testing Conan packages: the test() method -")
 
-out = run(f"conan create . --build=missing -tf=None")
+out = run(f"conan create . --build=missing")
 
 out = run(f"conan test test_package hello/1.0")
 

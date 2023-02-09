@@ -117,3 +117,9 @@
 ### [Use Android NDK to cross-build](examples/cross_build/android/ndk_basic)
 
 - Learn how to cross-build packages for Android. [Docs](https://docs.conan.io/en/2.0/examples/cross_build/android.html)
+
+### [Use custom deployers](examples/extensions/deployers/)
+
+- Learn how to create a custom deployer in Conan. [Docs](https://docs.conan.io/en/2.0/reference/extensions/deployers.html)
+
+    * ``sources_deploy`` [deployer](examples/extensions/deployers/sources/sources_deploy.py): Copies the sources of all your dependencies to your output folder. [Docs](https://docs.conan.io/en/2.0/examples/extensions/deployers/sources/custom_deployer_sources.html)

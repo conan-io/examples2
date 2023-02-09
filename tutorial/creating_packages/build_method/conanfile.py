@@ -31,7 +31,7 @@ class helloRecipe(ConanFile):
     generators = "CMakeDeps"
 
     def validate(self):
-        if self.info.options.with_fmt:
+        if self.options.with_fmt:
             check_min_cppstd(self, "11")
 
     def config_options(self):
@@ -72,8 +72,8 @@ class helloRecipe(ConanFile):
         # if tools.build:skip_test=True
         if not self.conf.get("tools.build:skip_test", default=False):
             test_folder = os.path.join("tests")
-            if self.info.settings.os == "Windows":
-                test_folder = os.path.join("tests", str(self.info.settings.build_type))
+            if self.settings.os == "Windows":
+                test_folder = os.path.join("tests", str(self.settings.build_type))
             self.run(os.path.join(test_folder, "test_hello"))
 
     def package(self):
