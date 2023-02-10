@@ -3,6 +3,8 @@ import platform
 
 from test.examples_tools import run, tmp_dir
 
+from conan import conan_version
+
 # ############# Example ################
 print("- Use the CMakeToolchain to work locally (local flow) using CMakePresets feature. -")
 
@@ -13,14 +15,8 @@ if cmake_version < "3.23.1":
     print("SKIPPED TEST BECAUSE OF MISSING COMPATIBLE CMAKE")
     exit(0)
 
-output = run("conan --version")
-conan_version = output.splitlines()[0].split(" ")[-1]
-print(conan_version)
-
-if conan_version in ["2.0.0-alpha6", "2.0.0-alpha7"]:
-    print(f"SKIPPED TEST BECAUSE NOT COMPATIBLE WITH {conan_version}")
-    exit(0)
-
+# FIXME: remove once 2.0-beta10 is out
+prefix_preset_name = "" if "beta9" in str(conan_version) else "conan-"
 
 with tmp_dir("tmp"):
     run("conan new -d name=foo -d version=1.0 cmake_exe")
@@ -28,15 +24,15 @@ with tmp_dir("tmp"):
     run("conan install . -s build_type=Debug")
     
     if platform.system() == "Windows":
-        run("cmake --preset default")
+        run(f"cmake --preset {prefix_preset_name}default")
     else:
-        run("cmake --preset release")
-        run("cmake --preset debug")
+        run(f"cmake --preset {prefix_preset_name}release")
+        run(f"cmake --preset {prefix_preset_name}debug")
     
-    run("cmake --build --preset release")
+    run(f"cmake --build --preset {prefix_preset_name}release")
     output = run(str(os.path.join("build", "Release", "foo")))
     assert "foo/1.0: Hello World Release!" in output
 
-    run("cmake --build --preset debug")
+    run(f"cmake --build --preset {prefix_preset_name}debug")
     output = run(str(os.path.join("build", "Debug", "foo")))
     assert "foo/1.0: Hello World Debug!" in output
