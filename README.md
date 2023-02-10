@@ -98,6 +98,22 @@
 
 - Learn how to create a Conan package when we have prebuilt libraries located in a remote repository. [Docs](https://docs.conan.io/en/2.0/tutorial/creating_packages/other_types_of_packages/package_prebuilt_binaries.html#downloading-and-packaging-pre-built-binaries)
 
+
+### Versioning
+
+#### [Introduction to lockfiles](tutorial/versioning/lockfiles/intro/)
+
+- Learn how to create lockfiles for achieving reproducible dependencies, and how different situations like conditional graphs based on configuration can be managed, or how to evolve lockfiles to introduce new dependencies
+
+#### [Dependencies version conflicts](tutorial/versioning/conflicts/versions/)
+
+- Learn why version conflict errors happen in dependency graph with diamond structures, and how they can be resolved.
+
+#### [Overriding options](tutorial/versioning/conflicts/options/)
+
+- Learn why different options values in a dependency graph can be an issue and how this can be resolved.
+
+
 ## Examples
 
 ### [Use custom commands in your Conan CLI](examples/extensions/commands/)

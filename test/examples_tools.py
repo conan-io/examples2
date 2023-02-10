@@ -7,6 +7,7 @@ from contextlib import contextmanager
 @contextmanager
 def chdir(dir_path):
     current = os.getcwd()
+    os.makedirs(dir_path, exist_ok=True)
     os.chdir(dir_path)
     try:
         yield
@@ -42,3 +43,17 @@ def run(cmd, error=False):
         raise Exception(
             "Cmd succeded (failure expected): {}\n{}".format(cmd, output))
     return output
+
+
+def replace(file_path, text, replace):
+    with open(file_path, "r") as f:
+        content = f.read()
+    content2 = content.replace(text, replace)
+    assert content != content2
+    with open(file_path, "w") as f:
+        f.write(content2)
+
+def load(file_path):
+    with open(file_path, "r") as f:
+        content = f.read()
+    return content
