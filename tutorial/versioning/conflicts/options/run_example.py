@@ -1,10 +1,13 @@
 import platform
 from test.examples_tools import run, replace, chdir, load
 
-run("conan remove matrix* -c")
-run("conan remove engine* -c")
-run("conan remove game* -c")
-run("conan remove intro* -c")
+try:
+    run("conan remove matrix* -c")
+    run("conan remove engine* -c")
+    run("conan remove game* -c")
+    run("conan remove intro* -c")
+except:
+    pass
 
 run("conan create matrix")
 run("conan create matrix -o matrix*:shared=True")

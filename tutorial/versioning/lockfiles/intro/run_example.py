@@ -1,9 +1,13 @@
 import platform
 from test.examples_tools import run, replace, chdir, load
 
-run("conan remove matrix* -c")
-run("conan remove engine* -c")
-run("conan remove sound32* -c")
+try:
+    run("conan remove matrix* -c")
+    run("conan remove engine* -c")
+    run("conan remove sound32* -c")
+except:
+    pass
+
 
 run("conan create matrix --version=1.0")
 with chdir("engine"):
