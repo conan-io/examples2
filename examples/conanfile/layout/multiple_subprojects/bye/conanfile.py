@@ -19,7 +19,9 @@ class bye(ConanFile):
 
     def export_sources(self):
         source_folder = os.path.join(self.recipe_folder, "..")
-        copy(self, "bye*", source_folder, self.export_sources_folder)
+        copy(self, "bye/conanfile.py", source_folder, self.export_sources_folder)
+        copy(self, "bye/CMakeLists.txt", source_folder, self.export_sources_folder)
+        copy(self, "bye/hello.cpp", source_folder, self.export_sources_folder)
         copy(self, "common*", source_folder, self.export_sources_folder)
 
     def build(self):
