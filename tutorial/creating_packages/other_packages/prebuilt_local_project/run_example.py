@@ -55,21 +55,23 @@ assert ("Packaged 1 '.a' file: libhello.a" in cmd_out or "Packaged 1 '.lib' file
 cmd_out = run("conan test test_package/conanfile.py hello/0.1 -s build_type=Debug")
 assert "hello/0.1: Hello World Debug!" in cmd_out
 
+# FIXME: remove once 2.0-beta10 is out
+prefix_preset_name = "" if "beta9" in str(conan_version) else "conan-"
 
 # Using CMakePresets, needed CMake > 3.23
 if platform.system() == "Darwin":
 
     run("conan install .")
-    run("cmake . --preset release")
-    run("cmake --build --preset release")
+    run(f"cmake . --preset {prefix_preset_name}release")
+    run(f"cmake --build --preset {prefix_preset_name}release")
 
     run("conan export-pkg .")
     cmd_out = run("conan test test_package/conanfile.py hello/0.1")
     assert "hello/0.1: Hello World Release!" in cmd_out
 
     run("conan install . -s build_type=Debug")
-    run("cmake . --preset debug")
-    run("cmake --build --preset debug")
+    run(f"cmake . --preset {prefix_preset_name}debug")
+    run(f"cmake --build --preset {prefix_preset_name}debug")
 
     run("conan export-pkg . -s build_type=Debug")
     cmd_out = run("conan test test_package/conanfile.py hello/0.1 -s build_type=Debug")
