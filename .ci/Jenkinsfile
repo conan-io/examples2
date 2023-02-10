@@ -78,6 +78,9 @@ def runExamples(Map ctxt) {
                 profile_path = sh(script: 'conan profile path default', returnStdout: true)
                 sh(script: "sed -i -e 's/gnu98/11/g' ${profile_path}")   
             }
+            // this fixes some problems that use to happen in ci with when CMake was built related to searching
+            // the MFC in windows, apparently setting BUILD_TESTING to OFF skips those tests
+            ctxt.shFunction("conan install --requires=cmake/3.19.8 -c tools.build:skip_test=True --build=missing")
             echo "Running examples with CONAN_HOME: ${env.CONAN_HOME}"
             for (example in ctxt.examples) {
                 runExample(ctxt, example)
