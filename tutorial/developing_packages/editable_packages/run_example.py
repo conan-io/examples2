@@ -49,7 +49,7 @@ with chdir("say"):
         run(f"cmake --build --preset {prefix_preset_name}release")
         run(f"cmake --build --preset {prefix_preset_name}debug")
     else:
-        run("cmake --build --preset {prefix_preset_name}release")
+        run(f"cmake --build --preset {prefix_preset_name}release")
 
 with chdir("hello"):
     if platform.system() == "Windows":        
