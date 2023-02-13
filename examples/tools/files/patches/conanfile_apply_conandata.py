@@ -14,7 +14,10 @@ class helloRecipe(ConanFile):
     exports_sources = "*.patch"
 
     def source(self):
+        # Please, be aware that using the head of the branch instead of an inmutable tag
+        # or commit is not a good practice in general as the branch may change the contents
         get(self, "https://github.com/conan-io/libhello/archive/refs/heads/main.zip", strip_root=True)
+
         apply_conandata_patches(self)
 
     def build(self):
