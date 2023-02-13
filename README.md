@@ -98,6 +98,13 @@
 
 - Learn how to create a Conan package when we have prebuilt libraries located in a remote repository. [Docs](https://docs.conan.io/en/2.0/tutorial/creating_packages/other_types_of_packages/package_prebuilt_binaries.html#downloading-and-packaging-pre-built-binaries)
 
+#### [Packages in editable mode](tutorial/developing_packages/editable_packages/)
+
+- Learn how to consume libraries while you are developing them. [Docs](https://docs.conan.io/en/2.0/tutorial/developing_packages/editable_packages.html)
+
+#### [Understanding the Conan Package layout](tutorial/developing_packages/package_layout/)
+
+- Learn how to declare information in the layout() for package creation and local developement. [Docs](https://docs.conan.io/en/2.0/tutorial/developing_packages/package_layout.html)
 
 ### Versioning
 
@@ -115,6 +122,12 @@
 
 
 ## Examples
+
+### [layout() examples](examples/conanfile/layout/)
+
+- Declare layout() when you have the conanfile.py in a subfolder. [Docs](https://docs.conan.io/en/2.0/examples/conanfile/layout/conanfile_in_subfolder.html)
+- Declare layout() when you want to handle multiple subprojects that some code. [Docs](https://docs.conan.io/en/2.0/examples/conanfile/layout/multiple_subprojects.html)
+- Declare layout() when you package third-party libraries. [Docs](https://docs.conan.io/en/2.0/examples/conanfile/layout/third_party_libraries.html)
 
 ### [Use custom commands in your Conan CLI](examples/extensions/commands/)
 

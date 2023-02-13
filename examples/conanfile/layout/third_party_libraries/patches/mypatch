@@ -1,0 +1,11 @@
+--- src/hello.cpp	2023-02-09 15:13:39
++++ src/hello.cpp	2023-02-09 15:17:51
+@@ -2,6 +2,8 @@
+ #include "hello.h"
+ 
+ void hello(){
++    std::cout << "Patched hello/1.0!!\n";
++
+     #ifdef NDEBUG
+     std::cout << "hello/1.0: Hello World Release!\n";
+     #else
