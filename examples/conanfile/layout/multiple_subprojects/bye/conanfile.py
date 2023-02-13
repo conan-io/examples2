@@ -28,4 +28,4 @@ class bye(ConanFile):
         cmake = CMake(self)
         cmake.configure()
         cmake.build()
-        self.run(os.path.join(self.cpp.build.bindirs[0], "bye"))
+        self.run(os.path.join(self.cpp.build.bindir, "bye"))
