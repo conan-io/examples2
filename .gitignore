@@ -61,3 +61,5 @@ conanbuild*
 conanrun*
 deactivate_conanbuild*
 deactivate_conanrun*
+tutorial/versioning/revisions/intro/chat/*
+tutorial/versioning/revisions/intro/hello/*
