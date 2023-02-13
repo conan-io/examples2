@@ -8,10 +8,12 @@ from test.examples_tools import run, chdir, replace
 
 print("- Editable packages -")
 
-run("conan editable add say say/1.0")
 
 # FIXME: remove once 2.0-beta10 is out
 prefix_preset_name = "" if "beta9" in str(conan_version) else "conan-"
+editable_argument = "" if "beta9" in str(conan_version) else "--refs="
+
+run(f"conan editable add say {editable_argument}say/1.0")
 
 with chdir("say"):
     if platform.system() == "Windows":
@@ -64,4 +66,4 @@ with chdir("hello"):
         cmd_out = run("./build/Release/hello")
         assert "say/1.0: Bye World Release!" in cmd_out
 
-run("conan editable remove say/1.0")
+run(f"conan editable remove {editable_argument}say/1.0")
