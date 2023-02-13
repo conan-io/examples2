@@ -11,9 +11,9 @@ print("- Editable packages -")
 
 # FIXME: remove once 2.0-beta10 is out
 prefix_preset_name = "" if "beta9" in str(conan_version) else "conan-"
-editable_argument = "" if "beta9" in str(conan_version) else "--refs="
+editable_argument = "say/1.0" if "beta9" in str(conan_version) else "--name=say --version=1.0"
 
-run(f"conan editable add say {editable_argument}say/1.0")
+run(f"conan editable add say {editable_argument}")
 
 with chdir("say"):
     if platform.system() == "Windows":
@@ -66,4 +66,4 @@ with chdir("hello"):
         cmd_out = run("./build/Release/hello")
         assert "say/1.0: Bye World Release!" in cmd_out
 
-run(f"conan editable remove {editable_argument}say/1.0")
+run(f"conan editable remove {editable_argument}")
