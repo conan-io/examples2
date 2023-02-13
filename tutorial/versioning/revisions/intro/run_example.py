@@ -21,7 +21,7 @@ with chdir("chat"):
     run("conan new cmake_lib -d name=chat -d version=1.0 -d requires=hello/1.0")
     run("conan create .")
     replace("conanfile.py", 'self.requires("hello/1.0")',
-                            'self.requires("hello/1.0#2475ece651f666f42c155623228c75d2")')
+                            'self.requires("hello/1.0#6b908be14391834776ffc2f42ea07cb7")')
     run("conan create .")
 
 with chdir("hello"):
