@@ -23,3 +23,5 @@ Sources for the [examples section](https://docs.conan.io/en/2.0/examples.html) o
 ### [Conan recipe tools](examples/tools)
 
 ### [Cross-building](examples/cross_build)
+
+### [Conan configuration files](examples/config_files)

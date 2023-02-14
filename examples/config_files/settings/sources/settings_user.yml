@@ -1,0 +1,7 @@
+os:
+    webOS:
+        sdk_version: [null, "7.0.0", "6.0.1", "6.0.0"]
+arch: ["cortexa15t2hf"]
+compiler:
+    gcc:
+        version: ["13.0-rc"]
