@@ -46,7 +46,7 @@
 - Use a *test_package* to test that the Conan package can be consumed correctly.
   [Docs](https://docs.conan.io/en/2.0/tutorial/creating_packages/test_conan_packages.html)
 
-# Creating packages: other types of packages
+## Creating packages: other types of packages
 
 ### [How to create a Conan package for a header-only library](other_packages/header_only/)
 
