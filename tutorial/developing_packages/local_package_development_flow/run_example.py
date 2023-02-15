@@ -21,12 +21,18 @@ assert "hello/1.0" in cmd_out
 
 # Using CMake directly, no conan build
 
-run("rm -rf src")
-run("rm -rf build")
+if platform.system() == "Windows":
+    run("rd /s /q src")
+    run("rd /s /q build")
+else:
+    run("rm -rf src")
+    run("rm -rf build")
+    
 run("conan remove hello/1.0 -c")
 
 run("conan source .")
 run("conan install .")
+
 with chdir("src"):
     if platform.system() == "Windows":
         run(f"cmake --preset {prefix_preset_name}default")
