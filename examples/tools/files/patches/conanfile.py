@@ -14,7 +14,7 @@ class helloRecipe(ConanFile):
     default_options = {"shared": False, "fPIC": True}
 
     def source(self):
-        # Please, be aware that using the head of the branch instead of an inmutable tag
+        # Please, be aware that using the head of the branch instead of an immutable tag
         # or commit is not a good practice in general as the branch may change the contents
         get(self, "https://github.com/conan-io/libhello/archive/refs/heads/main.zip", strip_root=True)
         replace_in_file(self, os.path.join(self.source_folder, "src", "hello.cpp"), "Hello World", "Hello Friends!")

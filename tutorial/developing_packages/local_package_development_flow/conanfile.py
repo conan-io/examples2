@@ -29,7 +29,7 @@ class helloRecipe(ConanFile):
             self.options.rm_safe("fPIC")
 
     def source(self):
-        # Please, be aware that using the head of the branch instead of an inmutable tag
+        # Please, be aware that using the head of the branch instead of an immutable tag
         # or commit is not a good practice in general
         get(self, "https://github.com/conan-io/libhello/archive/refs/heads/main.zip", 
             strip_root=True)
