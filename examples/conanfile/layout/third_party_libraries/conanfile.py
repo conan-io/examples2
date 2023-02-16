@@ -26,7 +26,7 @@ class Pkg(ConanFile):
         # the downloaded soures will be inside the "src" subfolder
         get(self, "https://github.com/conan-io/libhello/archive/refs/heads/main.zip", 
             strip_root=True)
-        # Please, be aware that using the head of the branch instead of an inmutable tag
+        # Please, be aware that using the head of the branch instead of an immutable tag
         # or commit is not a good practice in general as the branch may change the contents
 
         # patching, replacing, happens here
