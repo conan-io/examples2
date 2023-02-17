@@ -4,6 +4,8 @@
 
 - CMakeToolchain: [Building your project using CMakePresets](cmake/cmake_toolchain/local_flow_cmake_presets/). [Docs](https://docs.conan.io/en/2.0/examples/tools/cmake/cmake_toolchain/build_project_cmake_presets.html)
 
+- CMakeToolchain: [Extending your CMakePresets with Conan generated ones](cmake/cmake_toolchain/extend_own_cmake_presets/). [Docs](https://docs.conan.io/en/2.0/examples/tools/cmake/cmake_toolchain/extend_own_cmake_presets.html)
+
 ### [tools.files](files)
 
 - Learn how [patch sources](files/patches/). [Docs](https://docs.conan.io/en/2.0/examples/tools/files/patches/patch_sources.html)
