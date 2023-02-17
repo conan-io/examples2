@@ -13,8 +13,8 @@ run("conan install . -s build_type=Debug")
 
 if platform.system() == "Windows":
     run(f"cmake --preset default")
-    run(f"cmake --build --preset release")
-    run(f"cmake --build --preset debug")
+    run(f"cmake --build --preset multi-release")
+    run(f"cmake --build --preset multi-debug")
 else:
     run(f"cmake --preset release")
     run(f"cmake --build --preset release")
