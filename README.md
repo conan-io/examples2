@@ -2,7 +2,7 @@
 
 ## Tutorial
 
-Sources for the [tutorial section](https://docs.conan.io/en/2.0/tutorial.html) of the Conan documentation
+Sources for the [tutorial section](https://docs.conan.io/2/tutorial.html) of the Conan documentation
 
 ### [Consuming packages](tutorial/consuming_packages)
 
@@ -14,7 +14,7 @@ Sources for the [tutorial section](https://docs.conan.io/en/2.0/tutorial.html) o
 
 ## Examples
 
-Sources for the [examples section](https://docs.conan.io/en/2.0/examples.html) of the Conan documentation
+Sources for the [examples section](https://docs.conan.io/2/examples.html) of the Conan documentation
 
 ### [Conanfile methods](examples/conanfile)
 
