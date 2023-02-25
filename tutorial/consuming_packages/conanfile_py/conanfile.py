@@ -12,6 +12,8 @@ class CompressorRecipe(ConanFile):
         # Add base64 dependency only for Windows
         if self.settings.os == "Windows":
             self.requires("base64/0.4.0")
+
+    def build_requirements(self):
         if self.settings.os != "Windows":  # we need cmake 3.19 in other platforms
             self.tool_requires("cmake/3.19.8")
 
