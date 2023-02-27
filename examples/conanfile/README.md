@@ -1,7 +1,7 @@
 
 ## Conanfile methods examples
 
-### [layout() examples](examples/conanfile/layout/)
+### [layout() examples](conanfile/layout/)
 
 - Declare layout() when you have the [conanfile.py in a subfolder](conanfile_in_subfolder). [Docs](https://docs.conan.io/2/examples/conanfile/layout/conanfile_in_subfolder.html)
 
