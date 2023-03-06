@@ -4,5 +4,6 @@
 
 void ai(){
     std::cout << "I am the ai component!\n";
+    std::cout << "  └───> ";
     algorithms();
 }
