@@ -8,3 +8,7 @@
 - Declare layout() when you want to [handle multiple subprojects](layout/multiple_subprojects) that some code. [Docs](https://docs.conan.io/2/examples/conanfile/layout/multiple_subprojects.html)
 
 - Declare layout() when you package [third-party libraries](layout/third_party_libraries). [Docs](https://docs.conan.io/2/examples/conanfile/layout/third_party_libraries.html)
+
+### [package_info() examples](package_info/)
+
+- Declaring [components in package_info()](package_info/components). [Docs](https://docs.conan.io/2/examples/conanfile/package_info/components.html)
