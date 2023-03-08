@@ -36,11 +36,15 @@ class game_engineRecipe(ConanFile):
 
     def package_info(self):
         self.cpp_info.components["algorithms"].libs = ["algorithms"]
+        self.cpp_info.components["algorithms"].set_property("cmake_target_name", "algorithms")
 
         self.cpp_info.components["network"].libs = ["network"]
+        self.cpp_info.components["network"].set_property("cmake_target_name", "network")
 
         self.cpp_info.components["ai"].libs = ["ai"]
         self.cpp_info.components["ai"].requires = ["algorithms"]
+        self.cpp_info.components["ai"].set_property("cmake_target_name", "ai")
 
         self.cpp_info.components["rendering"].libs = ["rendering"]
         self.cpp_info.components["rendering"].requires = ["algorithms"]
+        self.cpp_info.components["rendering"].set_property("cmake_target_name", "rendering")

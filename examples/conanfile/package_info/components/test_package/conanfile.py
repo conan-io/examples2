@@ -1,13 +1,18 @@
 import os
 
 from conan import ConanFile
-from conan.tools.cmake import CMake, cmake_layout
+from conan.tools.cmake import CMake, CMakeDeps, cmake_layout
 from conan.tools.build import cross_building
 
 
 class game_engineTestConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
-    generators = "CMakeDeps", "CMakeToolchain"
+    generators = "CMakeToolchain"
+
+    def generate(self):
+        deps = CMakeDeps(self)
+        deps.check_components_exist = True
+        deps.generate()
 
     def requirements(self):
         self.requires(self.tested_reference_str)
