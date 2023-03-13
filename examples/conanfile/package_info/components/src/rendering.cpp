@@ -4,6 +4,5 @@
 
 void rendering(){
     std::cout << "I am the rendering component!\n";
-    std::cout << "  └───> ";
     algorithms();
 }
