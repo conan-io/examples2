@@ -17,6 +17,8 @@ shutil.copytree(current, folder)
 
 with chdir(folder):
     run("git init .")
+    run('git config user.name "Your Name"')
+    run('git config user.email "you@example.com"')
     run("git add .")
     run("git commit . -m wip")
     run("conan create .")
