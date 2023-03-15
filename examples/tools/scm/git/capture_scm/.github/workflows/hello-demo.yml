@@ -1,0 +1,20 @@
+name: Build "hello" package capturing SCM in Github actions
+run-name: ${{ github.actor }} checking hello-ci Git scm capture
+on: [push]
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+        with:
+          ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10' 
+      - uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - run: pip install conan
+      - run: conan profile detect
+      - run: conan create .
