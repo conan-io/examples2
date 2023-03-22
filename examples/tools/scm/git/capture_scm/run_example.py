@@ -22,3 +22,5 @@ with chdir(folder):
     run("git add .")
     run("git commit . -m wip")
     run("conan create .")
+    # will not fail with .gitignore
+    run("conan create .")
