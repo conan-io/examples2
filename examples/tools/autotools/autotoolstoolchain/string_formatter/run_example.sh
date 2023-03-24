@@ -4,7 +4,7 @@ echo "- AutotoolsToolchain: The toolchain generator for Autotools -"
 
 set -ex
 
-conan install .
+conan install . --build=missing
 source conanbuild.sh
 aclocal
 automake --add-missing
