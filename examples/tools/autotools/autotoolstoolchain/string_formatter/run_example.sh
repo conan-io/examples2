@@ -11,5 +11,13 @@ automake --add-missing
 autoconf
 ./configure
 make
-output="$(./string_formatter)"
-assert_eq "Conan - The C++ Package Manager!" "$output" "not equivalent!"
+
+output=$(./string_formatter)
+
+if [[ "$output" != 'Conan - The C++ Package Manager!' ]]; then
+    echo "ERROR: The String Formatter output does not match with the expected value: 'Conan - The C++ Package Manager!'"
+    exit 1
+fi
+
+echo 'AutotoolsToolchain example has been executed with SUCCESS!'
+exit 0
