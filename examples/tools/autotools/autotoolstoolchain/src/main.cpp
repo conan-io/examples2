@@ -1,7 +1,7 @@
 #include <cstdlib>
-#include <iostream>
+#include <fmt/core.h>
 
 int main(int argc, char** argv) {
-    std::cout << "Hello World" << std::endl;
+    fmt::print("Conan - The C++ Package Manager!\n");
     return EXIT_SUCCESS;
 }
