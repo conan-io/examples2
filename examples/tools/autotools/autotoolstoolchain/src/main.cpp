@@ -2,6 +2,6 @@
 #include <fmt/core.h>
 
 int main(int argc, char** argv) {
-    fmt::print("Conan - The C++ Package Manager!\n");
+    fmt::print("{} - The C++ Package Manager!\n", "Conan");
     return EXIT_SUCCESS;
 }
