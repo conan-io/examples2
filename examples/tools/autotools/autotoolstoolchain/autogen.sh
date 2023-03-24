@@ -1,4 +1,6 @@
-!/bin/sh
+#!/bin/sh
+
+set -ex
 
 aclocal \
 && automake --add-missing \
