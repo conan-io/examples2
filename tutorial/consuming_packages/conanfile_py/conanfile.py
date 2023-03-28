@@ -14,8 +14,8 @@ class CompressorRecipe(ConanFile):
             self.requires("base64/0.4.0")
 
     def build_requirements(self):
-        if self.settings.os != "Windows":  # we need cmake 3.19 in other platforms
-            self.tool_requires("cmake/3.19.8")
+        if self.settings.os != "Windows":  # we need cmake 3.22.6 in other platforms
+            self.tool_requires("cmake/3.22.6")
 
     def layout(self):
         # We make the assumption that if the compiler is msvc the
