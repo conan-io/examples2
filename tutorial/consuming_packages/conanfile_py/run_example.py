@@ -38,7 +38,7 @@ run_example(output_folder="--output-folder=build")
 
 os.rename("conanfile.py", "basic_conanfile.py")
 os.rename(os.path.join("src", "main.c"), os.path.join("src", "basic_main.c"))
-os.rename("CMakeLists.txt", "CMakeLists_basic.txt")
+os.rename("CMakeLists.txt", "basic_CMakeLists.txt")
 os.rename("complete_conanfile.py", "conanfile.py")
 os.rename(os.path.join("src", "complete_main.c"), os.path.join("src", "main.c"))
 os.rename("complete_CMakeLists.txt", "CMakeLists.txt")
