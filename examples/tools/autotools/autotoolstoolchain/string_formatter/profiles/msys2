@@ -13,3 +13,8 @@ os=Windows
 tools.cmake.cmaketoolchain:generator=MSYS Makefiles
 tools.microsoft.bash:subsystem=msys2
 tools.microsoft.bash:active=True
+[tool_requires]
+msys2/cci.latest
+autoconf/2.71
+automake/1.16.5
+pkgconf/1.9.3
