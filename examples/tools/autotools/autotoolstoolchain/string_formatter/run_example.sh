@@ -4,13 +4,17 @@ echo "- AutotoolsToolchain: The toolchain generator for Autotools -"
 
 set -ex
 
-conan install . --build=missing
+conan install . --build=missing ${PROFILE_ARGS}
 source conanbuild.sh
 aclocal
 automake --add-missing
 autoconf
 ./configure
 make
+
+source deactivate_conanbuild.sh
+
+source conanrun.sh
 
 output=$(./string_formatter)
 

@@ -11,3 +11,5 @@ os=Windows
 */*:shared=True
 [conf]
 tools.cmake.cmaketoolchain:generator=MSYS Makefiles
+tools.microsoft.bash:subsystem=msys2
+tools.microsoft.bash:active=True
