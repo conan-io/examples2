@@ -3,9 +3,9 @@ import os
 
 from test.examples_tools import chdir, run
 
-def run_example():
+def run_example(output_folder=""):
 
-    run("conan install . --output-folder=build --build missing")
+    run(f"conan install . {output_folder} --build missing")
 
     if platform.system() == "Windows":
         with chdir("build"):
@@ -32,7 +32,7 @@ print("- Understanding the flexibility of using conanfile.py vs conanfile.txt -"
 
 # first run the basic example without layout and conditionals 
 
-run_example()
+run_example(output_folder="--output-folder=build")
 
 # switch the conanfile's and code and run the more advanced example
 
