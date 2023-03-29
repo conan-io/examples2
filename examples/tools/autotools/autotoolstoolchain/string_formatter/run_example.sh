@@ -4,8 +4,11 @@ echo "- AutotoolsToolchain: The toolchain generator for Autotools -"
 
 set -ex
 
-conan install . --build=missing ${PROFILE_ARGS}
+conan install -r conancenter . --build=missing ${PROFILE_ARGS}
 source conanbuild.sh
+# Remove : from the path when building on Windows
+PKG_CONFIG_PATH="${PKG_CONFIG_PATH//:}"
+
 aclocal
 automake --add-missing
 autoconf
