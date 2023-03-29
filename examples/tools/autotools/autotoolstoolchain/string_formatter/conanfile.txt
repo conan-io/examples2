@@ -1,6 +1,0 @@
-[requires]
-fmt/9.1.0
-
-[generators]
-AutotoolsToolchain
-PkgConfigDeps

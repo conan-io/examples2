@@ -2,7 +2,7 @@
 
 echo "- AutotoolsToolchain: The toolchain generator for Autotools -"
 
-conan install . --build=missing
+conan install . --build=missing -pr profiles/msys
 if %ERRORLEVEL% neq 0 goto ERROR_EXIT
 
 conanbuild.bat
@@ -17,7 +17,7 @@ if %ERRORLEVEL% neq 0 goto ERROR_EXIT
 autoconf
 if %ERRORLEVEL% neq 0 goto ERROR_EXIT
 
-./configure
+configure
 if %ERRORLEVEL% neq 0 goto ERROR_EXIT
 
 make
