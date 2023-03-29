@@ -18,3 +18,6 @@ msys2/cci.latest
 autoconf/2.71
 automake/1.16.5
 pkgconf/1.9.3
+[buildenv]
+CC=gcc
+CXX=g++

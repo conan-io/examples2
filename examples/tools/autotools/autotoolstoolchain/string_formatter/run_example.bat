@@ -1,6 +1,8 @@
 @echo ON
 
+:: Use custom profile to build GCC on Windows
 set PROFILE_ARGS=-pr profiles/msys2
+:: Configure the terminal to run bash.exe
 set MSYSTEM=MINGW64
 set MSYS2_PATH_TYPE=inherit
 set CHERE_INVOKING=1
@@ -16,7 +18,7 @@ CALL conanbuild.bat
 if %ERRORLEVEL% neq 0 goto ERROR_EXIT
 
 echo "** START MSYS2 BASH TERMINAL AND BUILD THE AUTOTOOLSTOOLCHAIN EXAMPLE **"
-CALL %MSYS_BIN%\bash.exe -c ./run_example.sh
+CALL %MSYS_BIN%\bash.exe run_example.sh
 if %ERRORLEVEL% neq 0 goto ERROR_EXIT
 
 exit /b 0
