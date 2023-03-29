@@ -10,11 +10,8 @@ rm -rf conanbuild* conanrun* conanauto* deactivate* *.pc aclocal* auto* config.*
 # Try to build libfmt first if needed. The fmt project fails to build with bash activated on Windows
 conan install -r conancenter . --build=missing ${PROFILE_ARGS} -c tools.microsoft.bash:active=False
 # Then generate conanbuild.sh
-conan install -r conancenter . --build=missing ${PROFILE_ARGS} -v trace
+conan install -r conancenter . --build=missing ${PROFILE_ARGS}
 source conanbuild.sh
-
-# Remove : from the path when building on Windows
-PKG_CONFIG_PATH="${PKG_CONFIG_PATH//:}"
 
 # Build the example
 aclocal
