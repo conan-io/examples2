@@ -16,10 +16,10 @@ if platform.system() == "Windows":
     run(f"cmake --build --preset multi-release")
     run(f"cmake --build --preset multi-debug")
 else:
-    run(f"cmake --preset release")
-    run(f"cmake --build --preset release")
-    run(f"cmake --preset debug")
-    run(f"cmake --build --preset debug")
+    run(f"cmake --preset conan-release")
+    run(f"cmake --build --preset conan-release")
+    run(f"cmake --preset conan-debug")
+    run(f"cmake --build --preset conan-debug")
 
 if platform.system() == "Windows":        
     output = run("build\\Release\\foo.exe")
