@@ -3,7 +3,7 @@ from conan.tools.files import copy
 import os
 
 
-def deploy(graph, output_folder):
+def deploy(graph, output_folder, **kwargs):
     for name, dep in graph.root.conanfile.dependencies.items():
         if dep.folders is None or dep.folders.source_folder is None:
             raise ConanException(f"Sources missing for {name} dependency.\n"
