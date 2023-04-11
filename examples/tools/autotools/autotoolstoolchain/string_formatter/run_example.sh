@@ -7,10 +7,8 @@ set -ex
 # Remove cache
 rm -rf conanbuild* conanrun* conanauto* deactivate* *.pc aclocal* auto* config.* Makefile.in depcomp install-sh missing Makefile configure string_formatter
 
-# Try to build libfmt first if needed. The fmt project fails to build with bash activated on Windows
-conan install -r conancenter . --build=missing ${PROFILE_ARGS} -c tools.microsoft.bash:active=False
 # Then generate conanbuild.sh
-conan install -r conancenter . --build=missing ${PROFILE_ARGS}
+conan install -r conancenter . --build=missing
 source conanbuild.sh
 
 # Build the example
