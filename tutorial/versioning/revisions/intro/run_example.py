@@ -1,5 +1,6 @@
+import json
 import platform
-from test.examples_tools import run, replace, chdir
+from test.examples_tools import run, replace, chdir, load
 
 from conan import conan_version
 
@@ -24,8 +25,14 @@ with chdir("chat"):
     run("conan new cmake_lib -d name=chat -d version=1.0 -d requires=hello/1.0")
     run("conan create .")
 
-    # FIXME: remove after beta10 is released or use the json output to parse the rrev
-    hello_rrev = "2475ece651f666f42c155623228c75d2" if "beta9" in str(conan_version) else "6b908be14391834776ffc2f42ea07cb7"
+    run("conan list hello/1.0#* --format=json > output.json")
+
+    data = json.loads(load("output.json"))
+    
+    revisions = data["Local Cache"]["hello/1.0"]["revisions"]
+    sorted_revisions = sorted(revisions, key=lambda x: revisions[x]["timestamp"])
+
+    hello_rrev = sorted_revisions[-1] # oldest revision instead of the latest one
 
     replace("conanfile.py", 'self.requires("hello/1.0")',
                             f'self.requires("hello/1.0#{hello_rrev}")')
