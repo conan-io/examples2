@@ -36,14 +36,12 @@ void draw_keypoints(cv::Mat &resized_image, float *output)
 {
     int square_dim = resized_image.rows;
 
-    for (int i = 0; i < num_keypoints; ++i)
-    {
+    for (int i = 0; i < num_keypoints; ++i) {
         float y = output[i * 3];
         float x = output[i * 3 + 1];
         float conf = output[i * 3 + 2];
 
-        if (conf > confidence_threshold)
-        {
+        if (conf > confidence_threshold) {
             int img_x = static_cast<int>(x * square_dim);
             int img_y = static_cast<int>(y * square_dim);
             cv::circle(resized_image, cv::Point(img_x, img_y), 2, cv::Scalar(255, 200, 200), 1);
@@ -51,8 +49,7 @@ void draw_keypoints(cv::Mat &resized_image, float *output)
     }
 
     // draw skeleton
-    for (const auto &connection : connections)
-    {
+    for (const auto &connection : connections) {
         int index1 = connection.first;
         int index2 = connection.second;
         float y1 = output[index1 * 3];
@@ -62,8 +59,7 @@ void draw_keypoints(cv::Mat &resized_image, float *output)
         float x2 = output[index2 * 3 + 1];
         float conf2 = output[index2 * 3 + 2];
 
-        if (conf1 > confidence_threshold && conf2 > confidence_threshold)
-        {
+        if (conf1 > confidence_threshold && conf2 > confidence_threshold) {
             int img_x1 = static_cast<int>(x1 * square_dim);
             int img_y1 = static_cast<int>(y1 * square_dim);
             int img_x2 = static_cast<int>(x2 * square_dim);
@@ -73,8 +69,7 @@ void draw_keypoints(cv::Mat &resized_image, float *output)
     }
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
 
     // model from https://tfhub.dev/google/lite-model/movenet/singlepose/lightning/tflite/float16/4
     // A convolutional neural network model that runs on RGB images and predicts human
@@ -94,8 +89,7 @@ int main(int argc, char *argv[])
 
     auto model = tflite::FlatBufferModel::BuildFromFile(model_file.c_str());
 
-    if (!model)
-    {
+    if (!model) {
         throw std::runtime_error("Failed to load TFLite model");
     }
 
@@ -103,8 +97,7 @@ int main(int argc, char *argv[])
     std::unique_ptr<tflite::Interpreter> interpreter;
     tflite::InterpreterBuilder(*model, op_resolver)(&interpreter);
 
-    if (interpreter->AllocateTensors() != kTfLiteOk)
-    {
+    if (interpreter->AllocateTensors() != kTfLiteOk) {
         throw std::runtime_error("Failed to allocate tensors");
     }
 
@@ -117,21 +110,18 @@ int main(int argc, char *argv[])
 
     cv::VideoCapture video(video_file);
 
-    if (!video.isOpened())
-    {
+    if (!video.isOpened()) {
         std::cout << "Can't open the video: " << video_file << std::endl;
         return -1;
     }
 
     cv::Mat frame;
 
-    while (true)
-    {
+    while (true) {
 
         video >> frame;
 
-        if (frame.empty())
-        {
+        if (frame.empty()) {
             video.set(cv::CAP_PROP_POS_FRAMES, 0);
             continue;
         }
@@ -153,8 +143,7 @@ int main(int argc, char *argv[])
         // inference
         std::chrono::steady_clock::time_point start, end;
         start = std::chrono::steady_clock::now();
-        if (interpreter->Invoke() != kTfLiteOk)
-        {
+        if (interpreter->Invoke() != kTfLiteOk) {
             std::cerr << "Inference failed" << std::endl;
             return -1;
         }
@@ -175,8 +164,7 @@ int main(int argc, char *argv[])
             break;
         }
 
-        if (cv::waitKey(22) >= 0)
-        {
+        if (cv::waitKey(22) >= 0) {
             break;
         }
     }
