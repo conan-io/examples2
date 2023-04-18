@@ -78,14 +78,36 @@ int main(int argc, char *argv[]) {
     // movement/fitness activities. This variant: MoveNet.SinglePose.Lightning is a lower
     // capacity model (compared to MoveNet.SinglePose.Thunder) that can run >50FPS on most
     // modern laptops while achieving good performance.
-
-    std::cout << argc << std::endl;
-    std::string model_file = (argc < 3) ? "lite-model_movenet_singlepose_lightning_tflite_float16_4.tflite" : std::string(argv[1]);
-
+    std::string model_file = "data/lite-model_movenet_singlepose_lightning_tflite_float16_4.tflite";
     // Video by Olia Danilevich from https://www.pexels.com/
-    std::string video_file = (argc < 3) ? "dancing.mov" : std::string(argv[2]);
+    std::string video_file = "data/dancing.mov";
+    bool show_windows = true;
 
-    bool show_output = (argc == 4 && std::string(argv[3]) == "0") ? false : true;
+    std::map<std::string, std::string> arguments;
+
+    for (int i = 1; i < argc; ++i) {
+        std::string arg(argv[i]);
+
+        if (arg.find("--") == 0) {
+            size_t equal_sign_pos = arg.find("=");
+            std::string key = arg.substr(0, equal_sign_pos);
+            std::string value = equal_sign_pos != std::string::npos ? arg.substr(equal_sign_pos + 1) : "";
+
+            arguments[key] = value;
+        }
+    }
+
+    if (arguments.count("--model")) {
+        model_file = arguments["--model"];
+    }
+
+    if (arguments.count("--video")) {
+        video_file = arguments["--video"];
+    }
+
+    if (arguments.count("--no-windows")) {
+        show_windows = false;
+    }
 
     auto model = tflite::FlatBufferModel::BuildFromFile(model_file.c_str());
 
@@ -156,7 +178,7 @@ int main(int argc, char *argv[]) {
 
         draw_keypoints(resized_image, results);
 
-        if (show_output) {
+        if (show_windows) {
             imshow("Output", resized_image);
         }
         else {
