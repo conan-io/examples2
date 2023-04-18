@@ -78,9 +78,9 @@ int main(int argc, char *argv[]) {
     // movement/fitness activities. This variant: MoveNet.SinglePose.Lightning is a lower
     // capacity model (compared to MoveNet.SinglePose.Thunder) that can run >50FPS on most
     // modern laptops while achieving good performance.
-    std::string model_file = "data/lite-model_movenet_singlepose_lightning_tflite_float16_4.tflite";
+    std::string model_file = "assets/lite-model_movenet_singlepose_lightning_tflite_float16_4.tflite";
     // Video by Olia Danilevich from https://www.pexels.com/
-    std::string video_file = "data/dancing.mov";
+    std::string video_file = "assets/dancing.mov";
     bool show_windows = true;
 
     std::map<std::string, std::string> arguments;
