@@ -126,9 +126,27 @@ int main(int argc, char *argv[]) {
     tflite::PrintInterpreterState(interpreter.get());
 
     auto input = interpreter->inputs()[0];
+    auto input_batch_size = interpreter->tensor(input)->dims->data[0];
     auto input_height = interpreter->tensor(input)->dims->data[1];
     auto input_width = interpreter->tensor(input)->dims->data[2];
     auto input_channels = interpreter->tensor(input)->dims->data[3];
+
+    std::cout << "The input tensor has the following dimensions: ["<< input_batch_size << "," 
+                                                                   << input_height << "," 
+                                                                   << input_width << ","
+                                                                   << input_channels << "]" << std::endl;
+
+    auto output = interpreter->outputs()[0];
+
+    auto output_batch_size = interpreter->tensor(output)->dims->data[0];
+    auto output_height = interpreter->tensor(output)->dims->data[1];
+    auto output_width = interpreter->tensor(output)->dims->data[2];
+    auto output_channels = interpreter->tensor(output)->dims->data[3];
+    std::cout << "The output tensor has the following dimensions: ["<< output_batch_size << "," 
+                                                                    << output_height << "," 
+                                                                    << output_width << ","
+                                                                    << output_channels << "]" << std::endl;
+
 
     cv::VideoCapture video(video_file);
 
@@ -157,7 +175,7 @@ int main(int argc, char *argv[]) {
 
         cv::Mat resized_image;
 
-        // center + crop
+        // crop + resize the input image
         cv::resize(frame(cv::Rect(delta_width, delta_height, square_dim, square_dim)), resized_image, cv::Size(input_width, input_height));
 
         memcpy(interpreter->typed_input_tensor<unsigned char>(0), resized_image.data, resized_image.total() * resized_image.elemSize());
