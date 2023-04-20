@@ -36,4 +36,5 @@ if platform.system() == "Windows":
 else:
     run("cmake .. -G \"Visual Studio 15 2017\" -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_POLICY_DEFAULT_CMP0091=NEW'")
     run("cmake --build . --config Release")
+    run("dir")
     run("pose-estimation.exe --no-windows")
