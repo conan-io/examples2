@@ -138,14 +138,14 @@ int main(int argc, char *argv[]) {
 
     auto output = interpreter->outputs()[0];
 
-    auto output_batch_size = interpreter->tensor(output)->dims->data[0];
-    auto output_height = interpreter->tensor(output)->dims->data[1];
-    auto output_width = interpreter->tensor(output)->dims->data[2];
-    auto output_channels = interpreter->tensor(output)->dims->data[3];
-    std::cout << "The output tensor has the following dimensions: ["<< output_batch_size << "," 
-                                                                    << output_height << "," 
-                                                                    << output_width << ","
-                                                                    << output_channels << "]" << std::endl;
+    auto dim0 = interpreter->tensor(output)->dims->data[0];
+    auto dim1 = interpreter->tensor(output)->dims->data[1];
+    auto dim2 = interpreter->tensor(output)->dims->data[2];
+    auto dim3 = interpreter->tensor(output)->dims->data[3];
+    std::cout << "The output tensor has the following dimensions: ["<< dim0 << "," 
+                                                                    << dim1 << "," 
+                                                                    << dim2 << ","
+                                                                    << dim3 << "]" << std::endl;
 
 
     cv::VideoCapture video(video_file);

@@ -3,7 +3,6 @@ from conan.tools.cmake import cmake_layout
 
 
 class PoseEstimationRecipe(ConanFile):
-    # Binary configuration
     settings = "os", "compiler", "build_type", "arch"
     generators = "CMakeDeps", "CMakeToolchain"
 
