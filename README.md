@@ -25,3 +25,5 @@ Sources for the [examples section](https://docs.conan.io/2/examples.html) of the
 ### [Cross-building](examples/cross_build)
 
 ### [Conan configuration files](examples/config_files)
+
+### [Libraries examples](examples/libraries)
