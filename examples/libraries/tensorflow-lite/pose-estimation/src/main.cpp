@@ -204,7 +204,9 @@ int main(int argc, char *argv[]) {
             break;
         }
 
-        if (cv::waitKey(22) >= 0) {
+        // render at 30 fps
+        int waitTime = processing_time<33 ? 33-processing_time : 1;
+        if (cv::waitKey(33-processing_time) >= 0) {
             break;
         }
     }
