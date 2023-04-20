@@ -11,7 +11,7 @@ if platform.system() == "Windows":
     with chdir("build"):
         command = []
         command.append("conanbuild.bat")
-        command.append("cmake .. -G \"Visual Studio 15 2017\" -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake")
+        command.append("cmake .. -G \"Visual Studio 17 2022\" -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake")
         command.append("deactivate_conanbuild.bat")
         command.append("cmake --build . --config Release")
         cmd_out = run(" && ".join(command))
