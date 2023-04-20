@@ -5,7 +5,7 @@ print("Pose estimation example with Tensorflow Lite and OpenCV")
 
 run("conan install . -o opencv/\*:with_ffmpeg=False "
     "-o opencv/\*:with_gtk=False -c tools.system.package_manager:mode=install "
-    "-c tools.system.package_manager:sudo=True")
+    "-c tools.system.package_manager:sudo=True -s compiler.cppstd=17")
 
 # with presets
 
@@ -25,7 +25,7 @@ else:
 
 run("conan install . -o opencv/\*:with_ffmpeg=False "
     "-o opencv/\*:with_gtk=False -c tools.system.package_manager:mode=install "
-    "-c tools.system.package_manager:sudo=True")
+    "-c tools.system.package_manager:sudo=True -s compiler.cppstd=17")
 
 # calling CMake directly
 
