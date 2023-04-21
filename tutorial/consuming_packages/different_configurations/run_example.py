@@ -10,7 +10,7 @@ if platform.system() == "Windows":
     with chdir("build"):
         command = []
         command.append("conanbuild.bat")
-        command.append("cmake .. -G \"Visual Studio 15 2017\" -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake")
+        command.append("cmake .. -G \"Visual Studio 17 2022\" -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake")
         command.append("deactivate_conanbuild.bat")
         command.append("cmake --build . --config Release")
         run(" && ".join(command))
@@ -20,7 +20,7 @@ if platform.system() == "Windows":
     run("conan install . --output-folder=build --build=missing -s build_type=Debug")
     with chdir("build"):
         command.append("conanbuild.bat")
-        command.append("cmake .. -G \"Visual Studio 15 2017\" -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake")
+        command.append("cmake .. -G \"Visual Studio 17 2022\" -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake")
         command.append("deactivate_conanbuild.bat")
         command.append("cmake --build . --config Debug")
         run(" && ".join(command))
@@ -32,7 +32,7 @@ if platform.system() == "Windows":
     with chdir("build"):
         command = []
         command.append("conanbuild.bat")
-        command.append("cmake .. -G \"Visual Studio 15 2017\" -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake")
+        command.append("cmake .. -G \"Visual Studio 17 2022\" -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake")
         command.append("deactivate_conanbuild.bat")
         command.append("cmake --build . --config Release")
         run(" && ".join(command))
