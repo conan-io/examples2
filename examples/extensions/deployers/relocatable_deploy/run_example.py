@@ -27,9 +27,6 @@ shutil.move(folder, new_folder)
 
 with chdir(new_folder):
     if platform.system() == "Windows":
-        print(load(os.path.join(new_folder, "build\generators\conanbuildenv-release-x86_64.bat")))
-        print(load(os.path.join(new_folder, "build\generators\conanbuildenv-debug-x86_64.bat")))
-        print(load(os.path.join(new_folder, "build\generators\ZLIB-release-x86_64-data.cmake")))
         with chdir("build"):
             run("generators\conanbuild.bat && cmake --version")
             run("generators\conanbuild.bat && cmake .. -G \"Visual Studio 17 2022\" -DCMAKE_TOOLCHAIN_FILE=generators/conan_toolchain.cmake")
