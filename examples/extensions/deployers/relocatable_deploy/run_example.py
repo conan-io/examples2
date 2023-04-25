@@ -35,7 +35,8 @@ with chdir(new_folder):
     else: 
         with chdir("build/Release"):
             # TODO: This is still necessary in Linux
-            run(f"cd generators && sed -i '' 's,{folder},{new_folder},g' *")
+            sed_args = "-i ''" if platform.system() == "Darwin" else "-i"
+            run(f"cd generators && sed {sed_args} 's,{folder},{new_folder},g' *")
             run(". generators/conanbuild.sh && cmake --version")
             run(". generators/conanbuild.sh && cmake ../.. -DCMAKE_TOOLCHAIN_FILE=generators/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release")
             run(". generators/conanbuild.sh && cmake --build .")
