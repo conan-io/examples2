@@ -11,6 +11,7 @@ class PoseEstimationRecipe(ConanFile):
         self.requires("opencv/4.5.5")
         self.requires("libwebp/1.3.0", override=True)
         self.requires("eigen/3.4.0", override=True)
+        self.requires("xz_utils/5.4.2", override=True)
 
     def layout(self):
         cmake_layout(self)

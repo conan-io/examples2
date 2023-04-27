@@ -81,6 +81,7 @@ int main(int argc, char *argv[]) {
     std::string model_file = "assets/lite-model_movenet_singlepose_lightning_tflite_float16_4.tflite";
     // Video by Olia Danilevich from https://www.pexels.com/
     std::string video_file = "assets/dancing.mp4";
+    std::string image_file = "";
     bool show_windows = true;
 
     std::map<std::string, std::string> arguments;
@@ -103,6 +104,10 @@ int main(int argc, char *argv[]) {
 
     if (arguments.count("--video")) {
         video_file = arguments["--video"];
+    }
+
+    if (arguments.count("--image")) {
+        image_file = arguments["--image"];
     }
 
     if (arguments.count("--no-windows")) {
@@ -150,22 +155,29 @@ int main(int argc, char *argv[]) {
 
     cv::VideoCapture video(video_file);
 
-    if (!video.isOpened()) {
-        std::cout << "Can't open the video: " << video_file << std::endl;
-        return -1;
-    }
-
     cv::Mat frame;
+
+    if (image_file.empty()) {
+        if (!video.isOpened()) {
+            std::cout << "Can't open the video: " << video_file << std::endl;
+            return -1;
+        }
+    }
+    else {
+        frame = cv::imread(image_file);
+    }
 
     while (true) {
 
-        video >> frame;
+        if (image_file.empty()) {
+            video >> frame;
 
-        if (frame.empty()) {
-            video.set(cv::CAP_PROP_POS_FRAMES, 0);
-            continue;
+            if (frame.empty()) {
+                video.set(cv::CAP_PROP_POS_FRAMES, 0);
+                continue;
+            }
         }
-
+        
         int image_width = frame.size().width;
         int image_height = frame.size().height;
 
