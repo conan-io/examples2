@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
     // modern laptops while achieving good performance.
     std::string model_file = "assets/lite-model_movenet_singlepose_lightning_tflite_float16_4.tflite";
     // Video by Olia Danilevich from https://www.pexels.com/
-    std::string video_file = "assets/dancing.mov";
+    std::string video_file = "assets/dancing.mp4";
     bool show_windows = true;
 
     std::map<std::string, std::string> arguments;
