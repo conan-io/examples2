@@ -1,0 +1,12 @@
+[requires]
+zlib/1.2.13
+
+[tool_requires]
+cmake/3.25.3
+
+[generators]
+CMakeDeps
+CMakeToolchain
+
+[layout]
+cmake_layout
