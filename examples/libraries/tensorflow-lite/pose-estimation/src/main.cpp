@@ -223,8 +223,13 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    video.release();
-    cv::destroyAllWindows();
+    if (image_file.empty()) {
+        video.release();
+    }
+
+    if (show_windows) {
+            cv::destroyAllWindows();
+    }
 
     return 0;
 }
