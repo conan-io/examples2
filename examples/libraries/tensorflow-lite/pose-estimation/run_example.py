@@ -34,8 +34,7 @@ if platform.system() == "Windows":
     if platform.system() == "Windows":
         run("cmake . -G \"Visual Studio 17 2022\" -DCMAKE_TOOLCHAIN_FILE=./build/generators/conan_toolchain.cmake -DCMAKE_POLICY_DEFAULT_CMP0091=NEW")
         run("cmake --build . --config Release")
-        run("dir")
-        run("build\Release\pose-estimation.exe --no-windows --image=assets/dancing.png")
+        run("Release\pose-estimation.exe --no-windows --image=assets/dancing.png")
     else:
         run("cmake . -G \"Unix Makefiles\" -DCMAKE_TOOLCHAIN_FILE=build/Release/generators/conan_toolchain.cmake -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_BUILD_TYPE=Release")
         run("cmake --build .")
