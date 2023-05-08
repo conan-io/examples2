@@ -3,8 +3,7 @@ from test.examples_tools import run
 
 print("Pose estimation example with Tensorflow Lite and OpenCV")
 
-run("conan install . -o opencv/*:with_ffmpeg=False "
-    "-o opencv/*:with_gtk=False -c tools.system.package_manager:mode=install "
+run("conan install . -c tools.system.package_manager:mode=install "
     "-c tools.system.package_manager:sudo=True -s compiler.cppstd=17 --build=missing")
 
 # with presets
@@ -23,8 +22,7 @@ if platform.system() == "Windows":
 else:
     run("rm -rf build")
 
-run("conan install . -o opencv/*:with_ffmpeg=False "
-    "-o opencv/*:with_gtk=False -c tools.system.package_manager:mode=install "
+run("conan install . -c tools.system.package_manager:mode=install "
     "-c tools.system.package_manager:sudo=True -s compiler.cppstd=17")
 
 # calling CMake directly
