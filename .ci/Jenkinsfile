@@ -61,6 +61,9 @@ def runExample(Map ctxt, String example) {
             String command = script.contains(".py") ? "python ${script}" : "${script}"
             dir("${path}") {
                 echo "Running example: ${path}"
+                if (ctxt.runningUnix) {
+                    ctxt.shFunction("ls")
+                }
                 ctxt.shFunction("${command}")
             }
         }
