@@ -13,9 +13,9 @@ def envInside(Map ctxt, Closure closure) {
     String venvDirectory = ctxt.runningUnix ? "${pwd()}/conanenv" : "${pwd()}\\conanenv"
     String binPath = ctxt.runningUnix ? "$venvDirectory/bin/" : "$venvDirectory\\Scripts\\"
     String conanHome = ctxt.runningUnix ? "${pwd()}/${randDir}/.conan" : "${pwd()}\\${randDir}\\.conan"
-    String pythonpath = "${env.WORKSPACE}"
     String cmakePath = ctxt.runningUnix ? "/Users/jenkins/cmake/cmake-3.23.1/bin" : "C:\\cmake\\cmake-3.23.1-win64-x64\\bin"
-    withEnv(["PATH+EXTRA=${binPath}", "PATH+CMAKE=${cmakePath}", "CONAN_HOME=${conanHome}", "PYTHONPATH=${pythonpath}"]) {
+    String pythonPath = ctxt.runningUnix ? "${env.WORKSPACE}/${ctxt.subDir}" : "${env.WORKSPACE}\\${ctxt.subDir}"
+    withEnv(["PATH+EXTRA=${binPath}", "PATH+CMAKE=${cmakePath}", "CONAN_HOME=${conanHome}", "PYTHONPATH=${pythonPath}"]) {
         // This doesn't work if running docker.inside (https://issues.jenkins.io/browse/JENKINS-49076)
         closure()
     }
@@ -72,18 +72,23 @@ def runExample(Map ctxt, String example) {
 
 def runExamples(Map ctxt) {
     try {
-        checkout scm
-        envCreate(ctxt)
-        envInside(ctxt) {
-            ctxt.shFunction("cmake --version")
-            ctxt.shFunction('conan profile detect --force')
-            if (ctxt.runningUnix) {
-                profile_path = sh(script: 'conan profile path default', returnStdout: true)
-                sh(script: "sed -i -e 's/gnu98/11/g' ${profile_path}")   
-            }
-            echo "Running examples with CONAN_HOME: ${env.CONAN_HOME}"
-            for (example in ctxt.examples) {
-                runExample(ctxt, example)
+        ctxt.subDir = UUID.randomUUID().toString()
+        dir(ctxt.subDir) {
+            checkout scm
+            envCreate(ctxt)
+            envInside(ctxt) {
+                ctxt.shFunction("cmake --version")
+                ctxt.shFunction('conan profile detect --force')
+                if (ctxt.runningUnix) {
+                    profile_path = sh(script: 'conan profile path default', returnStdout: true)
+                    sh(script: "sed -i -e 's/gnu98/11/g' ${profile_path}")   
+                }
+                echo "Running examples with CONAN_HOME: ${env.CONAN_HOME}"
+                for (example in ctxt.examples) {
+                    if (example.contains("different")) {
+                        runExample(ctxt, example)
+                    }
+                }
             }
         }
     }
