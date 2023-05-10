@@ -85,9 +85,7 @@ def runExamples(Map ctxt) {
                 }
                 echo "Running examples with CONAN_HOME: ${env.CONAN_HOME}"
                 for (example in ctxt.examples) {
-                    if (example.contains("different")) {
-                        runExample(ctxt, example)
-                    }
+                    runExample(ctxt, example)
                 }
             }
         }
