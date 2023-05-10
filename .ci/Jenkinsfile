@@ -9,7 +9,7 @@ void cancelPrevious() {
 LINUX_CONTAINER = 'conanio/ci-functional'
 
 def envInside(Map ctxt, Closure closure) {
-    String randDir = UUID.randomUUID().toString().substring(0, 4)
+    String randDir = UUID.randomUUID().toString()
     String venvDirectory = ctxt.runningUnix ? "${pwd()}/conanenv" : "${pwd()}\\conanenv"
     String binPath = ctxt.runningUnix ? "$venvDirectory/bin/" : "$venvDirectory\\Scripts\\"
     String conanHome = ctxt.runningUnix ? "${pwd()}/${randDir}/.conan" : "${pwd()}\\${randDir}\\.conan"
@@ -72,7 +72,7 @@ def runExample(Map ctxt, String example) {
 
 def runExamples(Map ctxt) {
     try {
-        ctxt.subDir = UUID.randomUUID().toString()
+        ctxt.subDir = UUID.randomUUID().toString().substring(0, 4)
         dir(ctxt.subDir) {
             checkout scm
             envCreate(ctxt)
