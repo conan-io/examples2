@@ -3,7 +3,7 @@ from conan.tools.cmake import CMake, cmake_layout
 
 
 class LibfooRecipe(ConanFile):
-    name = "libfoo"
+    name = "myserver"
     version = "1.0"
     package_type = "library"
     settings = "os", "compiler", "build_type", "arch"
@@ -25,17 +25,12 @@ class LibfooRecipe(ConanFile):
         self.requires("protobuf/3.18.1", transitive_headers=True)
 
     def build_requirements(self):
-        # We want to use the same version as host, even if it's overridden!
-        self.tool_requires("protobuf/<host_version>")
+        self.tool_requires("protobuf/3.18.1")
 
     def layout(self):
         cmake_layout(self)
 
     def build(self):
-        protobuf_host_version = self.dependencies.host["protobuf"].ref.version
-        protobuf_build_version = self.dependencies.build["protobuf"].ref.version
-        # Checking if HOST/BUILD versions of protobuf are exactly the same
-        self.output.warning(f"Protobuf HOST/BUILD versions: {protobuf_host_version}/{protobuf_build_version}")
         cmake = CMake(self)
         cmake.configure()
         cmake.build()
@@ -45,5 +40,5 @@ class LibfooRecipe(ConanFile):
         cmake.install()
 
     def package_info(self):
-        self.cpp_info.libs = ["libfoo"]
+        self.cpp_info.libs = ["myserver"]
         self.cpp_info.requires = ["protobuf::libprotobuf"]

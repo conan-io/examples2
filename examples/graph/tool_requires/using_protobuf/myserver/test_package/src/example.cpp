@@ -12,7 +12,7 @@ int main(int argc, char* argv[]) {
   tutorial::AddressBook address_book;
   auto * person = address_book.add_people();
   person->set_id(1337);
-
+  std::cout << "Test(): created a person with id 1337\n";
   // Optional:  Delete all global objects allocated by libprotobuf.
   google::protobuf::ShutdownProtobufLibrary();
 
