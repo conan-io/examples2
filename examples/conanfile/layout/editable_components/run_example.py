@@ -13,7 +13,7 @@ cmd_out = run("conan build app")
 assert cmd_out.count("hello: Release!") == 2
 assert cmd_out.count("bye: Release!") == 1
 
-run("conan remove * -c")
+run("conan remove 'greetings*' -c")
 run("conan editable add greetings")
 run("conan build greetings")
 cmd_out = run("conan build app")
