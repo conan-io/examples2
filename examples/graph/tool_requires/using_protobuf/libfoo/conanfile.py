@@ -1,12 +1,11 @@
 from conan import ConanFile
-from conan.tools.cmake import CMakeToolchain, CMake, cmake_layout, CMakeDeps
+from conan.tools.cmake import CMake, cmake_layout
 
 
 class LibfooRecipe(ConanFile):
     name = "libfoo"
     version = "1.0"
     package_type = "library"
-
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False], "fPIC": [True, False]}
     default_options = {"shared": False, "fPIC": True}
@@ -35,7 +34,7 @@ class LibfooRecipe(ConanFile):
     def build(self):
         protobuf_host_version = self.dependencies.host["protobuf"].ref.version
         protobuf_build_version = self.dependencies.build["protobuf"].ref.version
-        # Checking that HOST/BUILD versions of protobuf are exactly the same
+        # Checking if HOST/BUILD versions of protobuf are exactly the same
         self.output.warning(f"Protobuf HOST/BUILD versions: {protobuf_host_version}/{protobuf_build_version}")
         cmake = CMake(self)
         cmake.configure()
@@ -48,4 +47,3 @@ class LibfooRecipe(ConanFile):
     def package_info(self):
         self.cpp_info.libs = ["libfoo"]
         self.cpp_info.requires = ["protobuf::libprotobuf"]
-
