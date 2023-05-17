@@ -9,13 +9,13 @@ void cancelPrevious() {
 LINUX_CONTAINER = 'conanio/ci-functional'
 
 def envInside(Map ctxt, Closure closure) {
-    String randDir = UUID.randomUUID().toString()
+    String randDir = UUID.randomUUID().toString().substring(0, 4)
     String venvDirectory = ctxt.runningUnix ? "${pwd()}/conanenv" : "${pwd()}\\conanenv"
     String binPath = ctxt.runningUnix ? "$venvDirectory/bin/" : "$venvDirectory\\Scripts\\"
     String conanHome = ctxt.runningUnix ? "${pwd()}/${randDir}/.conan" : "${pwd()}\\${randDir}\\.conan"
-    String pythonpath = "${env.WORKSPACE}"
     String cmakePath = ctxt.runningUnix ? "/Users/jenkins/cmake/cmake-3.23.1/bin" : "C:\\cmake\\cmake-3.23.1-win64-x64\\bin"
-    withEnv(["PATH+EXTRA=${binPath}", "PATH+CMAKE=${cmakePath}", "CONAN_HOME=${conanHome}", "PYTHONPATH=${pythonpath}"]) {
+    String pythonPath = ctxt.runningUnix ? "${env.WORKSPACE}/${ctxt.subDir}" : "${env.WORKSPACE}\\${ctxt.subDir}"
+    withEnv(["PATH+EXTRA=${binPath}", "PATH+CMAKE=${cmakePath}", "CONAN_HOME=${conanHome}", "PYTHONPATH=${pythonPath}"]) {
         // This doesn't work if running docker.inside (https://issues.jenkins.io/browse/JENKINS-49076)
         closure()
     }
@@ -43,10 +43,10 @@ String pipConanBranchInstall(String branch, String fork='conan-io') {
     return "-e git+https://github.com/${fork}/conan.git@${branch}#egg=conan"
 }
 
-// Run on develop2 and latest pre-release version
+// Run on latest development branch and latest released version
 List<Map> getBranchesInstalls() {
     def branches = [['name': 'latest Conan 2.0 release', 'branchInstall': 'conan']]
-    branches.add(0, ['name': 'develop Conan 2.0', 'branchInstall': pipConanBranchInstall('develop2')])
+    branches.add(0, ['name': 'develop Conan 2.0', 'branchInstall': pipConanBranchInstall('release/2.0')])
     return branches
 }
 
@@ -61,6 +61,9 @@ def runExample(Map ctxt, String example) {
             String command = script.contains(".py") ? "python ${script}" : "${script}"
             dir("${path}") {
                 echo "Running example: ${path}"
+                if (ctxt.runningUnix) {
+                    ctxt.shFunction("ls")
+                }
                 ctxt.shFunction("${command}")
             }
         }
@@ -69,18 +72,21 @@ def runExample(Map ctxt, String example) {
 
 def runExamples(Map ctxt) {
     try {
-        checkout scm
-        envCreate(ctxt)
-        envInside(ctxt) {
-            ctxt.shFunction("cmake --version")
-            ctxt.shFunction('conan profile detect --force')
-            if (ctxt.runningUnix) {
-                profile_path = sh(script: 'conan profile path default', returnStdout: true)
-                sh(script: "sed -i -e 's/gnu98/11/g' ${profile_path}")   
-            }
-            echo "Running examples with CONAN_HOME: ${env.CONAN_HOME}"
-            for (example in ctxt.examples) {
-                runExample(ctxt, example)
+        ctxt.subDir = UUID.randomUUID().toString().substring(0, 4)
+        dir(ctxt.subDir) {
+            checkout scm
+            envCreate(ctxt)
+            envInside(ctxt) {
+                ctxt.shFunction("cmake --version")
+                ctxt.shFunction('conan profile detect --force')
+                if (ctxt.runningUnix) {
+                    profile_path = sh(script: 'conan profile path default', returnStdout: true)
+                    sh(script: "sed -i -e 's/gnu98/11/g' ${profile_path}")   
+                }
+                echo "Running examples with CONAN_HOME: ${env.CONAN_HOME}"
+                for (example in ctxt.examples) {
+                    runExample(ctxt, example)
+                }
             }
         }
     }
