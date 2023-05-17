@@ -12,9 +12,10 @@ add_executable( dear-imgui-conan
                 opengl_shader.h
                 file_manager.h
                 bindings/imgui_impl_glfw.cpp
-                bindings/imgui_impl_opengl3.cpp
                 bindings/imgui_impl_glfw.h
+                bindings/imgui_impl_opengl3.cpp
                 bindings/imgui_impl_opengl3.h
+                bindings/imgui_impl_opengl3_loader.h
                 assets/simple-shader.vs
                 assets/simple-shader.fs )
 
