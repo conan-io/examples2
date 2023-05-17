@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.0)
 project(dear-imgui-conan CXX)
 
-find_package(imgui CONFIG)
-find_package(glfw3 CONFIG)
-find_package(glew CONFIG)
+find_package(imgui REQUIRED)
+find_package(glfw3 REQUIRED)
+find_package(glew REQUIRED)
 
 add_executable( dear-imgui-conan
                 main.cpp
