@@ -6,6 +6,8 @@ void cancelPrevious() {
     }
 }
 
+def isPR = env.CHANGE_ID ? true : false
+
 LINUX_CONTAINER = 'conanio/ci-functional'
 
 def envInside(Map ctxt, Closure closure) {
@@ -112,7 +114,7 @@ node('Linux') {
             checkout scm
             def _examples = sh(script: 'find . -name run_example.*', returnStdout: true).readLines()
             for (example in _examples) {
-                if (example.contains(".sh") || example.contains(".bat") || example.contains(".py")) {
+                if ((example.contains(".sh") || example.contains(".bat") || example.contains(".py")) && (!example.contains("tensorflow") || !isPR)) {
                     examples.add(example)
                 }
             }
