@@ -7,4 +7,4 @@
   #define LIBFOO_EXPORT
 #endif
 
-LIBFOO_EXPORT void myserver();
+LIBFOO_EXPORT void myaddresser();

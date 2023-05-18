@@ -1,10 +1,10 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "myserver.h"
+#include "myaddresser.h"
 
 
 int main(int argc, char* argv[]) {
-  myserver();
+  myaddresser();
   return 0;
 }

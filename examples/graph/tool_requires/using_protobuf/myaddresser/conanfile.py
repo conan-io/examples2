@@ -2,8 +2,8 @@ from conan import ConanFile
 from conan.tools.cmake import CMake, cmake_layout
 
 
-class myserverRecipe(ConanFile):
-    name = "myserver"
+class myaddresserRecipe(ConanFile):
+    name = "myaddresser"
     version = "1.0"
     package_type = "library"
     settings = "os", "compiler", "build_type", "arch"
@@ -40,5 +40,5 @@ class myserverRecipe(ConanFile):
         cmake.install()
 
     def package_info(self):
-        self.cpp_info.libs = ["myserver"]
+        self.cpp_info.libs = ["myaddresser"]
         self.cpp_info.requires = ["protobuf::libprotobuf"]
