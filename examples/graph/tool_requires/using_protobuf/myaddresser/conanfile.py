@@ -22,7 +22,7 @@ class myaddresserRecipe(ConanFile):
             self.options.rm_safe("fPIC")
 
     def requirements(self):
-        self.requires("protobuf/3.18.1", transitive_headers=True)
+        self.requires("protobuf/3.18.1")
 
     def build_requirements(self):
         self.tool_requires("protobuf/3.18.1")
