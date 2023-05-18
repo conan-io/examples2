@@ -64,3 +64,4 @@ deactivate_conanrun*
 tutorial/versioning/revisions/intro/chat/*
 tutorial/versioning/revisions/intro/hello/*
 examples/libraries/tensorflow-lite/pose-estimation/pose-estimation
+examples/libraries/imgui/introduction/bindings
