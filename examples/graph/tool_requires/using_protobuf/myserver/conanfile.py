@@ -2,7 +2,7 @@ from conan import ConanFile
 from conan.tools.cmake import CMake, cmake_layout
 
 
-class LibfooRecipe(ConanFile):
+class myserverRecipe(ConanFile):
     name = "myserver"
     version = "1.0"
     package_type = "library"
