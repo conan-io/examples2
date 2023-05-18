@@ -8,10 +8,10 @@ if platform.system() != "Darwin":
     sys.exit()
 
 # Running in native MacOS ARM
-output = run("conan create myserver --build missing -pr:b myserver/host-armv8 -pr:h myserver/host-armv8")
+output = run("conan create myserver --build missing -pr:b myserver/apple-arch-armv8 -pr:h myserver/apple-arch-armv8")
 assert "Test(): created a person with id 1337" in output
 # Cross-building to Intel arch
-output = run("conan create myserver --build missing -pr:b myserver/host-armv8 -pr:h myserver/host-x86_64")
+output = run("conan create myserver --build missing -pr:b myserver/apple-arch-armv8 -pr:h myserver/apple-arch-x86_64")
 assert "Test(): created a person with id 1337" not in output
 
 # Assert the architectures for both testing examples created
