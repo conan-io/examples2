@@ -27,3 +27,5 @@ Sources for the [examples section](https://docs.conan.io/2/examples.html) of the
 ### [Conan configuration files](examples/config_files)
 
 ### [Libraries examples](examples/libraries)
+
+### [Graph examples](examples/graph)
