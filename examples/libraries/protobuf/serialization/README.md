@@ -34,7 +34,7 @@ To build this project using cmake on Windows:
     cmake .. -DCMAKE_TOOLCHAIN_FILE=generators/conan_toolchain.cmake
     cmake --build . --config Release
 
-    sensor.exe
+    Release\sensor.exe
 
     SET PYTHONPATH="%CD%"
     python ../main.py

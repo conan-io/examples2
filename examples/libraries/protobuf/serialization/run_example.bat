@@ -10,7 +10,7 @@ conan install .. -pr:h=default -pr:b=default --build=missing
 cmake .. -DCMAKE_TOOLCHAIN_FILE=generators/conan_toolchain.cmake
 cmake --build . --config Release
 
-sensor.exe
+Release\sensor.exe
 
 SET PYTHONPATH="%CD%"
 python ../main.py
