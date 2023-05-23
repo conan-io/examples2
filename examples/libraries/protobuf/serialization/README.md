@@ -12,6 +12,7 @@ To build this project using cmake on Linux or Mac:
 ```
     git clone https://github.com/conan-io/examples2.git conan-examples2
     cd conan-examples2/examples/libraries/protobuf/serialization
+    pip install -r requirements.txt
     mkdir build && cd build/
     conan install .. -pr:h=default -pr:b=default --build=missing
     cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=Release/generators/conan_toolchain.cmake
@@ -27,6 +28,7 @@ To build this project using cmake on Windows:
 ```
     git clone https://github.com/conan-io/examples2.git conan-examples2
     cd conan-examples2/examples/libraries/protobuf/serialization
+    pip install -r requirements.txt
     mkdir build && cd build/
     conan install .. -pr:h=default -pr:b=default --build=missing
     cmake .. -DCMAKE_TOOLCHAIN_FILE=Release/generators/conan_toolchain.cmake
