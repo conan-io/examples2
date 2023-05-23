@@ -4,13 +4,13 @@ RMDIR /Q /S build
 MKDIR build
 PUSHD build
 
-pip install -r ../requirements.txt
+CALL pip install -r ../requirements.txt
 
-conan install .. -pr:h=default -pr:b=default --build=missing
-cmake .. -DCMAKE_TOOLCHAIN_FILE=generators/conan_toolchain.cmake
-cmake --build . --config Release
+CALL conan install .. -pr:h=default -pr:b=default --build=missing
+CALL cmake .. -DCMAKE_TOOLCHAIN_FILE=generators/conan_toolchain.cmake
+CALL cmake --build . --config Release
 
-Release\sensor.exe
+CALL Release\sensor.exe
 
-SET PYTHONPATH=Release
-python ../main.py
+SET PYTHONPATH=.
+CALL python ../main.py
