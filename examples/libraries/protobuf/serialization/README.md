@@ -1,21 +1,44 @@
-# Conan Protobuf Example
+# Protobuf Serialization Example with Conan v2
 
 ## Protobuf example using Conan for blog post
 
 - Conan.io blog: https://blog.conan.io
+- Blog post: https://blog.conan.io/2019/03/06/Serializing-your-data-with-Protobuf.html
 
 #### How to build
-To build this project using cmake:
 
-    git clone https://github.com/conan-io/examples.git conan-examples
-    cd conan-examples/libraries/protobuf/serialization
-    mkdir build && cd build
-    conan install ..
-    cmake ..
+To build this project using cmake on Linux or Mac:
+
+```
+    git clone https://github.com/conan-io/examples2.git conan-examples2
+    cd conan-examples2/examples/libraries/protobuf/serialization
+    mkdir build && cd build/
+    conan install .. -pr:h=default -pr:b=default --build=missing
+    cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=Release/generators/conan_toolchain.cmake
     cmake --build .
-    bin/sensor
+
+    ./sensor
+
+    PYTHONPATH=${PWD} python ../main.py
+```
+
+To build this project using cmake on Windows:
+
+```
+    git clone https://github.com/conan-io/examples2.git conan-examples2
+    cd conan-examples2/examples/libraries/protobuf/serialization
+    mkdir build && cd build/
+    conan install .. -pr:h=default -pr:b=default --build=missing
+    cmake .. -DCMAKE_TOOLCHAIN_FILE=Release/generators/conan_toolchain.cmake
+    cmake --build . --config Release
+
+    sensor.exe
+
+    SET PYTHONPATH="%CD%"
+    python ../main.py
+```
 
 #### Requirements
-- CMake >=3.1.3
-- C++ compiler with C++11 support (Protobuf requirement)
-- Conan >=1.9.1
+- CMake >=3.15
+- C++ compiler with C++14 support (Protobuf requirement)
+- Conan >=2.0.0
