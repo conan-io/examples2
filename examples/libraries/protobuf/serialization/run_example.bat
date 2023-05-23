@@ -12,5 +12,5 @@ cmake --build . --config Release
 
 Release\sensor.exe
 
-SET PYTHONPATH="%CD%"
+SET PYTHONPATH=Release
 python ../main.py
