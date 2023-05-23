@@ -8,7 +8,7 @@ if "%CMAKE_GENERATOR%"=="" (
     PUSHD build
 
     conan install .. -pr:h=default -pr:b=default --build=missing
-    cmake .. -G "%CMAKE_GENERATOR%" -A "%CMAKE_GENERATOR_PLATFORM%" -DCMAKE_TOOLCHAIN_FILE==Release/generators/conan_toolchain.cmake
+    cmake .. -G "%CMAKE_GENERATOR%" -A "%CMAKE_GENERATOR_PLATFORM%" -DCMAKE_TOOLCHAIN_FILE=Release/generators/conan_toolchain.cmake
     cmake --build . --config Release
 
     sensor.exe
