@@ -1,27 +1,33 @@
 import platform
 import os
+import shutil
 
 from test.examples_tools import chdir, run
 
 def run_example(output_folder=""):
 
+    if os.path.exists("build"):
+        shutil.rmtree("build")
+
     run(f"conan install . {output_folder} --build missing")
 
     if platform.system() == "Windows":
+        gen_folder = "" if output_folder else "generators\\"
         with chdir("build"):
             command = []
-            command.append("cmake .. -G \"Visual Studio 17 2022\" -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake")
+            command.append(f"cmake .. -G \"Visual Studio 17 2022\" -DCMAKE_TOOLCHAIN_FILE={gen_folder}conan_toolchain.cmake")
             command.append("cmake --build . --config Release")
             run(" && ".join(command))
             cmd_out = run("Release\\compressor.exe")
     else:
         with chdir("build"):
+            gen_folder = "" if output_folder else "Release/generators/"
             command = []
             # in the conanfile.py we only add CMake as tool_require in Linux
-            command.append(". ./conanbuild.sh")
-            command.append("cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release")
+            command.append(f". ./{gen_folder}conanbuild.sh")
+            command.append(f"cmake .. -DCMAKE_TOOLCHAIN_FILE={gen_folder}conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release")
             command.append("cmake --build .")
-            command.append(". ./deactivate_conanbuild.sh")
+            command.append(f". ./{gen_folder}deactivate_conanbuild.sh")
             run(" && ".join(command))
             cmd_out = run("./compressor")
 
