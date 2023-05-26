@@ -1,3 +1,6 @@
+import os
+
+
 from conan import ConanFile
 
 
@@ -19,10 +22,8 @@ class CompressorRecipe(ConanFile):
     def layout(self):
         # We make the assumption that if the compiler is msvc the
         # CMake generator is multi-config
-        if self.settings.get_safe("compiler") == "msvc":
-            multi = True
+        multi = True if self.settings.get_safe("compiler") == "msvc" else False
+        if multi:
+            self.folders.generators = os.path.join("build", "generators")
         else:
-            multi = False          
-
-        self.folders.build = "build" if multi else f"build/{str(self.settings.build_type)}"
-        self.folders.generators = "build"
+            self.folders.generators = os.path.join("build", str(self.settings.build_type), "generators")
