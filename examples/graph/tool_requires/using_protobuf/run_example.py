@@ -15,7 +15,7 @@ output = run("conan create myaddresser --build missing -pr:b myaddresser/apple-a
 assert "myaddresser(): created a person with id 1337" not in output
 
 # Assert the architectures for both testing examples created
-output = run("file myaddresser/test_package/build/apple-clang-13.0-armv8-gnu17-release/example")
+output = run("file myaddresser/test_package/build/apple-clang-13-armv8-gnu17-release/example")
 assert "64-bit executable arm64" in output
-output = run("file myaddresser/test_package/build/apple-clang-13.0-x86_64-gnu17-release/example")
+output = run("file myaddresser/test_package/build/apple-clang-13-x86_64-gnu17-release/example")
 assert "64-bit executable x86_64" in output
