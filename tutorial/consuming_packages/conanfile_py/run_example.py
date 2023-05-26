@@ -1,9 +1,13 @@
 import platform
 import os
+import shutil
 
 from test.examples_tools import chdir, run
 
 def run_example(output_folder=""):
+
+    if os.path.exists("build"):
+        shutil.rmtree("build")
 
     run(f"conan install . {output_folder} --build missing")
 
