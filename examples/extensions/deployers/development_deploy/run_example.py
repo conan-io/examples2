@@ -16,8 +16,8 @@ shutil.copytree(current, folder)
 
 
 with chdir(folder):
-    output = run("conan install . --deploy=full_deploy --build=missing")
-    output = run("conan install . --deploy=full_deploy -s build_type=Debug --build=missing")
+    output = run("conan install . --deployer=full_deploy --build=missing")
+    output = run("conan install . --deployer=full_deploy -s build_type=Debug --build=missing")
 
 new_folder = tempfile.mkdtemp(suffix='conans')
 new_folder = os.path.join(new_folder, "full_relocatable_deploy")
