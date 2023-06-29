@@ -3,6 +3,7 @@ project(sdl-example CXX)
 
 find_package(SDL2 REQUIRED CONFIG)
 find_package(SDL2_image REQUIRED CONFIG)
+find_package(SDL2_ttf REQUIRED CONFIG)
 
 add_executable(sdl-example src/main.cpp)
 
@@ -19,6 +20,13 @@ if(TARGET SDL2_image::SDL2_image-static)
     target_link_libraries(${PROJECT_NAME} PRIVATE SDL2_image::SDL2_image-static)
 else()
     target_link_libraries(${PROJECT_NAME} PRIVATE SDL2_image::SDL2_image)
+endif()
+
+# SDL ttf so we can display hello world!
+if(TARGET SDL2_ttf::SDL2_ttf)
+    target_link_libraries(${PROJECT_NAME} PRIVATE SDL2_ttf::SDL2_ttf)
+else()
+    target_link_libraries(${PROJECT_NAME} PRIVATE SDL2_ttf::SDL2_ttf-static)
 endif()
 
 install(TARGETS sdl-example DESTINATION "."
