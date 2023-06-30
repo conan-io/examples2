@@ -1,5 +1,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_timer.h>
+#include <SDL2/SDL_image.h>
+
 
 int main(int argc, char *argv[])
 {
@@ -19,9 +21,42 @@ int main(int argc, char *argv[])
     // creates a renderer to render our images
     SDL_Renderer* rend = SDL_CreateRenderer(win, -1, render_flags);
 
+    // creates a surface to load an image into the main memory
+    SDL_Surface* surface;
+
+    // please provide a path for your image
+    surface = IMG_Load("/Users/christopherm/conan-examples2/examples/libraries/sdl2/conan-logo.png");
+
+    // loads image to our graphics hardware memory.
+    SDL_Texture* tex = SDL_CreateTextureFromSurface(rend, surface);
+
+    // clears main-memory
+    SDL_FreeSurface(surface);
+
+    // let us control our image position
+    // so that we can move it with our keyboard.
+    SDL_Rect dest;
+
+    // connects our texture with dest to control position
+    SDL_QueryTexture(tex, NULL, NULL, &dest.w, &dest.h);
+
+    // adjust height and width of our image box.
+    dest.w /= 6;
+    dest.h /= 6;
+
+    // sets initial x-position of object
+    dest.x = (1000 - dest.w) / 2;
+
+    // sets initial y-position of object
+    dest.y = (1000 - dest.h) / 2;
+
     //////
     // We'll add code here sortly ;-)
+    // Everthing Below will get moved in the next step!
     //////
+
+    // clears the screen
+    SDL_RenderClear(rend);
 
     // We add a delay in order to see that our window
     // has successfully popped up.
