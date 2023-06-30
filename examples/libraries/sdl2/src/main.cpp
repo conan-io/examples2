@@ -1,7 +1,30 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 
+void render_text(
+    SDL_Renderer *renderer,
+    int x,
+    int y,
+    const char *text,
+    TTF_Font *font,
+    SDL_Rect *rect,
+    SDL_Color *color
+) {
+    SDL_Surface *surface;
+    SDL_Texture *texture;
+
+    surface = TTF_RenderText_Solid(font, text, *color);
+    texture = SDL_CreateTextureFromSurface(renderer, surface);
+    rect->x = x;
+    rect->y = y;
+    rect->w = surface->w;
+    rect->h = surface->h;
+    SDL_FreeSurface(surface);
+    SDL_RenderCopy(renderer, texture, NULL, rect);
+    SDL_DestroyTexture(texture);
+}
 
 int main(int argc, char *argv[])
 {
@@ -13,6 +36,13 @@ int main(int argc, char *argv[])
                                     SDL_WINDOWPOS_CENTERED,
                                     SDL_WINDOWPOS_CENTERED,
                                     1000, 1000, SDL_WINDOW_SHOWN);
+    /* Init TTF. */
+    TTF_Init();
+    TTF_Font *font = TTF_OpenFont("Roboto-Regular.ttf", 24);
+    if (font == NULL) {
+        fprintf(stderr, "error: font not found\n");
+        exit(EXIT_FAILURE);
+    }
 
     // triggers the program that controls
     // your graphics hardware and sets flags
@@ -113,6 +143,13 @@ int main(int argc, char *argv[])
         // clears the screen
         SDL_RenderClear(rend);
         SDL_RenderCopy(rend, tex, NULL, &dest);
+
+        SDL_Rect text_rect;
+        // The color for the text we will be displaying
+        SDL_Color white = {255, 255, 255, 0};
+        // so we can have nice text, two lines one above the next
+        render_text(rend, 10, 10,               "Hello World!", font, &text_rect, &white);
+        render_text(rend, 10, text_rect.y + text_rect.h, "Conan demo by JFrog", font, &text_rect, &white);
 
         // triggers the double buffers
         // for multiple rendering
