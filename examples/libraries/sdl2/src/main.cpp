@@ -159,6 +159,18 @@ int main(int argc, char *argv[])
         SDL_Delay(1000 / 60);
     }
 
+    // close font handle
+    TTF_CloseFont(font);
+
+    // close TTF
+    TTF_Quit();
+
+    // destroy texture
+    SDL_DestroyTexture(tex);
+
+    // destroy renderer
+    SDL_DestroyRenderer(rend);
+
     // We destroy our window. We are passing in the pointer
     // that points to the memory allocated by the 
     // 'SDL_CreateWindow' function. Remember, this is
