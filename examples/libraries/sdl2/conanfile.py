@@ -21,10 +21,9 @@ class SdlExampleRecipe(ConanFile):
         cmake_layout(self)
 
     def requirements(self):
-        self.requires("libwebp/1.3.0", override=True) # Version conflict: libtiff/4.4.0->libwebp/1.2.4
-        self.requires("sdl/2.26.1") # 2.26.5 is a version conflict with sdl_image
-        self.requires("sdl_image/2.0.5")
-        self.requires("sdl_ttf/2.0.18")
+        self.requires("sdl_image/[~2.0]")
+        self.requires("sdl_ttf/[~2.0]")
+        self.requires("sdl/[~2.26]")
 
     def build(self):
         cmake = CMake(self)
