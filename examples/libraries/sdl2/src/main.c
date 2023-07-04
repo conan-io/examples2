@@ -102,6 +102,9 @@ int main(int argc, char *argv[])
             case SDL_KEYDOWN:
                 // keyboard API for key pressed
                 switch (event.key.keysym.scancode) {
+                case SDL_SCANCODE_ESCAPE:
+                    close = 1;
+                    break;
                 case SDL_SCANCODE_W:
                 case SDL_SCANCODE_UP:
                     dest.y -= speed / 30;
