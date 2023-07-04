@@ -6,6 +6,7 @@ find_package(SDL2_image REQUIRED CONFIG)
 find_package(SDL2_ttf REQUIRED CONFIG)
 
 add_executable(sdl-example src/main.cpp)
+target_compile_features(sdl-example PRIVATE cxx_std_11)
 
 # Main SDL library for init
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2main)
