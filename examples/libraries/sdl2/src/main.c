@@ -147,11 +147,14 @@ int main(int argc, char *argv[])
         SDL_RenderClear(rend);
         SDL_RenderCopy(rend, tex, NULL, &dest);
 
+        // create a rectangle to update with the size of the rendered text
         SDL_Rect text_rect;
+
         // The color for the text we will be displaying
         SDL_Color white = {255, 255, 255, 0};
+
         // so we can have nice text, two lines one above the next
-        render_text(rend, 10, 10,               "Hello World!", font, &text_rect, &white);
+        render_text(rend, 10, 10, "Hello World!", font, &text_rect, &white);
         render_text(rend, 10, text_rect.y + text_rect.h, "Conan demo by JFrog", font, &text_rect, &white);
 
         // triggers the double buffers
