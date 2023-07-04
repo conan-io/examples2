@@ -1,0 +1,11 @@
+[requires]
+sdl_image/[~2.0]
+sdl_ttf/[~2.0]
+sdl/[~2.26] 
+
+[generators]
+CMakeToolchain
+CMakeDeps
+
+[layout]
+cmake_layout
