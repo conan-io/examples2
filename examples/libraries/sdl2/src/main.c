@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
     SDL_Surface* surface;
 
     // please provide a path for your image
-    surface = IMG_Load("/Users/christopherm/conan-examples2/examples/libraries/sdl2/conan-logo.png");
+    surface = IMG_Load("conan-logo.png");
 
     // loads image to our graphics hardware memory.
     SDL_Texture* tex = SDL_CreateTextureFromSurface(rend, surface);
