@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_timer.h>
+#include <SDL2/SDL_image.h>
 
 int main(int argc, char *argv[])
 {
@@ -23,23 +24,61 @@ int main(int argc, char *argv[])
     /// Section 2: SDL image loader
     ///
 
+    // creates a surface to load an image into the main memory
+    SDL_Surface* surface;
+
+    // please provide a path for your image
+    surface = IMG_Load("conan-logo.png");
+
+    // loads image to our graphics hardware memory.
+    SDL_Texture* tex = SDL_CreateTextureFromSurface(rend, surface);
+
+    // clears main-memory
+    SDL_FreeSurface(surface);
+
+    // let us control our image position
+    // so that we can move it with our keyboard.
+    SDL_Rect dest;
+
+    // connects our texture with dest to control position
+    SDL_QueryTexture(tex, NULL, NULL, &dest.w, &dest.h);
+
+    // adjust height and width of our image box.
+    dest.w /= 6;
+    dest.h /= 6;
+
+    // sets initial x-position of object
+    dest.x = (1000 - dest.w) / 2;
+
+    // sets initial y-position of object
+    dest.y = (1000 - dest.h) / 2;
+
     ///
     /// Section 4: SDL ttf and rendering text
     ///
 
     ///
     /// Section 3: Game Loop and Basic Controlls
+    ///            Note: The rest of this snippet will be removed
+
+    while (1)
+    {
+        // clears the screen
+        SDL_RenderClear(rend);
+        SDL_RenderCopy(rend, tex, NULL, &dest);
+
+        // triggers the double buffers
+        // for multiple rendering
+        SDL_RenderPresent(rend);
+    }
+
     ///
-
-
-    // We add a delay in order to see that our window
-    // has successfully popped up.
-    SDL_Delay(3000);
+    /// Section 3: Game Loop and Basic Controlls
+    ///            Note: The code above will be removed
 
     ///
     /// Section 5: Freeing resources
     ///
-
 
     // We destroy our window. We are passing in the pointer
     // that points to the memory allocated by the 
