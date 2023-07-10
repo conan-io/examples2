@@ -1,6 +1,31 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
+
+void render_text(
+    SDL_Renderer *renderer,
+    int x,
+    int y,
+    const char *text,
+    TTF_Font *font,
+    SDL_Rect *rect,
+    SDL_Color *color
+) {
+    SDL_Surface *surface;
+    SDL_Texture *texture;
+
+    surface = TTF_RenderText_Solid(font, text, *color);
+    texture = SDL_CreateTextureFromSurface(renderer, surface);
+    rect->x = x;
+    rect->y = y;
+    rect->w = surface->w;
+    rect->h = surface->h;
+    SDL_FreeSurface(surface);
+    SDL_RenderCopy(renderer, texture, NULL, rect);
+    SDL_DestroyTexture(texture);
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -56,6 +81,14 @@ int main(int argc, char *argv[])
     ///
     /// Section 4: SDL ttf and rendering text
     ///
+
+    // Init TTF
+    TTF_Init();
+    TTF_Font *font = TTF_OpenFont("Roboto-Regular.ttf", 24);
+    if (font == NULL) {
+        fprintf(stderr, "error: font not found\n");
+        exit(EXIT_FAILURE);
+    }
 
     ///
     /// Section 3: Game Loop and Basic Controlls
@@ -128,9 +161,19 @@ int main(int argc, char *argv[])
         SDL_RenderClear(rend);
         SDL_RenderCopy(rend, tex, NULL, &dest);
 
-       ///
-       /// Section 4: SDL ttf and rendering text
-       ///
+        ///
+        /// Section 4: SDL ttf and rendering text
+        ///
+
+        // create a rectangle to update with the size of the rendered text
+        SDL_Rect text_rect;
+
+        // The color for the text we will be displaying
+        SDL_Color white = {255, 255, 255, 0};
+
+        // so we can have nice text, two lines one above the next
+        render_text(rend, 10, 10, "Hello World!", font, &text_rect, &white);
+        render_text(rend, 10, text_rect.y + text_rect.h, "Conan demo by JFrog", font, &text_rect, &white);
 
         // triggers the double buffers
         // for multiple rendering
