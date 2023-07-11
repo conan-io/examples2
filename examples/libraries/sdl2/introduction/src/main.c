@@ -32,6 +32,7 @@ int main(int argc, char *argv[])
     // returns zero on success else non-zero
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         printf("error initializing SDL: %s\n", SDL_GetError());
+        return 1;
     }
     SDL_Window* win = SDL_CreateWindow("GAME", // creates a window
                                     SDL_WINDOWPOS_CENTERED,
@@ -86,8 +87,8 @@ int main(int argc, char *argv[])
     TTF_Init();
     TTF_Font *font = TTF_OpenFont("Roboto-Regular.ttf", 24);
     if (font == NULL) {
-        fprintf(stderr, "error: font not found\n");
-        exit(EXIT_FAILURE);
+        printf("error initializing TTF: %s\n", TTF_GetError());
+        return 1;
     }
 
     ///
