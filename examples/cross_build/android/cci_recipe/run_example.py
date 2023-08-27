@@ -13,7 +13,7 @@ build_type=Release
 compiler=clang
 compiler.cppstd=17
 compiler.libcxx=c++_static
-compiler.version=14`
+compiler.version=14
 os=Android
 os.api_level=31
 
