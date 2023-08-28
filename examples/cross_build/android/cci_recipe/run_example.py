@@ -17,8 +17,12 @@ compiler.version=14
 os=Android
 os.api_level=31
 
+[conf]
+tools.cmake.cmaketoolchain:generator=Ninja
+
 [tool_requires]
 android-ndk/r25c
+ninja/1.11.1
 """
 
 with tmp_dir("tmp"):
