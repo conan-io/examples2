@@ -72,6 +72,7 @@ std::string image_to_ascii(const std::string& image_data) {
 }
 
 int main(int argc, char** argv) {
+    // Picture by Katarzyna Modrzejewska from pexels.com
     std::string url = "https://images.pexels.com/photos/1314550/pexels-photo-1314550.jpeg";
 
     if (argc > 1) {
