@@ -107,11 +107,18 @@ node('Linux') {
         cancelPrevious() 
         
         List<String> examples = []
+
+        // FIXME
+        // These examples won't run in the PR's at least until we have binaries for
+        // all libraries examples in CC to not slow down the ci on PR's
+        List<String> skipExamplesInPR = ['tensorflow', 'sdl2']  
+
         stage('Find examples') {
             checkout scm
             def _examples = sh(script: 'find . -name run_example.*', returnStdout: true).readLines()
             for (example in _examples) {
-                if ((example.contains(".sh") || example.contains(".bat") || example.contains(".py")) && (!example.contains("tensorflow") || !isPR)) {
+                def shouldSkip = skipExamplesInPR.any { skipExample -> example.contains(skipExample) }
+                if ((example.contains(".sh") || example.contains(".bat") || example.contains(".py")) && (!shouldSkip || !isPR)) {
                     examples.add(example)
                 }
             }

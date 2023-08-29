@@ -1,0 +1,3 @@
+include(default)
+[conf]
+tools.cmake.cmaketoolchain:user_toolchain+={{profile_dir}}/myvars.cmake

@@ -6,6 +6,8 @@
 
 - CMakeToolchain: [Extending your CMakePresets with Conan generated ones](cmake/cmake_toolchain/extend_own_cmake_presets/). [Docs](https://docs.conan.io/2/examples/tools/cmake/cmake_toolchain/extend_own_cmake_presets.html)
 
+- CMakeToolchain: [Inject CMake variables via profile using user_toolchain](cmake/cmake_toolchain/user_toolchain_profile/). [Docs](https://docs.conan.io/2/examples/tools/cmake/cmake_toolchain/inject_cmake_variables.html)
+
 ### [tools.files](files)
 
 - Learn how [patch sources](files/patches/). [Docs](https://docs.conan.io/2/examples/tools/files/patches/patch_sources.html)
