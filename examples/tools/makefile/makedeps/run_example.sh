@@ -21,7 +21,7 @@ source build/conanrun.sh
 
 output=$(build/string_digest_hex)
 
-expected_str='[9d9bad5e773ca301b2a2977843ce6fb5] To be a Cimmerian warrior, you must have both cunning and balance as well as speed and strength.'
+expected_str='To be a Cimmerian warrior, you must have both cunning and balance as well as speed and strength.'
 
 if [[ $expected_str -eq $output ]]; then
     echo "ERROR: The String Formatter output does not match with the expected value: '$(expected_str)'"
