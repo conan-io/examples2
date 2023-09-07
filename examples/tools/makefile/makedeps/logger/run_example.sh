@@ -19,7 +19,7 @@ source build/deactivate_conanbuild.sh
 # Make dynamic library available on PATH
 source build/conanrun.sh
 
-output=$(build/string_digest_hex)
+output=$(build/logger)
 
 expected_str='To be a Cimmerian warrior, you must have both cunning and balance as well as speed and strength.'
 

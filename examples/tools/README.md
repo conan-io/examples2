@@ -23,4 +23,4 @@
 
 ### [tools.makefiles](makefiles)
 
-- Build a [Makefile project](makefile/makedeps/) using Conan and [make](https://www.gnu.org/software/make/). [Docs](https://docs.conan.io/2/examples/tools/makefile/makedeps/build_project_makefile.rst)
+- Build a [Makefile project](makefile/makedeps/logger) using Conan and [make](https://www.gnu.org/software/make/). [Docs](https://docs.conan.io/2/examples/tools/makefile/makedeps/build_project_makefile.rst)
