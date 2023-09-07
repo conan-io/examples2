@@ -19,3 +19,8 @@
 ### [tools.autotools](autotools)
 
 - Build a [Autotools project](autotools/autotoolstoolchain/string_formatter/) using Conan and [fmt](https://fmt.dev/). [Docs](https://docs.conan.io/2/examples/tools/autotools/autotools_toolchain/build_project_autotools_toolchain.rst)
+
+
+### [tools.makefiles](makefiles)
+
+- Build a [Makefile project](makefile/makedeps/) using Conan and [make](https://www.gnu.org/software/make/). [Docs](https://docs.conan.io/2/examples/tools/makefiles/makedeps/build_project_makefile.rst)
