@@ -50,9 +50,9 @@ def run(cmd, error=False):
         output += line
     print("----END OUTPUT------")
     
-    ret = process.returncode
     process.stdout.close()
     process.wait()
+    ret = process.returncode
 
     if ret != 0 and not error:
         raise Exception("Failed cmd: {}\n{}".format(cmd, output))
