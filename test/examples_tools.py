@@ -40,25 +40,22 @@ def tmp_dir(newdir):
 
 
 def run(cmd, error=False):
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True, universal_newlines=True)
-    
-    output = ""
-    print("Running: {}".format(cmd))
-    print("----- OUTPUT -------")
-    for line in iter(process.stdout.readline, ""):
-        print(line, end="")
-        output += line
-    print("----END OUTPUT------")
-    
-    process.stdout.close()
-    process.wait()
+    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+    out, err = process.communicate()
+    out = out.decode("utf-8")
+    err = err.decode("utf-8")
     ret = process.returncode
 
+    output = err + out
+    print("Running: {}".format(cmd))
+    print("----- OUTPUT -------")
+    print(output)
+    print("----END OUTPUT------")
     if ret != 0 and not error:
         raise Exception("Failed cmd: {}\n{}".format(cmd, output))
     if ret == 0 and error:
         raise Exception(
-            "Cmd succeeded (failure expected): {}\n{}".format(cmd, output))
+            "Cmd succeded (failure expected): {}\n{}".format(cmd, output))
     return output
 
 
