@@ -63,7 +63,6 @@ def runExample(Map ctxt, String example) {
             String command = script.contains(".py") ? "python ${script}" : "${script}"
             dir("${path}") {
                 echo "Running example: ${path}"
-                ctxt.shFunction('conan remove "*" -c')
                 ctxt.shFunction("${command}")
             }
         }
@@ -85,6 +84,7 @@ def runExamples(Map ctxt) {
                 }
                 echo "Running examples with CONAN_HOME: ${env.CONAN_HOME}"
                 for (example in ctxt.examples) {
+                    ctxt.shFunction('conan remove "*" -c')
                     runExample(ctxt, example)
                 }
             }
