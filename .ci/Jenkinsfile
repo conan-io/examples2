@@ -133,6 +133,7 @@ node('Linux') {
                     linux: {
                         conanBranchesInstalls.each { branch ->
                             stage("${branch.name}: Run Linux examples") {
+                                docker.image(LINUX_CONTAINER).pull()
                                 docker.image(LINUX_CONTAINER).inside("--entrypoint=") {
                                     def sourcedir = "/home/conan/"
                                     def pyenvdir = "${sourcedir}.pyenv"
