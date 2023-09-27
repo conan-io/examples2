@@ -139,7 +139,7 @@ node('Linux') {
                                     def command = "export PYENV_ROOT=${pyenvdir} && " \
                                                 + "export PATH=\"${pyenvdir}/versions/\${pythonVersion}/bin:${pyenvdir}/bin:\$PATH\" && " \
                                                 + "pyenv global ${pythonVersion} && " \
-                                                + "sudo /home/conan/select_cmake.sh 3.23.5"
+                                                + "sudo /home/conan/select_cmake.sh 3.23.5 && sudo /home/conan/select_gcc.sh 11"
                                     sh(script: command)
                                     runExamples([python_host: 'python3',
                                                 shFunction: { data -> sh(data) },
