@@ -112,14 +112,17 @@ node('Linux') {
         // FIXME
         // These examples won't run in the PR's at least until we have binaries for
         // all libraries examples in CC to not slow down the ci on PR's
-        List<String> skipExamplesInPR = ['tensorflow', 'sdl2']  
+        List<String> skipExamplesInPR = ['tensorflow']  
+        List<String> skipExamplesAlways= ['sdl2'] // FIXME: this is failing because a conflict in the graph
+                                                  // run again once the conflict in Conan Center is solved
 
         stage('Find examples') {
             checkout scm
             def _examples = sh(script: 'find . -name run_example.*', returnStdout: true).readLines()
             for (example in _examples) {
-                def shouldSkip = skipExamplesInPR.any { skipExample -> example.contains(skipExample) }
-                if ((example.contains(".sh") || example.contains(".bat") || example.contains(".py")) && (!shouldSkip || !isPR)) {
+                def shouldSkipinPR = skipExamplesInPR.any { skipExample -> example.contains(skipExample) }
+                def shouldSkipAlways = skipExamplesAlways.any { skipExample -> example.contains(skipExample) }
+                if ((example.contains(".sh") || example.contains(".bat") || example.contains(".py")) && (!shouldSkipinPR || !isPR) && (!shouldSkipAlways)) {
                     examples.add(example)
                 }
             }
