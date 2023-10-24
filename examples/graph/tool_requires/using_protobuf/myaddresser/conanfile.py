@@ -25,7 +25,7 @@ class myaddresserRecipe(ConanFile):
         self.requires("protobuf/3.18.1")
 
     def build_requirements(self):
-        self.tool_requires("protobuf/3.18.1")
+        self.tool_requires("protobuf/<host_version>")
 
     def layout(self):
         cmake_layout(self)
