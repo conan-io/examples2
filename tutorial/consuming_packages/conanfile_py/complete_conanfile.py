@@ -27,3 +27,5 @@ class CompressorRecipe(ConanFile):
             self.folders.generators = os.path.join("build", "generators")
         else:
             self.folders.generators = os.path.join("build", str(self.settings.build_type), "generators")
+            self.folders.build = os.path.join("build", str(self.settings.build_type))
+
