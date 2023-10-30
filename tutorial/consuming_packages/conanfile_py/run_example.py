@@ -20,12 +20,14 @@ def run_example(output_folder=""):
             run(" && ".join(command))
             cmd_out = run("Release\\compressor.exe")
     else:
-        with chdir("build"):
-            gen_folder = "" if output_folder else "Release/generators/"
+        build_path = "build" if output_folder else "build/Release"
+        gen_folder = "" if output_folder else "generators/"
+        cmakelists_path = ".." if output_folder else "../.."
+        with chdir(build_path):
             command = []
             # in the conanfile.py we only add CMake as tool_require in Linux
             command.append(f". ./{gen_folder}conanbuild.sh")
-            command.append(f"cmake .. -DCMAKE_TOOLCHAIN_FILE={gen_folder}conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release")
+            command.append(f"cmake {cmakelists_path} -DCMAKE_TOOLCHAIN_FILE={gen_folder}conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release")
             command.append("cmake --build .")
             command.append(f". ./{gen_folder}deactivate_conanbuild.sh")
             run(" && ".join(command))
