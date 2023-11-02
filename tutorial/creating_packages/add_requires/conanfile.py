@@ -1,7 +1,7 @@
 from conan import ConanFile
 from conan.tools.cmake import CMakeToolchain, CMake, cmake_layout
 from conan.tools.scm import Git
-from conan.tools.build import check_min_cppstd
+from conan.tools.build import check_max_cppstd, check_min_cppstd
 
 
 class helloRecipe(ConanFile):
@@ -24,6 +24,7 @@ class helloRecipe(ConanFile):
 
     def validate(self):
         check_min_cppstd(self, "11")
+        check_max_cppstd(self, "20")
 
     def source(self):
         git = Git(self)
