@@ -24,7 +24,7 @@ class helloRecipe(ConanFile):
 
     def validate(self):
         check_min_cppstd(self, "11")
-        check_max_cppstd(self, "23")
+        check_max_cppstd(self, "20")
 
     def source(self):
         git = Git(self)
