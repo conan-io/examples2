@@ -1,0 +1,5 @@
+[requires]
+spdlog/1.12.0
+
+[generators]
+MakeDeps
