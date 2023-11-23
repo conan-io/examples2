@@ -5,9 +5,9 @@
 #include <zlib.h>
 
 int main(void) {
-    char buffer_in [256] = {"Conan is a MIT-licensed, Open Source package manager for C and C++ development "
-                            "for C and C++ development, allowing development teams to easily and efficiently "
-                            "manage their packages and dependencies across platforms and build systems."};
+    char buffer_in [256] = {"Conan is a MIT-licensed, Open Source package manager for C and C++ development, "
+                            "allowing development teams to easily and efficiently manage their packages and "
+                            "dependencies across platforms and build systems."};
     char buffer_out [256] = {0};
 
     z_stream defstream;
