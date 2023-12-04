@@ -6,11 +6,11 @@ from test.examples_tools import run
 # ############# Example ################
 print("\n- Use the BazelToolchain and BazelDeps generators -\n")
 
-try:
-    output = run("bazel --version")
-except:
+if platform.system() != "Linux":
     print(f"SKIPPED TEST BECAUSE BAZEL IS NOT INSTALLED IN {platform.system()} PLATFORM YET.")
     exit(0)
+
+output = run("bazel --version")
 
 try:
     print("\n- Conan installing all the files into the build folder -\n")
