@@ -19,3 +19,7 @@
 ### [tools.autotools](autotools)
 
 - Build a [Autotools project](autotools/autotoolstoolchain/string_formatter/) using Conan and [fmt](https://fmt.dev/). [Docs](https://docs.conan.io/2/examples/tools/autotools/autotools_toolchain/build_project_autotools_toolchain.rst)
+
+### [tools.google](google)
+
+- Build a [Bazel project](bazel/bazeltoolchain/string_formatter/) using Conan and [fmt](https://fmt.dev/). [Docs](https://docs.conan.io/2/examples/tools/google/bazeltoolchain/build_simple_bazel_project.rst)
