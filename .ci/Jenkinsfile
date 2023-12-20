@@ -131,33 +131,33 @@ node('Linux') {
         if (!examples.isEmpty()) {
             stage('Run examples') {
                 def conanBranchesInstalls = getBranchesInstalls()
-                //parallel(
-                    // linux: {
-                    //     conanBranchesInstalls.each { branch ->
-                    //         stage("${branch.name}: Run Linux examples") {
-                    //             docker.image(LINUX_CONTAINER).pull()
-                    //             docker.image(LINUX_CONTAINER).inside("--entrypoint=") {
-                    //                 def sourcedir = "/home/conan/"
-                    //                 def pyenvdir = "${sourcedir}.pyenv"
-                    //                 def pythonVersion = "3.9.2"
-                    //                 def command = "export PYENV_ROOT=${pyenvdir} && " \
-                    //                             + "export PATH=\"${pyenvdir}/versions/\${pythonVersion}/bin:${pyenvdir}/bin:\$PATH\" && " \
-                    //                             + "pyenv global ${pythonVersion} && " \
-                    //                             + "sudo /home/conan/select_cmake.sh 3.23.5 && sudo /home/conan/select_gcc.sh 11"
-                    //                 sh(script: command)
-                    //                 runExamples([python_host: 'python3',
-                    //                             shFunction: { data -> sh(data) },
-                    //                             isInsideDocker: true,
-                    //                             runningUnix: true,
-                    //                             examples: examples,
-                    //                             branch: branch,
-                    //                             extensions: ['.py', '.sh']])
-                    //             }
-                    //         }
-                    //     }
-                    // },
-                    // macos: {
-                        node('M2Macos') {
+                parallel(
+                    linux: {
+                        conanBranchesInstalls.each { branch ->
+                            stage("${branch.name}: Run Linux examples") {
+                                docker.image(LINUX_CONTAINER).pull()
+                                docker.image(LINUX_CONTAINER).inside("--entrypoint=") {
+                                    def sourcedir = "/home/conan/"
+                                    def pyenvdir = "${sourcedir}.pyenv"
+                                    def pythonVersion = "3.9.2"
+                                    def command = "export PYENV_ROOT=${pyenvdir} && " \
+                                                + "export PATH=\"${pyenvdir}/versions/\${pythonVersion}/bin:${pyenvdir}/bin:\$PATH\" && " \
+                                                + "pyenv global ${pythonVersion} && " \
+                                                + "sudo /home/conan/select_cmake.sh 3.23.5 && sudo /home/conan/select_gcc.sh 11"
+                                    sh(script: command)
+                                    runExamples([python_host: 'python3',
+                                                shFunction: { data -> sh(data) },
+                                                isInsideDocker: true,
+                                                runningUnix: true,
+                                                examples: examples,
+                                                branch: branch,
+                                                extensions: ['.py', '.sh']])
+                                }
+                            }
+                        }
+                    },
+                    macos: {
+                        node('M1Macos') {
                             conanBranchesInstalls.each { branch ->
                                 stage("${branch.name}: Run Macos examples") {
                                 withEnv(["PYENV_ROOT=/Users/jenkins/.pyenv", "PATH+EXTRA=/Users/jenkins/.pyenv/shims:/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin"]) {
@@ -172,24 +172,23 @@ node('Linux') {
                                 }
                             }
                         }
-                    // },
-                    
-                    //windows: {
-                        // node('Windows') {
-                        //     conanBranchesInstalls.each { branch ->
-                        //         stage("${branch.name}: Run Windows examples") {
-                        //             runExamples([python_host: 'C:\\Python39\\python.exe',
-                        //                         shFunction: { data -> bat(data) },
-                        //                         isInsideDocker: false,
-                        //                         runningUnix: false,
-                        //                         examples: examples,
-                        //                         branch: branch,
-                        //                         extensions: ['.py', '.bat']])
-                        //         }
-                        //     }
-                        // }
-                    //}
-                //)
+                    },
+                    windows: {
+                        node('Windows') {
+                            conanBranchesInstalls.each { branch ->
+                                stage("${branch.name}: Run Windows examples") {
+                                    runExamples([python_host: 'C:\\Python39\\python.exe',
+                                                shFunction: { data -> bat(data) },
+                                                isInsideDocker: false,
+                                                runningUnix: false,
+                                                examples: examples,
+                                                branch: branch,
+                                                extensions: ['.py', '.bat']])
+                                }
+                            }
+                        }
+                    }
+                )
             }
         }
     }
