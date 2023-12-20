@@ -49,7 +49,7 @@ def run(cmd, error=False):
     output = ''
     
     for line in iter(process.stdout.readline, ''):
-        print(line, end='')
+        print(line, end='', flush=True)
         output += line
 
     ret = process.wait()
