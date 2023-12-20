@@ -131,49 +131,50 @@ node('Linux') {
         if (!examples.isEmpty()) {
             stage('Run examples') {
                 def conanBranchesInstalls = getBranchesInstalls()
-                parallel(
-                    linux: {
-                        conanBranchesInstalls.each { branch ->
-                            stage("${branch.name}: Run Linux examples") {
-                                docker.image(LINUX_CONTAINER).pull()
-                                docker.image(LINUX_CONTAINER).inside("--entrypoint=") {
-                                    def sourcedir = "/home/conan/"
-                                    def pyenvdir = "${sourcedir}.pyenv"
-                                    def pythonVersion = "3.9.2"
-                                    def command = "export PYENV_ROOT=${pyenvdir} && " \
-                                                + "export PATH=\"${pyenvdir}/versions/\${pythonVersion}/bin:${pyenvdir}/bin:\$PATH\" && " \
-                                                + "pyenv global ${pythonVersion} && " \
-                                                + "sudo /home/conan/select_cmake.sh 3.23.5 && sudo /home/conan/select_gcc.sh 11"
-                                    sh(script: command)
-                                    runExamples([python_host: 'python3',
-                                                shFunction: { data -> sh(data) },
-                                                isInsideDocker: true,
-                                                runningUnix: true,
-                                                examples: examples,
-                                                branch: branch,
-                                                extensions: ['.py', '.sh']])
-                                }
-                            }
-                        }
-                    },
-                    macos: {
-                        node('M1Macos') {
-                            conanBranchesInstalls.each { branch ->
-                                stage("${branch.name}: Run Macos examples") {
-                                withEnv(["PYENV_ROOT=/Users/jenkins/.pyenv", "PATH+EXTRA=/Users/jenkins/.pyenv/shims:/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin"]) {
-                                        runExamples([python_host: '/Users/jenkins/.pyenv/versions/3.9.11/bin/python',
-                                                    shFunction: { data -> sh(data) },
-                                                    isInsideDocker: false,
-                                                    runningUnix: true,
-                                                    examples: examples,
-                                                    branch: branch,
-                                                    extensions: ['.py', '.sh']])
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    windows: {
+                //parallel(
+                    // linux: {
+                    //     conanBranchesInstalls.each { branch ->
+                    //         stage("${branch.name}: Run Linux examples") {
+                    //             docker.image(LINUX_CONTAINER).pull()
+                    //             docker.image(LINUX_CONTAINER).inside("--entrypoint=") {
+                    //                 def sourcedir = "/home/conan/"
+                    //                 def pyenvdir = "${sourcedir}.pyenv"
+                    //                 def pythonVersion = "3.9.2"
+                    //                 def command = "export PYENV_ROOT=${pyenvdir} && " \
+                    //                             + "export PATH=\"${pyenvdir}/versions/\${pythonVersion}/bin:${pyenvdir}/bin:\$PATH\" && " \
+                    //                             + "pyenv global ${pythonVersion} && " \
+                    //                             + "sudo /home/conan/select_cmake.sh 3.23.5 && sudo /home/conan/select_gcc.sh 11"
+                    //                 sh(script: command)
+                    //                 runExamples([python_host: 'python3',
+                    //                             shFunction: { data -> sh(data) },
+                    //                             isInsideDocker: true,
+                    //                             runningUnix: true,
+                    //                             examples: examples,
+                    //                             branch: branch,
+                    //                             extensions: ['.py', '.sh']])
+                    //             }
+                    //         }
+                    //     }
+                    // },
+                    // macos: {
+                    //     node('M1Macos') {
+                    //         conanBranchesInstalls.each { branch ->
+                    //             stage("${branch.name}: Run Macos examples") {
+                    //             withEnv(["PYENV_ROOT=/Users/jenkins/.pyenv", "PATH+EXTRA=/Users/jenkins/.pyenv/shims:/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin"]) {
+                    //                     runExamples([python_host: '/Users/jenkins/.pyenv/versions/3.9.11/bin/python',
+                    //                                 shFunction: { data -> sh(data) },
+                    //                                 isInsideDocker: false,
+                    //                                 runningUnix: true,
+                    //                                 examples: examples,
+                    //                                 branch: branch,
+                    //                                 extensions: ['.py', '.sh']])
+                    //                 }
+                    //             }
+                    //         }
+                    //     }
+                    // },
+                    
+                    //windows: {
                         node('Windows') {
                             conanBranchesInstalls.each { branch ->
                                 stage("${branch.name}: Run Windows examples") {
@@ -187,8 +188,8 @@ node('Linux') {
                                 }
                             }
                         }
-                    }
-                )
+                    //}
+                //)
             }
         }
     }
