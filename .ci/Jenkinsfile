@@ -157,37 +157,37 @@ node('Linux') {
                     //     }
                     // },
                     // macos: {
-                    //     node('M1Macos') {
-                    //         conanBranchesInstalls.each { branch ->
-                    //             stage("${branch.name}: Run Macos examples") {
-                    //             withEnv(["PYENV_ROOT=/Users/jenkins/.pyenv", "PATH+EXTRA=/Users/jenkins/.pyenv/shims:/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin"]) {
-                    //                     runExamples([python_host: '/Users/jenkins/.pyenv/versions/3.9.11/bin/python',
-                    //                                 shFunction: { data -> sh(data) },
-                    //                                 isInsideDocker: false,
-                    //                                 runningUnix: true,
-                    //                                 examples: examples,
-                    //                                 branch: branch,
-                    //                                 extensions: ['.py', '.sh']])
-                    //                 }
-                    //             }
-                    //         }
-                    //     }
-                    // },
-                    
-                    //windows: {
-                        node('Windows') {
+                        node('M2Macos') {
                             conanBranchesInstalls.each { branch ->
-                                stage("${branch.name}: Run Windows examples") {
-                                    runExamples([python_host: 'C:\\Python39\\python.exe',
-                                                shFunction: { data -> bat(data) },
-                                                isInsideDocker: false,
-                                                runningUnix: false,
-                                                examples: examples,
-                                                branch: branch,
-                                                extensions: ['.py', '.bat']])
+                                stage("${branch.name}: Run Macos examples") {
+                                withEnv(["PYENV_ROOT=/Users/jenkins/.pyenv", "PATH+EXTRA=/Users/jenkins/.pyenv/shims:/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin"]) {
+                                        runExamples([python_host: '/Users/jenkins/.pyenv/versions/3.9.11/bin/python',
+                                                    shFunction: { data -> sh(data) },
+                                                    isInsideDocker: false,
+                                                    runningUnix: true,
+                                                    examples: examples,
+                                                    branch: branch,
+                                                    extensions: ['.py', '.sh']])
+                                    }
                                 }
                             }
                         }
+                    // },
+                    
+                    //windows: {
+                        // node('Windows') {
+                        //     conanBranchesInstalls.each { branch ->
+                        //         stage("${branch.name}: Run Windows examples") {
+                        //             runExamples([python_host: 'C:\\Python39\\python.exe',
+                        //                         shFunction: { data -> bat(data) },
+                        //                         isInsideDocker: false,
+                        //                         runningUnix: false,
+                        //                         examples: examples,
+                        //                         branch: branch,
+                        //                         extensions: ['.py', '.bat']])
+                        //         }
+                        //     }
+                        // }
                     //}
                 //)
             }
