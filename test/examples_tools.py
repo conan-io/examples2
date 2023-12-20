@@ -44,7 +44,7 @@ def run(cmd, error=False):
     print("Running: {}".format(cmd))
     start_time = time.time()
 
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True, text=True, bufsize=1)
+    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True, text=True)
 
     output = ''
     
