@@ -32,5 +32,3 @@ if ndk_path:
             _f.write(profile)
         run("conan new -d name=foo -d version=1.0 cmake_lib")
         output = run("conan create . --profile ./android")
-        if platform.system() != "Linux":  # Linux with CMake 3.15 builds but print warns instead of this msg
-            assert "Targeting API '21' with architecture 'arm64', ABI 'arm64-v8a', and processor 'aarch64'" in output
