@@ -84,7 +84,6 @@ def runExamples(Map ctxt) {
                 }
                 echo "Running examples with CONAN_HOME: ${env.CONAN_HOME}"
                 for (example in ctxt.examples) {
-                    ctxt.shFunction('conan remove "*" -c')
                     runExample(ctxt, example)
                 }
             }
@@ -162,7 +161,7 @@ node('Linux') {
                             conanBranchesInstalls.each { branch ->
                                 stage("${branch.name}: Run Macos examples") {
                                 withEnv(["PYENV_ROOT=/Users/jenkins/.pyenv", "PATH+EXTRA=/Users/jenkins/.pyenv/shims:/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin"]) {
-                                        runExamples([python_host: '/Users/jenkins/.pyenv/versions/3.9.11/bin/python',
+                                        runExamples([python_host: '/Users/jenkins/.pyenv/versions/3.9.10/bin/python',
                                                     shFunction: { data -> sh(data) },
                                                     isInsideDocker: false,
                                                     runningUnix: true,
