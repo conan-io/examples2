@@ -24,7 +24,7 @@ int main(void) {
     deflateEnd(&defstream);
 
     printf("Uncompressed size is: %lu\n", strlen(buffer_in));
-    printf("Compressed size is: %lu\n", strlen(buffer_out));
+    printf("Compressed size is: %lu\n", defstream.total_out);
 
     printf("ZLIB VERSION: %s\n", zlibVersion());
 
