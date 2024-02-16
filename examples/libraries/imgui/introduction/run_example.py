@@ -1,4 +1,5 @@
 import platform
+import os
 from test.examples_tools import run
 
 print("An introduction to the Dear ImGui library")
@@ -14,6 +15,8 @@ if platform.system() == "Windows":
 else:
     run("cmake --preset conan-release")
     run("cmake --build --preset conan-release")
+
+assert os.path.exists(os.path.join("build", "Release", "simple-shader.fs"))
 
 if platform.system() == "Windows":
     run("rd /s /q build")
