@@ -6,5 +6,3 @@ compiler.cppstd=gnu14
 compiler.libcxx=libstdc++11
 compiler.version=13
 build_type=Release
-[tool_requires]
-arm-toolchain/13.2
