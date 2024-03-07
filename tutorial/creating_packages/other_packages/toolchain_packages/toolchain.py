@@ -55,11 +55,6 @@ class ArmToolchainPackage(ConanFile):
 
     def package_info(self):
         self.cpp_info.bindirs.append(os.path.join(self.package_folder, "arm-none-linux-gnueabihf", "bin"))
-        self.cpp_info.includedirs.append(os.path.join(self.package_folder, "arm-none-linux-gnueabihf", "include"))
-        self.cpp_info.libdirs.append(os.path.join(self.package_folder, "arm-none-linux-gnueabihf", "lib"))
-
-        #self.conf_info.append("tools.build:cflags", ["--specs=rdimon.specs"])
-        #self.conf_info.append("tools.build:sharedlinkflags", ["--specs=rdimon.specs"])
         
         self.conf_info.define("tools.build:compiler_executables", {
             "c": "arm-none-linux-gnueabihf-gcc",
