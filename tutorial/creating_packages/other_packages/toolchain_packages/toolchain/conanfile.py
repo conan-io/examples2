@@ -15,6 +15,20 @@ class ArmToolchainPackage(ConanFile):
     settings = "os", "arch"
     package_type = "application"
 
+    def _archs32(self):
+        return ["armv6", "armv7", "armv7hf"]
+    
+    def _archs64(self):
+        return ["armv8", "armv8.3"]
+
+    def _get_toolchain(self, target_arch):
+        if target_arch in self._archs32():
+            return ("arm-none-linux-gnueabihf", 
+                    "df0f4927a67d1fd366ff81e40bd8c385a9324fbdde60437a512d106215f257b3")
+        else:
+            return ("aarch64-none-linux-gnu", 
+                    "12fcdf13a7430655229b20438a49e8566e26551ba08759922cdaf4695b0d4e23")
+
     def package_id(self):
         self.info.settings_target = self.settings_target
         # We only want the ``arch`` setting
@@ -22,16 +36,8 @@ class ArmToolchainPackage(ConanFile):
         self.info.settings_target.rm_safe("compiler")
         self.info.settings_target.rm_safe("build_type")
 
-    def _get_toolchain(self, target_arch):
-        if target_arch in ["armv6", "armv7", "armv7hf"]:
-            return ("arm-none-linux-gnueabihf", 
-                    "df0f4927a67d1fd366ff81e40bd8c385a9324fbdde60437a512d106215f257b3")
-        else:
-            return ("aarch64-none-linux-gnu", 
-                    "12fcdf13a7430655229b20438a49e8566e26551ba08759922cdaf4695b0d4e23")
-
     def validate(self):
-        valid_archs = ["armv6", "armv7", "armv7hf", "armv8", "armv8.3"]
+        valid_archs = self._archs32() + self._archs64()
         if self.settings_target.os != "Linux" or self.settings_target.arch not in valid_archs:
             raise ConanInvalidConfiguration(f"This toolchain only supports building for Linux-{valid_archs.join(',')}. "
                                            f"{self.settings_target.os}-{self.settings_target.arch} is not supported.")
