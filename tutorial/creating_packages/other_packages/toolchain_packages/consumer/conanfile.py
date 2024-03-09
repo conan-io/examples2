@@ -7,9 +7,6 @@ class CompressorRecipe(ConanFile):
 
     def requirements(self):
         self.requires("zlib/1.2.11")
-    
-    def build_requirements(self):
-        self.tool_requires("arm-toolchain/13")
 
     def layout(self):
         cmake_layout(self)
