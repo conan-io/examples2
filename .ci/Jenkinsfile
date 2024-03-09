@@ -115,9 +115,9 @@ node('Linux') {
         // FIXME
         // These examples won't run in the PR's at least until we have binaries for
         // all libraries examples in CC to not slow down the ci on PR's
-        List<String> skipExamplesInPR = []  
-        List<String> skipExamplesAlways= ['sdl2', 'tensorflow'] // FIXME: this is failing because a conflict in the graph
-                                                               // run again once the conflict in Conan Center is solved
+        List<String> skipExamplesInPR = ['tensorflow']  
+        List<String> skipExamplesAlways= ['sdl2'] // FIXME: this is failing because a conflict in the graph
+                                                  // run again once the conflict in Conan Center is solved
 
         stage('Find examples') {
             checkout scm
