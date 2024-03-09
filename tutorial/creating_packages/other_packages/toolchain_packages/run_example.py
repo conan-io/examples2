@@ -5,18 +5,21 @@ from test.examples_tools import chdir, run
 
 if platform.system() == "Linux":
 
-    run("conan install . --build missing -pr:b=default -pr:h=./profiles/raspberry")
+    with chdir("toolchain"):
+        run("conan create . -pr:b=default -pr:h=../profiles/raspberry-64 --build-require")
+    
+    with chdir("consumer"):
+        run("conan install . --build missing -pr:b=default -pr:h=../profiles/raspberry-64 -pr:h=../profiles/arm-toolchain")
 
     generators_folder = "Release/generators"
 
-    with chdir("build"):
+    with chdir("consumer/build"):
         command = []
         # in the conanfile.py we only add CMake as tool_require in Linux
         command.append(f". {generators_folder}/conanbuild.sh")
-        command.append(
-            f"cmake .. -DCMAKE_TOOLCHAIN_FILE={generators_folder}/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release")
+        command.append(f"cmake .. -DCMAKE_TOOLCHAIN_FILE={generators_folder}/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release")
         command.append("cmake --build .")
         command.append(f". {generators_folder}/deactivate_conanbuild.sh")
         run(" && ".join(command))
         cmd_out = run("file compressor")
-        assert "ARM, EABI" in cmd_out
+        assert "ELF 64-bit" in cmd_out

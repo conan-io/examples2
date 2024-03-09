@@ -1,3 +1,4 @@
+from io import StringIO
 from conan import ConanFile
 from conan.tools.cmake import CMake, cmake_layout
 import os
@@ -26,5 +27,9 @@ class TestPackgeConan(ConanFile):
             toolchain = "aarch64-none-linux-gnu"
         self.run(f"{toolchain}-gcc --version")
         test_file = os.path.join(self.cpp.build.bindirs[0], "test_package")
-        self.run(f"file {test_file}")
-        assert os.path.exists(test_file)
+        stdout = StringIO()
+        self.run(f"file {test_file}", stdout=stdout)
+        if toolchain == "aarch64-none-linux-gnu":
+            assert "ELF 64-bit" in stdout.getvalue()
+        else:
+            assert "ELF 32-bit" in stdout.getvalue()

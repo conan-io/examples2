@@ -3,6 +3,6 @@
 
 int main()
 {
-    std::cout << "hi!\n";
+    std::cout << "hello world!\n";
     return EXIT_SUCCESS;
 }
