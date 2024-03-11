@@ -28,9 +28,9 @@ if platform.system() == "Linux":
 
     with chdir("consumer"):
         run("conan install . --build missing -pr:b=default -pr:h=../profiles/raspberry-64 -pr:h=../profiles/arm-toolchain")
-
-    with chdir("consumer/build"):
         run("cmake --preset conan-release")
         run("cmake --build --preset conan-release")
+
+    with chdir("consumer/build/Release"):
         cmd_out = run("file compressor")
         assert "ELF 64-bit" in cmd_out
