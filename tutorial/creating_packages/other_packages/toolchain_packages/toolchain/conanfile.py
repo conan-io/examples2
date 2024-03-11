@@ -4,7 +4,7 @@ from conan.tools.files import get, copy, download
 from conan.errors import ConanInvalidConfiguration
 from conan.tools.scm import Version
 
-# conan create toolchain.py -pr:b=default -pr:h=./profiles/raspberry-64 --build-require -c:b tools.files.download:verify=False
+
 class ArmToolchainPackage(ConanFile):
     name = "arm-toolchain"
     version = "13.2"
