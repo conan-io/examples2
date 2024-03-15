@@ -121,7 +121,7 @@ node('Linux') {
 
         stage('Find examples') {
             checkout scm
-            def _examples = sh(script: 'find . -name run_example.*', returnStdout: true).readLines()
+            def _examples = sh(script: 'find . -name ci_test_example.*', returnStdout: true).readLines()
             for (example in _examples) {
                 def shouldSkipinPR = skipExamplesInPR.any { skipExample -> example.contains(skipExample) }
                 def shouldSkipAlways = skipExamplesAlways.any { skipExample -> example.contains(skipExample) }
