@@ -7,3 +7,5 @@
 ### [Using Protobuf to serialize data](protobuf/serialization)
 
 ### [Using libcurl to download an image and stb to read it](libcurl/download_image)
+
+### [Using libcurl to download an image and stb to read it (color version with fmt)](libcurl/ascii_art_color)
