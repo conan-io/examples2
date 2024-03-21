@@ -2,17 +2,17 @@
 #include <curl/curl.h>
 #include <vector>
 #include <string>
-#include <fmt/core.h> // Ensure fmt is included in your project
+#include <fmt/core.h>
 #include <fmt/color.h>
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h" // Ensure stb_image.h is included in your project
+#include "stb_image.h"
 
 // Size of ASCII art
 static const int new_width = 80;
 
 // Ascii gradient
-static const std::string ASCII_CHARS = " .:-=+#%@@@"; // Inverted colors for ASCII art
+static const std::string ASCII_CHARS = " .:-=+#%@@@";
 
 // Function to scale the luminance into an ASCII character
 char map_luminance_to_ascii(float luminance) {
