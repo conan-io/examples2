@@ -68,3 +68,5 @@ examples/libraries/imgui/introduction/bindings
 
 # Bazel files
 bazel-*
+examples/libraries/libcurl/ascii_art_color/conan/**
+examples/libraries/libcurl/ascii_art_color/asciiartgen/x64/**
