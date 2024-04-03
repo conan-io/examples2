@@ -1,7 +1,7 @@
 [requires]
-sdl_image/[~2.0]
+sdl_image/[~2.6]
 sdl_ttf/[~2.0]
-sdl/[~2.26] 
+sdl/[~2.28] 
 
 [generators]
 CMakeToolchain
