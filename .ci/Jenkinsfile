@@ -115,7 +115,7 @@ node('Linux') {
         // FIXME
         // These examples won't run in the PR's at least until we have binaries for
         // all libraries examples in CC to not slow down the ci on PR's
-        List<String> skipExamplesInPR = ['tensorflow']  
+        List<String> skipExamplesInPR = ['tensorflow']
 
         stage('Find examples') {
             checkout scm
