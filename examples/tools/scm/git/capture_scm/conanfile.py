@@ -15,6 +15,7 @@ class helloRecipe(ConanFile):
 
     def export(self):
         git = Git(self, self.recipe_folder)
+        # save the url and commit in conandata.yml
         git.coordinates_to_conandata()
 
     def source(self):
