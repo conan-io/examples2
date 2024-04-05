@@ -48,7 +48,7 @@ String pipConanBranchInstall(String branch, String fork='conan-io') {
 // Run on latest development branch and latest released version
 List<Map> getBranchesInstalls() {
     def branches = [['name': 'latest Conan 2.0 release', 'branchInstall': 'conan']]
-    branches.add(0, ['name': 'develop Conan 2.0', 'branchInstall': pipConanBranchInstall('release/2.0')])
+    branches.add(0, ['name': 'develop Conan 2.0', 'branchInstall': pipConanBranchInstall('develop2')])
     return branches
 }
 
