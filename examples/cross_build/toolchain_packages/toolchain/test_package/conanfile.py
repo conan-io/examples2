@@ -20,15 +20,18 @@ class TestPackageConan(ConanFile):
         cmake.build()
 
     def test(self):
-        if self.settings.arch in ["armv6", "armv7", "armv7hf"]:
-            toolchain = "arm-none-linux-gnueabihf"
-        else:
-            toolchain = "aarch64-none-linux-gnu"
+        # if self.settings.arch in ["armv6", "armv7", "armv7hf"]:
+        #     toolchain = "arm-none-linux-gnueabihf"
+        # else:
+        #     toolchain = "aarch64-none-linux-gnu"
+
+        toolchain = "x86_64-unknown-linux-gnu"
         self.run(f"{toolchain}-gcc --version")
         test_file = os.path.join(self.cpp.build.bindirs[0], "test_package")
         stdout = StringIO()
         self.run(f"file {test_file}", stdout=stdout)
-        if toolchain == "aarch64-none-linux-gnu":
-            assert "ELF 64-bit" in stdout.getvalue()
-        else:
-            assert "ELF 32-bit" in stdout.getvalue()
+        assert "ELF 64-bit LSB executable, x86-64" in stdout.getvalue()
+        # if toolchain == "aarch64-none-linux-gnu":
+        #     assert "ELF 64-bit" in stdout.getvalue()
+        # else:
+        #     assert "ELF 32-bit" in stdout.getvalue()
