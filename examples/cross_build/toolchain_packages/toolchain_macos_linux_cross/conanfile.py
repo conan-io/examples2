@@ -10,8 +10,8 @@ class ArmToolchainPackage(ConanFile):
     version = "13.2"
 
     license = "GPL-3.0-only"
-    homepage = "https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads"
-    description = "Conan package for the ARM toolchain, targeting different Linux ARM architectures."
+    homepage = "https://github.com/messense/homebrew-macos-cross-toolchains/"
+    description = "Conan package for test cross-compilation from Macos to Linux."
     settings = "os", "arch"
     package_type = "application"
 
