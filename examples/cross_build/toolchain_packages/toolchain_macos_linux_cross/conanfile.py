@@ -5,7 +5,7 @@ from conan.errors import ConanInvalidConfiguration
 from conan.tools.scm import Version
 
 
-class ArmToolchainPackage(ConanFile):
+class LinuxGnuMacosToolchain(ConanFile):
     name = "arm-toolchain"
     version = "13.2"
 
