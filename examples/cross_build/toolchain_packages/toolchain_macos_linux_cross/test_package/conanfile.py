@@ -6,7 +6,7 @@ import os
 
 class TestPackageConan(ConanFile):
     settings = "os", "arch", "compiler", "build_type"
-    generators = "CMakeToolchain", "VirtualBuildEnv"
+    generators = "CMakeToolchain"
 
     def _get_arch(self, arch):
         if arch in self._archs_aarch64():
