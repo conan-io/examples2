@@ -19,10 +19,10 @@ class TestPackageConan(ConanFile):
             return "x86_64"
         elif arch in self._archs_i686():
             return "i686"
-        elif arch in self._arch_mipsel():
+        elif arch in self._archs_mipsel():
             return "mipsel"
 
-    def _arch_mipsel(self):
+    def _archs_mipsel(self):
         return ["mips", "mips64"]
 
     def _archs_i686(self):
@@ -57,4 +57,8 @@ class TestPackageConan(ConanFile):
         test_file = os.path.join(self.cpp.build.bindirs[0], "test_package")
         stdout = StringIO()
         self.run(f"file {test_file}", stdout=stdout)
-        assert "ELF 64-bit" in stdout.getvalue()
+        archs_32 = self._archs_i686() + self._archs_arm() + self._archs_armv7()
+        if self.settings.arch in archs_32:
+            assert "ELF 32-bit" in stdout.getvalue()
+        else:
+            assert "ELF 64-bit" in stdout.getvalue()

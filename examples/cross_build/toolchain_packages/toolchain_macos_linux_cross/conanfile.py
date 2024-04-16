@@ -26,7 +26,7 @@ class ArmToolchainPackage(ConanFile):
             return "x86_64"
         elif arch in self._archs_i686():
             return "i686"
-        elif arch in self._arch_mipsel():
+        elif arch in self._archs_mipsel():
             return "mipsel"
 
     def _get_arch_macos(self, arch):
@@ -35,7 +35,7 @@ class ArmToolchainPackage(ConanFile):
         elif arch in self._archs_x86_64():
             return "x86_64"
 
-    def _arch_mipsel(self):
+    def _archs_mipsel(self):
         return ["mips", "mips64"]
 
     def _archs_i686(self):
@@ -58,6 +58,26 @@ class ArmToolchainPackage(ConanFile):
 
     def _get_toolchain(self, target_arch):
         return f"{self._get_arch_linux(target_arch)}-unknown-linux-gnu"
+
+    def _get_toolchain_without_libc(self, arch_macos, arch_linux):
+        toolchain = arch_linux + "-" + arch_macos
+        d = {}
+        d["aarch64-aarch64"] = ["aarch64-unknown-linux-gnu-aarch64-darwin.tar.gz", "aarch64-unknown-linux-musl-aarch64-darwin.tar.gz"]
+        d["aarch64-x86_64"] = ["aarch64-unknown-linux-gnu-x86_64-darwin.tar.gz", "aarch64-unknown-linux-musl-x86_64-darwin.tar.gz"]
+        d["arm-aarch64"] = ["arm-unknown-linux-gnueabi-aarch64-darwin.tar.gz", "arm-unknown-linux-gnueabihf-aarch64-darwin.tar.gz", "arm-unknown-linux-musleabihf-aarch64-darwin.tar.gz"]
+        d["arm-x86_64"] = ["arm-unknown-linux-gnueabi-x86_64-darwin.tar.gz", "arm-unknown-linux-gnueabihf-x86_64-darwin.tar.gz", "arm-unknown-linux-musleabihf-x86_64-darwin.tar.gz"]
+        d["armv7-aarch64"] = ["armv7-unknown-linux-gnueabihf-aarch64-darwin.tar.gz", "armv7-unknown-linux-musleabihf-aarch64-darwin.tar.gz"]
+        d["armv7-x86_64"] = ["armv7-unknown-linux-gnueabihf-x86_64-darwin.tar.gz", "armv7-unknown-linux-musleabihf-x86_64-darwin.tar.gz"]
+        d["i686-aarch64"] = ["i686-unknown-linux-gnu-aarch64-darwin.tar.gz", "i686-unknown-linux-musl-aarch64-darwin.tar.gz"]
+        d["i686-x86_64"] = ["i686-unknown-linux-gnu-x86_64-darwin.tar.gz", "i686-unknown-linux-musl-x86_64-darwin.tar.gz"]
+        d["mipsel-aarch64"] = ["mipsel-unknown-linux-gnu-aarch64-darwin.tar.gz"]
+        d["mipsel-x86_64"] = ["mipsel-unknown-linux-gnu-x86_64-darwin.tar.gz"]
+        d["x86_64-aarch64"] = ["x86_64-unknown-linux-gnu-aarch64-darwin.tar.gz", "x86_64-unknown-linux-musl-aarch64-darwin.tar.gz"]
+        d["x86_64-x86_64"] = ["x86_64-unknown-linux-gnu-x86_64-darwin.tar.gz", "x86_64-unknown-linux-musl-x86_64-darwin.tar.gz"]
+        return d[toolchain]
+    
+    def _get_toolchain_with_libc(self, arch_macos, arch_linux, libc):
+        toolchain = f"{arch_linux}-unknown-linux-{libc}-{arch_macos}-darwin.tar.gz"
     
     def _hash_validator(self, toolchain):
         d = {}
@@ -87,14 +107,32 @@ class ArmToolchainPackage(ConanFile):
         d["x86_64-unknown-linux-musl-x86_64-darwin.tar.gz"] = "ff0f635766f765050dc918764c856247614c38e9c4ad27c30f85c0af4b21e919"
         return d[toolchain]
 
-    def _get_toolchain_url(self, macos_arch, linux_arch):
-        macos_name = self._get_arch_macos(macos_arch)
-        linux_name = self._get_arch_linux(linux_arch)
-        platform = "gnu"
-        toolchain = f"{linux_name}-unknown-linux-{platform}-{macos_name}-darwin.tar.gz"
+    def _get_toolchain_url(self):
+        arch_macos = self._get_arch_macos(self.settings.arch)
+        arch_linux = self._get_arch_linux(self.settings_target.arch)
+        custom_libc = self.conf.get("user.libc:name", None)
+        
+        if custom_libc:
+            toolchain = self._get_toolchain_with_libc(macos_name, linux_name, custom_libc)
+        else: 
+            toolchain = self._get_toolchain_without_libc(arch_macos, arch_linux)[0]
+        
         hash_sha256 = self._hash_validator(toolchain)
         base_url = f"https://github.com/messense/homebrew-macos-cross-toolchains/releases/download/v13.2.0/{toolchain}"
         return base_url, hash_sha256
+
+    def package_id(self):
+        if not self.conf.get("user.libc:name", None):
+            # [conf]
+            # user.libc:name=gnu
+            # tools.info.package_id:confs=["user.libc:*"]
+            self.output.warning("You can define the linux libc with the user.libc:name configuration")
+            
+        self.info.settings_target = self.settings_target
+        # We only want the ``arch`` setting
+        self.info.settings_target.rm_safe("os")
+        self.info.settings_target.rm_safe("compiler")
+        self.info.settings_target.rm_safe("build_type")
 
     def validate(self):
         if self.settings.os != "Macos" or self._get_arch_macos(self.settings.arch) == None:
@@ -108,7 +146,7 @@ class ArmToolchainPackage(ConanFile):
                                            f"{self.settings_target.os}-{self.settings_target.arch} is not supported.")
 
     def build(self):
-        url, sha256 = self._get_toolchain_url(self.settings.arch, self.settings_target.arch)
+        url, sha256 = self._get_toolchain_url()
         get(self, url, strip_root=False, sha256=sha256)            
 
     def package(self):
@@ -117,13 +155,6 @@ class ArmToolchainPackage(ConanFile):
         for dir_name in dirs_to_copy:
             copy(self, pattern=f"{dir_name}/*", src=self.build_folder, dst=self.package_folder, keep_path=True)
         copy(self, "LICENSE", src=self.build_folder, dst=os.path.join(self.package_folder, "licenses"), keep_path=False)
-
-    def package_id(self):
-        self.info.settings_target = self.settings_target
-        # We only want the ``arch`` setting
-        self.info.settings_target.rm_safe("os")
-        self.info.settings_target.rm_safe("compiler")
-        self.info.settings_target.rm_safe("build_type")
 
     def package_info(self):
         toolchain = self._get_toolchain(self.settings_target.arch)
