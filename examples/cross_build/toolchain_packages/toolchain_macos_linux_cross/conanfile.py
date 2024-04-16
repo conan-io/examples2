@@ -35,9 +35,9 @@ class ArmToolchainPackage(ConanFile):
     
     def _hash_validator(self, toolchain):
         d = {
-            "aarch64-unknown-linux-gnu-aarch64-darwin.tar.gz": "a87669a9df908d8d8859849a0f9fc0fb287561a4e449c21dade10663d42d2ccb"
-            "aarch64-unknown-linux-gnu-x86_64-darwin.tar.gz": "6979291e34064583ac8b12a8b6b99ec6829caf22f47bcb68b646365ec9e24690"
-            "x86_64-unknown-linux-gnu-aarch64-darwin.tar.gz": "bb59598afd84b4d850c32031a4fa64c928fb41f8ece4401553b6c23714efbc47"
+            "aarch64-unknown-linux-gnu-aarch64-darwin.tar.gz": "a87669a9df908d8d8859849a0f9fc0fb287561a4e449c21dade10663d42d2ccb",
+            "aarch64-unknown-linux-gnu-x86_64-darwin.tar.gz": "6979291e34064583ac8b12a8b6b99ec6829caf22f47bcb68b646365ec9e24690",
+            "x86_64-unknown-linux-gnu-aarch64-darwin.tar.gz": "bb59598afd84b4d850c32031a4fa64c928fb41f8ece4401553b6c23714efbc47",
             "x86_64-unknown-linux-gnu-x86_64-darwin.tar.gz": "86e28c979e5ca6d0d1019c9b991283f2ab430f65cee4dc1e4bdf85170ff7c4f2"
         }
         return d[toolchain]
