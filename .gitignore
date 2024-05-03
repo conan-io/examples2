@@ -46,6 +46,10 @@ build/*
 *.pyc
 tmp/
 
+# Virtualenv
+venv/
+.venv/
+
 # IDE
 .idea/*
 .project
@@ -71,3 +75,5 @@ bazel-*
 examples/libraries/libcurl/ascii_art_color/conan/*
 examples/libraries/libcurl/ascii_art_color/asciiartgen/x64/*
 examples/libraries/libcurl/ascii_art_color/x64/Release/*
+examples/tools/google/bazel_7.1/testsuite/conan
+examples/tools/google/bazel_7.1/testsuite/MODULE.bazel.lock
