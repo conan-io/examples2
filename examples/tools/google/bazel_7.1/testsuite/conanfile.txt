@@ -1,0 +1,9 @@
+[requires]
+gtest/1.14.0
+
+[generators]
+BazelDeps
+BazelToolchain
+
+[layout]
+bazel_layout
