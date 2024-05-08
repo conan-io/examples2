@@ -1,16 +1,16 @@
-# MacOs to Linux cross-compilation example
+# Creating a Toolchain Package for Cross-Building from macOS to Linux
 
 ## Introduction
 
-This example is a recipe that enables cross-compilation from *MacOs* to *Linux*. The example is limited to cross-compiling 
-from a *MacOs* with either `x86_64` or `aarch64` architecture to a *Linux GNU* system, also with `x86_64` or `aarch64`.
+This example presents a detailed guide for creating and utilizing a toolchain package to facilitate cross-compilation 
+from *macOS* to *Linux*. The example is limited to cross-compiling from a *MacOs* with either `x86_64` or `aarch64` 
+architecture to a *Linux GNU* system, also with `x86_64` or `aarch64`.
 
 ## Setup
 
 To run the following example, you need:
 
 - *Conan* installed
-- Compiler installed
 - *MacOS* machine with an `x86_64` or `aarch64` architecture
 - *MacOS* build profile with an `x86_64` or `aarch64` architecture
 - *Linux* host profile with an `x86_64` or `aarch64` architecture

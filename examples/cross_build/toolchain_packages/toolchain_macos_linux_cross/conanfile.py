@@ -6,7 +6,7 @@ from conan.tools.scm import Version
 
 
 class LinuxGnuMacosToolchain(ConanFile):
-    name = "arm-toolchain"
+    name = "linux-gnu-macos-toolchain"
     version = "13.2"
 
     license = "GPL-3.0-only"
