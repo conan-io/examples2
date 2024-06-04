@@ -1,3 +1,4 @@
+import os
 import platform
 import shutil
 
@@ -9,6 +10,9 @@ print("\n- Use the BazelToolchain and BazelDeps generators -\n")
 if platform.system() != "Linux":
     print(f"SKIPPED TEST BECAUSE BAZEL IS NOT INSTALLED IN {platform.system()} PLATFORM YET.")
     exit(0)
+
+# Add bazel path
+os.environ["PATH"] += os.pathsep + '/usr/share/bazel-6.3.2/bin'
 
 output = run("bazel --version")
 
