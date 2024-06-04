@@ -7,12 +7,11 @@ from test.examples_tools import run
 # ############# Example ################
 print("\n- Use the BazelToolchain and BazelDeps generators -\n")
 
-if platform.system() != "Linux":
-    print(f"SKIPPED TEST BECAUSE BAZEL IS NOT INSTALLED IN {platform.system()} PLATFORM YET.")
-    exit(0)
-
+path_mapping = {'Linux': '/usr/share/bazel-7.1.2/bin',
+                'Windows': 'C:/bazel-7.1.2/bin',
+                'Darwin': '/Users/jenkins/bazel-7.1.2/bin'}
 # Add bazel path
-os.environ["PATH"] += os.pathsep + '/usr/share/bazel-6.3.2/bin'
+os.environ["PATH"] += os.pathsep + path_mapping.get(platform.system())
 
 output = run("bazel --version")
 
