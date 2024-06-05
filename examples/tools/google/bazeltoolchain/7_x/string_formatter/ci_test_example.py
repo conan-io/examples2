@@ -2,7 +2,13 @@ import os
 import platform
 import shutil
 
+from conan import conan_version
+
 from test.examples_tools import run
+
+if conan_version < "2.4.0":
+    print("SKIPPED TEST BECAUSE OF CONAN MINIMUM REQUIRED VERSION")
+    exit(0)
 
 # ############# Example ################
 print("\n- Use the BazelToolchain and BazelDeps generators -\n")
@@ -21,7 +27,10 @@ try:
     print("\n- Running bazel build command to compile the demo bazel target -\n")
     run("bazel --bazelrc=./conan/conan_bzl.rc build --config=conan-config //main:demo")
     print("\n- Running the application 'demo' created -\n")
-    run("./bazel-bin/main/demo")
+    if platform.system() == "Windows":
+        run("./bazel-bin/main/demo")
+    else:
+        run("bazel-bin\\main\\demo.exe")
 finally:
     # Remove all the bazel symlinks and clean its cache
     run("bazel clean")
