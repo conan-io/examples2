@@ -22,4 +22,5 @@
 
 ### [tools.google](google)
 
-- Build a [Bazel project](bazel/bazeltoolchain/string_formatter/) using Conan and [fmt](https://fmt.dev/). [Docs](https://docs.conan.io/2/examples/tools/google/bazeltoolchain/build_simple_bazel_project.rst)
+- Build a [Bazel 6.x compatible project](bazel/bazeltoolchain/6_x/string_formatter/) using Conan and [fmt](https://fmt.dev/). [Docs](https://docs.conan.io/2/examples/tools/google/bazeltoolchain/build_simple_bazel_project.rst)
+- Build a [Bazel >= 7.1 compatible project](bazel/bazeltoolchain/7_x/string_formatter/) using Conan and [fmt](https://fmt.dev/). [Docs](https://docs.conan.io/2/examples/tools/google/bazeltoolchain/build_simple_bazel_7x_project.rst)

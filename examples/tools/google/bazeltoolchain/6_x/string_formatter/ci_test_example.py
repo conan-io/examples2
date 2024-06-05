@@ -7,13 +7,11 @@ from test.examples_tools import run
 # ############# Example ################
 print("\n- Use the BazelToolchain and BazelDeps generators -\n")
 
-if platform.system() != "Linux":
-    print(f"SKIPPED TEST BECAUSE BAZEL IS NOT INSTALLED IN {platform.system()} PLATFORM YET.")
-    exit(0)
-
+path_mapping = {'Linux': '/usr/share/bazel-6.3.2/bin',
+                'Windows': 'C:/bazel-6.3.2/bin',
+                'Darwin': '/Users/jenkins/bazel-6.3.2/bin'}
 # Add bazel path
-os.environ["PATH"] += os.pathsep + '/usr/share/bazel-6.3.2/bin'
-
+os.environ["PATH"] += os.pathsep + path_mapping.get(platform.system())
 output = run("bazel --version")
 
 try:
@@ -22,7 +20,10 @@ try:
     print("\n- Running bazel build command to compile the demo bazel target -\n")
     run("bazel --bazelrc=./conan/conan_bzl.rc build --config=conan-config //main:demo")
     print("\n- Running the application 'demo' created -\n")
-    run("./bazel-bin/main/demo")
+    if platform.system() == "Windows":
+        run("bazel-bin\\main\\demo.exe")
+    else:
+        run("./bazel-bin/main/demo")
 finally:
     # Remove all the bazel symlinks and clean its cache
     run("bazel clean")
