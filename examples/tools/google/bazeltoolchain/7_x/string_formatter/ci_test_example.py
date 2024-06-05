@@ -6,7 +6,7 @@ from conan import conan_version
 
 from test.examples_tools import run
 
-if conan_version < "2.4.0":
+if conan_version <= "2.3.2":
     print("SKIPPED TEST BECAUSE OF CONAN MINIMUM REQUIRED VERSION")
     exit(0)
 
