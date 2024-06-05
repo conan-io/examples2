@@ -21,9 +21,9 @@ try:
     run("bazel --bazelrc=./conan/conan_bzl.rc build --config=conan-config //main:demo")
     print("\n- Running the application 'demo' created -\n")
     if platform.system() == "Windows":
-        run("./bazel-bin/main/demo")
-    else:
         run("bazel-bin\\main\\demo.exe")
+    else:
+        run("./bazel-bin/main/demo")
 finally:
     # Remove all the bazel symlinks and clean its cache
     run("bazel clean")
