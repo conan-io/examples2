@@ -152,16 +152,17 @@ for level in to_build:
         ref = elem["ref"]
         # For every ref, multiple binary packages are being built. This can be done in parallel too
         # And often, for different OSs, they will need to be distributed to different build agents
-        for package in elem["packages"]:
-            binary = package["binary"]
-            if binary != "Build":
-                continue
-            # TODO: The options are not used, they should be passed too
-            filenames = package["filenames"]
-            # This is the mapping between the build-order filenames and the profiles
-            build_type = "Debug" if "debug" in filenames[0] else "Release"
-            cmd = "conan install --requires={ref} --build={ref} --lockfile=game.lock -s build_type={bt}".format(ref=ref, bt=build_type)
-            run(cmd)
+        for packages in elem["packages"]:
+            for package in packages:
+                binary = package["binary"]
+                if binary != "Build":
+                    continue
+                # TODO: The options are not used, they should be passed too
+                filenames = package["filenames"]
+                # This is the mapping between the build-order filenames and the profiles
+                build_type = "Debug" if "debug" in filenames[0] else "Release"
+                cmd = "conan install --requires={ref} --build={ref} --lockfile=game.lock -s build_type={bt}".format(ref=ref, bt=build_type)
+                run(cmd)
 
 out = run("game", env_script="conanrunenv-release-x86_64")
 print(out)
