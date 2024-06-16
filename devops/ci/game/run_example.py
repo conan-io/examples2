@@ -124,10 +124,10 @@ out = run("conan lock create --requires=mapviewer/1.0 -s build_type=Debug --lock
 lock = open("game.lock").read()
 print(lock)
 
-out = run("conan graph build-order --requires=game/1.0 --lockfile=game.lock --build=missing --format=json", file_stdout="game_bo.json")
-out = run("conan graph build-order --requires=game/1.0 --lockfile=game.lock --build=missing -s build_type=Debug --format=json", file_stdout="game_bo_debug.json")
-out = run("conan graph build-order --requires=mapviewer/1.0 --lockfile=game.lock --build=missing --format=json", file_stdout="mapviewer_bo.json")
-out = run("conan graph build-order --requires=mapviewer/1.0 --lockfile=game.lock --build=missing -s build_type=Debug --format=json", file_stdout="mapviewer_bo_debug.json")
+out = run("conan graph build-order --requires=game/1.0 --lockfile=game.lock --build=missing --order-by=recipe --format=json", file_stdout="game_bo.json")
+out = run("conan graph build-order --requires=game/1.0 --lockfile=game.lock --build=missing -s build_type=Debug --order-by=recipe --format=json", file_stdout="game_bo_debug.json")
+out = run("conan graph build-order --requires=mapviewer/1.0 --lockfile=game.lock --build=missing --order-by=recipe --format=json", file_stdout="mapviewer_bo.json")
+out = run("conan graph build-order --requires=mapviewer/1.0 --lockfile=game.lock --build=missing -s build_type=Debug --order-by=recipe --format=json", file_stdout="mapviewer_bo_debug.json")
 
 ############### Part 8 ###################################
 # If we have the build order for several applications, and 
