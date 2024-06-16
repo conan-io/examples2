@@ -117,10 +117,12 @@ assert "ERROR: Missing prebuilt package for 'engine/1.0'" in out
 # and for that we need to know what to build, and very importantly in what order
 print("- Part 7: Compute the build-order -")
 run("conan lock create --requires=game/1.0 --lockfile-out=game.lock")
-run("conan lock create --requires=game/1.0 -s build_type=Debug --lockfile=game.lock --lockfile-out=game.lock")
-run("conan lock create --requires=mapviewer/1.0 --lockfile=game.lock --lockfile-out=game.lock")
-out=run("conan lock create --requires=mapviewer/1.0 -s build_type=Debug --lockfile=game.lock --lockfile-out=game.lock")
+out = run("conan lock create --requires=game/1.0 -s build_type=Debug --lockfile=game.lock --lockfile-out=game.lock")
 assert "ai/1.1.0" in out
+run("conan lock create --requires=mapviewer/1.0 --lockfile=game.lock --lockfile-out=game.lock")
+out = run("conan lock create --requires=mapviewer/1.0 -s build_type=Debug --lockfile=game.lock --lockfile-out=game.lock")
+lock = open("game.lock").read()
+print(lock)
 
 out = run("conan graph build-order --requires=game/1.0 --lockfile=game.lock --build=missing --format=json", file_stdout="game_bo.json")
 out = run("conan graph build-order --requires=game/1.0 --lockfile=game.lock --build=missing -s build_type=Debug --format=json", file_stdout="game_bo_debug.json")
@@ -141,7 +143,9 @@ out = run("conan graph build-order-merge --file=game_bo.json --file=game_bo_debu
 # simulating a distributed build
 print("- Part 9: Iterate the build-order -")
 json_file = open("bo.json").read()
+print(json_file)
 to_build = json.loads(json_file)
+to_build = to_build["order"]
 
 for level in to_build:
     for elem in level:  # This can be executed in parallel
