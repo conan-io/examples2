@@ -4,7 +4,7 @@ from conan.tools.cmake import CMakeToolchain, CMakeDeps, CMake, cmake_layout
 
 class aiRecipe(ConanFile):
     name = "ai"
-
+    version = "1.0"
     requires = "mathlib/[>=1.0 <2]"
 
     # Binary configuration
