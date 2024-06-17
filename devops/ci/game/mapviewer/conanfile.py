@@ -4,7 +4,7 @@ from conan.tools.cmake import CMakeToolchain, CMakeDeps, CMake, cmake_layout
 
 class mapviewerRecipe(ConanFile):
     name = "mapviewer"
-    version = ""
+    version = "1.0"
     package_type = "application"
 
     requires = "graphics/[>=1.0 <2]"

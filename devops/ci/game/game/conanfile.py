@@ -4,7 +4,7 @@ from conan.tools.cmake import CMakeToolchain, CMakeDeps, CMake, cmake_layout
 
 class gameRecipe(ConanFile):
     name = "game"
-    version = ""
+    version = "1.0"
     package_type = "application"
 
     requires = "engine/[>=1.0 <2]"

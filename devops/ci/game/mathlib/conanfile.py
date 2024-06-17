@@ -4,6 +4,7 @@ from conan.tools.cmake import CMakeToolchain, CMakeDeps, CMake, cmake_layout
 
 class mathlibRecipe(ConanFile):
     name = "mathlib"
+    version = "1.0"
 
     # Binary configuration
     settings = "os", "compiler", "build_type", "arch"

@@ -3,6 +3,12 @@ import os
 import subprocess
 import platform
 
+DEVELOP_URL = "http://localhost:8081/artifactory/api/conan/develop"
+PACKAGES_URL = "http://localhost:8081/artifactory/api/conan/packages"
+PRODUCTS_URL = "http://localhost:8081/artifactory/api/conan/products"
+PASSWORD = "Patata!12"
+init_graph = True
+
 
 def run(cmd, error=False, env_script=None, file_stdout=None):
     if env_script is not None:
@@ -33,30 +39,80 @@ def replace(filepath, old, new):
         raise Exception("No replacement of '{}' happened".format(old))
     open(filepath, "w").write(new_content)
 
+def clean():
+    run('conan remove "*" -c')  # Make sure no packages from last run
+    run("conan remote remove *")
 
-############### Part 1 ###################################
-# Just create a project with a cool dependency graph, and
-# and 2 consuming applications, everything with version ranges
-print("- Part 1: Setup the project initial state -")
-run('conan remove "*" -c')  # Make sure no packages from last run
-run("conan create mathlib --version=1.0")
-run("conan create ai --version=1.0")
-run("conan create graphics --version=1.0")
-run("conan create engine --version=1.0")
-out = run("conan create game --version=1.0")
-assert "game/1.0:fun game (Release)!" in out
-out = run("conan create mapviewer --version=1.0")
-assert "mapviewer/1.0:serving the game (Release)!" in out
+def add_repo(name, url):
+    run(f"conan remote add {name} {url}")
+    run(f"conan remote login {name} admin -p {PASSWORD}")
+
+if init_graph:
+    print("- Preparation of the dependency graph -")
+    ############### Part 1 ###################################
+    # Just create a project with a cool dependency graph, and
+    # and 2 consuming applications, everything with version ranges
+    print("- Part 1: Setup the project initial state -")
+    clean()
+    for repo in (DEVELOP_URL, PACKAGES_URL, PRODUCTS_URL):
+        add_repo("repo", repo)
+        run("conan remove * -c -r=repo")
+        run("conan remote remove *")
+
+    # create initial graph
+    run("conan create mathlib -tf=")
+    run("conan create ai -tf=")
+    run("conan create graphics -tf=")
+    run("conan create engine -tf=")
+    out = run("conan create game")
+    assert "game/1.0:fun game (Release)!" in out
+    out = run("conan create mapviewer")
+    assert "mapviewer/1.0:serving the game (Release)!" in out
+    add_repo("develop", DEVELOP_URL)
+    run("conan upload * -r=develop -c")
 
 
-############### Part 2 ###################################
+print("- Package pipeline -")
+############### Package pipeline ###################################
 # Simulates a change done by one developer to ai.cpp code (a patch/bug fix)
 # We do a change in one of the packages in the middle of 
 # the graph, bump its version to 1.0.1 and create it
-print("- Part 2: Lets do a change in ai/1.0, and bump the version to 1.0.1 -")
+
+############### Package pipeline: Single configuration ###################################
+print("- Package pipeline, single configuration -")
+clean()
+add_repo("develop", DEVELOP_URL)
 replace("ai/src/ai.cpp", "Some Artificial", "SUPER BETTER Artificial")
-out = run("conan create ai --version=1.0.1")
+replace("ai/conanfile.py", 'version = "1.0"', 'version = "1.0.1"')
+out = run("conan create ai --build=missing:ai/*")
 assert "ai/1.0.1: SUPER BETTER Artificial Intelligence for aliens (Release)!" in out
+# We don't want to disrupt developers or CI
+add_repo("products", PRODUCTS_URL)
+run("conan upload ai* -r=product -c")
+
+############### Package pipeline: Multi configuration Release/Debug ###################################
+print("- Package pipeline, multi configuration -")
+clean()
+add_repo("develop", DEVELOP_URL)
+
+add_repo("packages", PACKAGES_URL)
+# it could be distributed
+run("conan create ai --build=missing:ai/* -s build_type=Release")
+run("conan upload ai* -r=packages -c --format=json", file_stdout="upload_release.json")
+run("conan create ai --build=missing:ai/* -s build_type=Debug")
+run("conan upload ai* -r=packages -c --format=json", file_stdout="upload_debug.json")
+# aggregate the package list
+run("conan pkglist merge -l upload_release.json -l upload_debug.json --format=json", file_stdout="upload.json")
+
+clean()
+# We don't want to disrupt developers or CI
+add_repo("packages", PACKAGES_URL)
+add_repo("products", PRODUCTS_URL)
+# Promotion with Artifactory CE (slow, can be improved with art:promote)
+run("conan download --list=upload.json -r=packages")
+run("conan upload --list=upload.json -r=product -c")
+
+kk
 
 
 ############### Part 3 ###################################
