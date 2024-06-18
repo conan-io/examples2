@@ -88,7 +88,7 @@ out = run("conan create ai --build=missing:ai/*")
 assert "ai/1.0.1: SUPER BETTER Artificial Intelligence for aliens (Release)!" in out
 # We don't want to disrupt developers or CI
 add_repo("products", PRODUCTS_URL)
-run("conan upload ai* -r=product -c")
+run("conan upload ai* -r=products -c")
 
 ############### Package pipeline: Multi configuration Release/Debug ###################################
 print("- Package pipeline, multi configuration -")
