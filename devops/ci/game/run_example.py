@@ -1,36 +1,6 @@
-import json
-import os
-import subprocess
-import platform
+from init_project import DEVELOP, PACKAGES, PRODUCTS
+from init_project import init_project, run, clean, add_repo, title, chdir
 
-DEVELOP_URL = "http://localhost:8081/artifactory/api/conan/develop"
-PACKAGES_URL = "http://localhost:8081/artifactory/api/conan/packages"
-PRODUCTS_URL = "http://localhost:8081/artifactory/api/conan/products"
-PASSWORD = "Patata!12"
-init_graph = True
-
-
-def run(cmd, error=False, env_script=None, file_stdout=None):
-    if env_script is not None:
-        env = "{}.bat".format(env_script) if platform.system() == "Windows" else ". {}.sh".format(env_script)
-        cmd = "{} && {}".format(env, cmd)
-    # Used by tools/scm check_repo only (see if repo ok with status)
-    print("Running: {}".format(cmd))
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-    out, err = process.communicate()
-    out = out.decode("utf-8")
-    err = err.decode("utf-8")
-    ret = process.returncode
-
-    if file_stdout:
-        open(file_stdout, "w").write(out)
-
-    output = err + out
-    if ret != 0 and not error:
-        raise Exception("Failed cmd: {}\n{}".format(cmd, output))
-    if ret == 0 and error:
-        raise Exception("Cmd succeded (failure expected): {}\n{}".format(cmd, output))
-    return output
 
 def replace(filepath, old, new):
     content = open(filepath).read()
@@ -39,96 +9,138 @@ def replace(filepath, old, new):
         raise Exception("No replacement of '{}' happened".format(old))
     open(filepath, "w").write(new_content)
 
-def clean():
-    run('conan remove "*" -c')  # Make sure no packages from last run
-    run("conan remote remove *")
 
-def add_repo(name, url):
-    run(f"conan remote add {name} {url}")
-    run(f"conan remote login {name} admin -p {PASSWORD}")
+init_graph = False
+package_single = False
+package_multi = False
+package_multi_lock = False
+
+
+print("Checking current home")
+out = run("conan config home")
+print("Current home is:", out)
+run("conan profile detect -f")
 
 if init_graph:
-    print("- Preparation of the dependency graph -")
-    ############### Part 1 ###################################
-    # Just create a project with a cool dependency graph, and
-    # and 2 consuming applications, everything with version ranges
-    print("- Part 1: Setup the project initial state -")
-    clean()
-    for repo in (DEVELOP_URL, PACKAGES_URL, PRODUCTS_URL):
-        add_repo("repo", repo)
-        run("conan remove * -c -r=repo")
-        run("conan remote remove *")
-
-    # create initial graph
-    run("conan create mathlib -tf=")
-    run("conan create ai -tf=")
-    run("conan create graphics -tf=")
-    run("conan create engine -tf=")
-    out = run("conan create game")
-    assert "game/1.0:fun game (Release)!" in out
-    out = run("conan create mapviewer")
-    assert "mapviewer/1.0:serving the game (Release)!" in out
-    add_repo("develop", DEVELOP_URL)
-    run("conan upload * -r=develop -c")
+    init_project()
 
 
-print("- Package pipeline -")
 ############### Package pipeline ###################################
 # Simulates a change done by one developer to ai.cpp code (a patch/bug fix)
 # We do a change in one of the packages in the middle of 
 # the graph, bump its version to 1.0.1 and create it
 
-############### Package pipeline: Single configuration ###################################
-print("- Package pipeline, single configuration -")
-clean()
-add_repo("develop", DEVELOP_URL)
+title("Package pipeline", c="*")
+print("Doing changes to AI and bumping it to ai/1.0.1 version")
+run("git checkout -- ai") # In case ai had previous changes 
 replace("ai/src/ai.cpp", "Some Artificial", "SUPER BETTER Artificial")
-replace("ai/conanfile.py", 'version = "1.0"', 'version = "1.0.1"')
-out = run("conan create ai --build=missing:ai/*")
-assert "ai/1.0.1: SUPER BETTER Artificial Intelligence for aliens (Release)!" in out
-# We don't want to disrupt developers or CI
-add_repo("products", PRODUCTS_URL)
-run("conan upload ai* -r=products -c")
+replace("ai/include/ai.h", "intelligence=0", "intelligence=50")
+replace("ai/conanfile.py", 'version = "1.0"', 'version = "1.1.0"')
+
+
+############### Package pipeline: Single configuration ###################################
+if package_single:
+    title("Package pipeline, single configuration ")
+    clean()
+    add_repo(DEVELOP)
+    out = run("conan create ai --build=missing:ai/*")
+    assert "ai/1.1.0: SUPER BETTER Artificial Intelligence for aliens (Release)!" in out
+    assert "ai/1.1.0: Intelligence level=50" in out
+    # We don't want to disrupt developers or CI
+    add_repo(PRODUCTS)
+    run(f"conan upload ai* -r={PRODUCTS} -c")
+
 
 ############### Package pipeline: Multi configuration Release/Debug ###################################
-print("- Package pipeline, multi configuration -")
-clean()
-add_repo("develop", DEVELOP_URL)
+if package_multi:
+    title("Package pipeline, multi configuration")
+    clean()
+    add_repo(DEVELOP)
+    # it could be distributed
+    with chdir("ai"):
+        run("conan create . --build=missing:ai/* -s build_type=Release --format=json", file_stdout="graph.json")
+        run("conan list --graph=graph.json --graph-binaries=build --format=json", file_stdout="upload_release.json")
+        add_repo(PACKAGES)
+        run(f"conan upload -l=upload_release.json -r={PACKAGES} -c --format=json", file_stdout="upload_release.json")
+        #clean()
+        #add_repo(DEVELOP)
+        run("conan create . --build=missing:ai/* -s build_type=Debug --format=json", file_stdout="graph.json")
+        run("conan list --graph=graph.json --graph-binaries=build --format=json", file_stdout="upload_debug.json")
+        # add_repo(PACKAGES)
+        run(f"conan upload -l=upload_debug.json -r={PACKAGES} -c --format=json", file_stdout="upload_debug.json")
 
-add_repo("packages", PACKAGES_URL)
-# it could be distributed
-run("conan create ai --build=missing:ai/* -s build_type=Release")
-run("conan upload ai* -r=packages -c --format=json", file_stdout="upload_release.json")
-run("conan create ai --build=missing:ai/* -s build_type=Debug")
-run("conan upload ai* -r=packages -c --format=json", file_stdout="upload_debug.json")
-# aggregate the package list
-run("conan pkglist merge -l upload_release.json -l upload_debug.json --format=json", file_stdout="upload.json")
-
-clean()
-# We don't want to disrupt developers or CI
-add_repo("packages", PACKAGES_URL)
-add_repo("products", PRODUCTS_URL)
-# Promotion with Artifactory CE (slow, can be improved with art:promote)
-run("conan download --list=upload.json -r=packages")
-run("conan upload --list=upload.json -r=product -c")
-
-kk
+        print("- Running a promotion -")
+        # aggregate the package list
+        run("conan pkglist merge -l upload_release.json -l upload_debug.json --format=json", file_stdout="promote.json")
+        clean()
+        # We don't want to disrupt developers or CI
+        add_repo(PACKAGES)
+        add_repo(PRODUCTS)
+        # Promotion with Artifactory CE (slow, can be improved with art:promote --artifactory-ce)
+        out = run(f"conan download --list=promote.json -r={PACKAGES} --format=json", file_stdout="promote.json")
+        out = run(f"conan upload --list=promote.json -r={PRODUCTS} -c")
+        print(out)
 
 
-############### Part 3 ###################################
+############### Package pipeline: Multi configuration Release/Debug ###################################
+if package_multi_lock:
+    title("Package pipeline, multi configuration with Lockfiles")
+    clean()
+    with chdir("ai"):
+        add_repo(DEVELOP)
+        # it could be distributed
+        run("conan lock create . --lockfile-out=conan.lock")
+        run("conan lock create . -s build_type=Debug --lockfile=conan.lock --lockfile-out=conan.lock")  # To make sure we cover all
+
+        clean()
+        add_repo(DEVELOP)
+        run("conan create . --build=missing:ai/* -s build_type=Release --lockfile=conan.lock --format=json", file_stdout="graph.json")
+        run("conan list --graph=graph.json --graph-binaries=build --format=json", file_stdout="upload_release.json")
+        add_repo(PACKAGES)
+        run(f"conan upload -l=upload_release.json -r={PACKAGES} -c --format=json", file_stdout="upload_release.json")
+
+        out = run("conan create . --build=missing:ai/* -s build_type=Debug --lockfile=conan.lock --format=json", file_stdout="graph.json")
+        run("conan list --graph=graph.json --graph-binaries=build --format=json", file_stdout="upload_debug.json")
+        run(f"conan upload -l=upload_debug.json -r={PACKAGES} -c --format=json", file_stdout="upload_debug.json")
+
+        print("- Running a promotion -")
+        # aggregate the package list
+        run("conan pkglist merge -l upload_release.json -l upload_debug.json --format=json", file_stdout="promote.json")
+        clean()
+        # We don't want to disrupt developers or CI
+        add_repo(PACKAGES)
+        add_repo(PRODUCTS)
+        # Promotion with Artifactory CE (slow, can be improved with art:promote --artifactory-ce)
+        out = run(f"conan download --list=promote.json -r={PACKAGES} --format=json", file_stdout="promote.json")
+        out = run(f"conan upload --list=promote.json -r={PRODUCTS} -c")
+        print(out)
+
+
+title("Product pipeline", c="*")
+
 # Try to see if our main products keep working fine with that change ai/1.0.1
 # lets build the consumers game and mapviewer applications
 # to integrate the ai/1.0.1 changes
-print("- Part 3: Lets see if this change ai/1.0.1 integrates correctly downstream -")
-run("conan install --requires=mapviewer/1.0")
+title("Lets see if this change ai/1.1.0 integrates correctly downstream")
+clean()
+add_repo(PRODUCTS)
+add_repo(DEVELOP)
+out = run("conan install --requires=mapviewer/1.0")
+out = run("mapviewer", env_script="conanrun")
+assert "mapviewer/1.0:serving the game (Release)!" in out
+
 out = run("conan install --requires=game/1.0", error=True)
 assert "ERROR: Missing prebuilt package for 'game/1.0'" in out
-run("conan install --requires=game/1.0 --build=missing")
+out = run("conan install --requires=game/1.0 --build=missing")
+print(out)
 out = run("game", env_script="conanrun")
 assert "game/1.0:fun game (Release)!" in out
-assert "ai/1.0.1: SUPER BETTER Artificial Intelligence for aliens (Release)!" in out
+assert "ai/1.1.0: SUPER BETTER Artificial Intelligence for aliens (Release)!" in out
+assert "ai/1.1.0: Intelligence level=50" in out
+print(out)
 
 
+exit()
 ############### Part 4 ###################################
 # If we are building different configurations, like Release
 # and Debug, something could change in between in deps.

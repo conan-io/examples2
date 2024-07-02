@@ -1,2 +1,4 @@
 *.json
 game.lock
+conan.lock
+.conan2
