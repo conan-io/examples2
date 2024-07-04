@@ -20,7 +20,8 @@ package_multi_lock = False
 
 product_simple = False
 product_build_order = False
-multi_product_build_order = True
+multi_product_build_order = False
+multi_product_build_order_lock = True
 
 
 print("Checking current home")
@@ -58,6 +59,17 @@ if package_single:
     run(f"conan upload ai* -r={PRODUCTS} -c")
 
 
+def promote(repo_src, repo_dst, pkg_list):
+    clean()
+    # We don't want to disrupt developers or CI
+    add_repo(repo_src)
+    add_repo(repo_dst)
+    # Promotion with Artifactory CE (slow, can be improved with art:promote --artifactory-ce)
+    out = run(f"conan download --list={pkg_list} -r={repo_src} --format=json", file_stdout="promote.json")
+    out = run(f"conan upload --list=promote.json -r={repo_dst} -c")
+    print(out)
+
+
 ############### Package pipeline: Multi configuration Release/Debug ###################################
 if package_multi:
     title("Package pipeline, multi configuration")
@@ -79,14 +91,7 @@ if package_multi:
         print("- Running a promotion -")
         # aggregate the package list
         run("conan pkglist merge -l upload_release.json -l upload_debug.json --format=json", file_stdout="promote.json")
-        clean()
-        # We don't want to disrupt developers or CI
-        add_repo(PACKAGES)
-        add_repo(PRODUCTS)
-        # Promotion with Artifactory CE (slow, can be improved with art:promote --artifactory-ce)
-        out = run(f"conan download --list=promote.json -r={PACKAGES} --format=json", file_stdout="promote.json")
-        out = run(f"conan upload --list=promote.json -r={PRODUCTS} -c")
-        print(out)
+        promote(PACKAGES, PRODUCTS, "upload.json")
 
 
 ############### Package pipeline: Multi configuration Release/Debug ###################################
@@ -112,15 +117,8 @@ if package_multi_lock:
 
         print("- Running a promotion -")
         # aggregate the package list
-        run("conan pkglist merge -l upload_release.json -l upload_debug.json --format=json", file_stdout="promote.json")
-        clean()
-        # We don't want to disrupt developers or CI
-        add_repo(PACKAGES)
-        add_repo(PRODUCTS)
-        # Promotion with Artifactory CE (slow, can be improved with art:promote --artifactory-ce)
-        out = run(f"conan download --list=promote.json -r={PACKAGES} --format=json", file_stdout="promote.json")
-        out = run(f"conan upload --list=promote.json -r={PRODUCTS} -c")
-        print(out)
+        run("conan pkglist merge -l upload_release.json -l upload_debug.json --format=json", file_stdout="upload.json")
+        promote(PACKAGES, PRODUCTS, "upload.json")
 
 
 title("Product pipeline", c="*")
@@ -136,6 +134,7 @@ def test_product(product, build_type):
         assert "ai/1.1.0: Intelligence level=50" in out
     else:
         assert "ai/1" not in out
+
 
 if product_simple:
     # Try to see if our main products keep working fine with that change ai/1.1.0
@@ -156,7 +155,7 @@ if product_simple:
         test_product("game", "Release")
 
 
-def execute_build_order(build_order_file):
+def execute_build_order(build_order_file, lockfile=None):
     build_order = (open(build_order_file, "r").read())
     print(build_order)
     build_order = json.loads(build_order)
@@ -173,12 +172,12 @@ def execute_build_order(build_order_file):
                     build_args = package["build_args"]
                     filenames = package["filenames"]
                     build_type = "-s build_type=Debug" if any("debug" in f for f in filenames) else ""
-                    run(f"conan install {build_args} {build_type}")
+                    lockfile_arg = f"--lockfile={lockfile}" if lockfile else ""
+                    run(f"conan install {build_args} {build_type} {lockfile_arg}")
 
 
 if product_build_order:
-    ############### Simple build order example ###################################
-    title("Introducing the build-order to check ai/1.1.0 integration")
+    title("Introducing a simple build-order to check ai/1.1.0 integration")
     clean()
 
     add_repo(PRODUCTS)
@@ -192,7 +191,6 @@ if product_build_order:
 
 
 if multi_product_build_order:
-    ############### Simple build order example ###################################
     title("Using a multi-product multi-configuration build-order")
     clean()
 
@@ -200,6 +198,7 @@ if multi_product_build_order:
     add_repo(DEVELOP)
     shutil.rmtree("build", ignore_errors=True)
     with chdir("build"):
+        # products = "game/1.0", "mapviewer/1.0"
         out = run("conan graph build-order --requires=game/1.0 --build=missing --order-by=recipe --format=json", file_stdout="game_release.json")
         out = run("conan graph build-order --requires=game/1.0 --build=missing -s build_type=Debug --order-by=recipe --format=json", file_stdout="game_debug.json")
         out = run("conan graph build-order --requires=mapviewer/1.0 --build=missing --order-by=recipe --format=json", file_stdout="mapviewer_release.json")
@@ -213,3 +212,34 @@ if multi_product_build_order:
         test_product("game", "Debug")
         test_product("mapviewer", "Release")
         test_product("mapviewer", "Debug")
+
+
+if multi_product_build_order_lock:
+    title("Using a multi-product multi-configuration build-order with lockfiles")
+    clean()
+
+    add_repo(PRODUCTS)
+    add_repo(DEVELOP)
+    shutil.rmtree("build", ignore_errors=True)
+    with chdir("build"):
+        # products = "game/1.0", "mapviewer/1.0"
+        run("conan lock create --requires=game/1.0 --lockfile-out=conan.lock")
+        run("conan lock create --requires=game/1.0 -s build_type=Debug --lockfile=conan.lock --lockfile-out=conan.lock")  # To make sure we cover all
+        run("conan lock create --requires=mapviewer/1.0 --lockfile=conan.lock --lockfile-out=conan.lock")  # To make sure we cover all
+        run("conan lock create --requires=mapviewer/1.0 -s build_type=Debug --lockfile=conan.lock --lockfile-out=conan.lock")  # To make sure we cover all
+
+        out = run("conan graph build-order --requires=game/1.0 --lockfile=conan.lock --build=missing --order-by=recipe --format=json", file_stdout="game_release.json")
+        out = run("conan graph build-order --requires=game/1.0 --lockfile=conan.lock --build=missing -s build_type=Debug --order-by=recipe --format=json", file_stdout="game_debug.json")
+        out = run("conan graph build-order --requires=mapviewer/1.0 --lockfile=conan.lock --build=missing --order-by=recipe --format=json", file_stdout="mapviewer_release.json")
+        out = run("conan graph build-order --requires=mapviewer/1.0 --lockfile=conan.lock --build=missing -s build_type=Debug --order-by=recipe --format=json", file_stdout="mapviewer_debug.json")
+
+        out = run("conan graph build-order-merge --file=game_release.json --file=game_debug.json --file=mapviewer_release.json --file=mapviewer_debug.json "
+                  "--format=json --reduce", file_stdout="build_order.json")
+        execute_build_order("build_order.json", lockfile="conan.lock")
+        # We are not uploading yet
+        test_product("game", "Release")
+        test_product("game", "Debug")
+        test_product("mapviewer", "Release")
+        test_product("mapviewer", "Debug")
+
+        #promote(PRODUCTS, DEVELOP, )

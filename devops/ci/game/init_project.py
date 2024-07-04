@@ -11,7 +11,7 @@ PACKAGES = "packages"
 PRODUCTS = "products"
 # TODO: This must be configured by users
 SERVER_URL = "http://localhost:8081/artifactory/api/conan"
-PASSWORD = "Type your password here"
+PASSWORD = ""
 
 
 def run(cmd, error=False, env_script=None, file_stdout=None):
