@@ -19,7 +19,8 @@ package_multi = False
 package_multi_lock = False
 
 product_simple = False
-product_build_order= True
+product_build_order = False
+multi_product_build_order = True
 
 
 print("Checking current home")
@@ -124,6 +125,18 @@ if package_multi_lock:
 
 title("Product pipeline", c="*")
 
+def test_product(product, build_type):
+    print(f"---- Testing product {product} with build-type {build_type} ------")
+    out = run(f"conan install --requires={product}/1.0 -s build_type={build_type}")
+    out = run(product, env_script="conanrun")
+    msg = "fun game" if product == "game" else "serving the game"
+    assert f"{product}/1.0:{msg} ({build_type})!" in out
+    if product == "game":
+        assert f"ai/1.1.0: SUPER BETTER Artificial Intelligence for aliens ({build_type})!" in out
+        assert "ai/1.1.0: Intelligence level=50" in out
+    else:
+        assert "ai/1" not in out
+
 if product_simple:
     # Try to see if our main products keep working fine with that change ai/1.1.0
     # lets build the consumers game and mapviewer applications
@@ -140,105 +153,63 @@ if product_simple:
         out = run("conan install --requires=game/1.0", error=True)
         assert "ERROR: Missing prebuilt package for 'game/1.0'" in out
         out = run("conan install --requires=game/1.0 --build=missing")
-        out = run("game", env_script="conanrun")
-        assert "game/1.0:fun game (Release)!" in out
-        assert "ai/1.1.0: SUPER BETTER Artificial Intelligence for aliens (Release)!" in out
-        assert "ai/1.1.0: Intelligence level=50" in out
+        test_product("game", "Release")
+
+
+def execute_build_order(build_order_file):
+    build_order = (open(build_order_file, "r").read())
+    print(build_order)
+    build_order = json.loads(build_order)
+    to_build = build_order["order"]
+
+    print(f"---- Executing build-order: {build_order_file} -------")
+    for level in to_build:
+        for recipe in level:  # This can be executed in parallel
+            ref = recipe["ref"]
+            # For every ref, multiple binary packages are being built. This can be done in parallel too
+            # And often, for different OSs, they will need to be distributed to different build agents
+            for packages_level in recipe["packages"]:  # This is also a nested list, packages might have dependencies to each other, but not common
+                for package in packages_level:  # This could be executed in parallel too
+                    build_args = package["build_args"]
+                    filenames = package["filenames"]
+                    build_type = "-s build_type=Debug" if any("debug" in f for f in filenames) else ""
+                    run(f"conan install {build_args} {build_type}")
 
 
 if product_build_order:
     ############### Simple build order example ###################################
-    title("Introducing the build-order")
+    title("Introducing the build-order to check ai/1.1.0 integration")
     clean()
 
     add_repo(PRODUCTS)
     add_repo(DEVELOP)
     shutil.rmtree("build", ignore_errors=True)
     with chdir("build"):
-        run("conan graph build-order --requires=game/1.0 --build=missing --order-by=recipe --reduce --format=json", file_stdout="game_bo.json")
-        build_order = (open("game_bo.json", "r").read())
-        build_order = json.loads(build_order)
-        to_build = build_order["order"]
-        
-        for level in to_build:
-            for recipe in level:  # This can be executed in parallel
-                ref = recipe["ref"]
-                # For every ref, multiple binary packages are being built. This can be done in parallel too
-                # And often, for different OSs, they will need to be distributed to different build agents
-                for packages_level in recipe["packages"]:  # This is also a nested list, packages might have dependencies to each other, but not common
-                    for package in packages_level:  # This could be executed in parallel too
-                        build_args = package["build_args"]
-                        run(f"conan install {build_args}")
-
-        out = run("conan install --requires=game/1.0")
-        print(out)
-        out = run("game", env_script="conanrun")
-        assert "game/1.0:fun game (Release)!" in out
-        assert "ai/1.1.0: SUPER BETTER Artificial Intelligence for aliens (Release)!" in out
-        assert "ai/1.1.0: Intelligence level=50" in out
-        print(out)
-
-exit()
+        run("conan graph build-order --requires=game/1.0 --build=missing --order-by=recipe --reduce --format=json", file_stdout="game_build_order.json")
+        execute_build_order("game_build_order.json")
+        # We are not uploading yet
+        test_product("game", "Release")
 
 
-############### Part 7 ###################################
-# Now that there are some cases that all the intermediate dependencies
-# need to be built, we might want to distribute the build in a CI farm
-# and for that we need to know what to build, and very importantly in what order
-print("- Part 7: Compute the build-order -")
-run("conan lock create --requires=game/1.0 --lockfile-out=game.lock")
-out = run("conan lock create --requires=game/1.0 -s build_type=Debug --lockfile=game.lock --lockfile-out=game.lock")
-assert "ai/1.1.0" in out
-run("conan lock create --requires=mapviewer/1.0 --lockfile=game.lock --lockfile-out=game.lock")
-out = run("conan lock create --requires=mapviewer/1.0 -s build_type=Debug --lockfile=game.lock --lockfile-out=game.lock")
-lock = open("game.lock").read()
-print(lock)
+if multi_product_build_order:
+    ############### Simple build order example ###################################
+    title("Using a multi-product multi-configuration build-order")
+    clean()
 
-out = run("conan graph build-order --requires=game/1.0 --lockfile=game.lock --build=missing --order-by=recipe --format=json", file_stdout="game_bo.json")
-out = run("conan graph build-order --requires=game/1.0 --lockfile=game.lock --build=missing -s build_type=Debug --order-by=recipe --format=json", file_stdout="game_bo_debug.json")
-out = run("conan graph build-order --requires=mapviewer/1.0 --lockfile=game.lock --build=missing --order-by=recipe --format=json", file_stdout="mapviewer_bo.json")
-out = run("conan graph build-order --requires=mapviewer/1.0 --lockfile=game.lock --build=missing -s build_type=Debug --order-by=recipe --format=json", file_stdout="mapviewer_bo_debug.json")
+    add_repo(PRODUCTS)
+    add_repo(DEVELOP)
+    shutil.rmtree("build", ignore_errors=True)
+    with chdir("build"):
+        out = run("conan graph build-order --requires=game/1.0 --build=missing --order-by=recipe --format=json", file_stdout="game_release.json")
+        out = run("conan graph build-order --requires=game/1.0 --build=missing -s build_type=Debug --order-by=recipe --format=json", file_stdout="game_debug.json")
+        out = run("conan graph build-order --requires=mapviewer/1.0 --build=missing --order-by=recipe --format=json", file_stdout="mapviewer_release.json")
+        out = run("conan graph build-order --requires=mapviewer/1.0 --build=missing -s build_type=Debug --order-by=recipe --format=json", file_stdout="mapviewer_debug.json")
 
-############### Part 8 ###################################
-# If we have the build order for several applications, and 
-# serveral configurations, there might be overlap. The build-orders
-# can be merged in a single one, to optimize the building
-print("- Part 8: Aggregate build orders -")
-out = run("conan graph build-order-merge --file=game_bo.json --file=game_bo_debug.json "
-          "--format=json", file_stdout="bo.json")
-
-
-############### Part 9 ###################################
-# Now that we have the aggregated build-order, lets execute it
-# simulating a distributed build
-print("- Part 9: Iterate the build-order -")
-json_file = open("bo.json").read()
-print(json_file)
-to_build = json.loads(json_file)
-to_build = to_build["order"]
-
-for level in to_build:
-    for elem in level:  # This can be executed in parallel
-        ref = elem["ref"]
-        # For every ref, multiple binary packages are being built. This can be done in parallel too
-        # And often, for different OSs, they will need to be distributed to different build agents
-        for packages in elem["packages"]:
-            for package in packages:
-                binary = package["binary"]
-                if binary != "Build":
-                    continue
-                # TODO: The options are not used, they should be passed too
-                filenames = package["filenames"]
-                # This is the mapping between the build-order filenames and the profiles
-                build_type = "Debug" if "debug" in filenames[0] else "Release"
-                cmd = "conan install --requires={ref} --build={ref} --lockfile=game.lock -s build_type={bt}".format(ref=ref, bt=build_type)
-                run(cmd)
-
-out = run("game", env_script="conanrunenv-release-x86_64")
-print(out)
-assert "ai/1.1.0: AUTONOMOUSLY EVOLVED Artificial Intelligence for aliens (Release)!" in out
-assert "ai/1.1.0: Intelligence level=50" in out
-out = run("game", env_script="conanrunenv-debug-x86_64")
-print(out)
-assert "ai/1.1.0: AUTONOMOUSLY EVOLVED Artificial Intelligence for aliens (Debug)!" in out
-assert "ai/1.1.0: Intelligence level=50" in out
+        out = run("conan graph build-order-merge --file=game_release.json --file=game_debug.json --file=mapviewer_release.json --file=mapviewer_debug.json "
+                  "--format=json --reduce", file_stdout="build_order.json")
+        execute_build_order("build_order.json")
+        # We are not uploading yet
+        test_product("game", "Release")
+        test_product("game", "Debug")
+        test_product("mapviewer", "Release")
+        test_product("mapviewer", "Debug")
