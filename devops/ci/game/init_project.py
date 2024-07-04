@@ -11,7 +11,8 @@ PACKAGES = "packages"
 PRODUCTS = "products"
 # TODO: This must be configured by users
 SERVER_URL = "http://localhost:8081/artifactory/api/conan"
-PASSWORD = "Define here your password"
+PASSWORD = ""
+
 
 def run(cmd, error=False, env_script=None, file_stdout=None):
     if env_script is not None:
@@ -54,6 +55,7 @@ def title(msg, c="-"):
 @contextmanager
 def chdir(newdir):
     old_path = os.getcwd()
+    os.makedirs(newdir, exist_ok=True)
     os.chdir(newdir)
     try:
         yield

@@ -1,3 +1,6 @@
+import json
+import shutil
+
 from init_project import DEVELOP, PACKAGES, PRODUCTS
 from init_project import init_project, run, clean, add_repo, title, chdir
 
@@ -15,6 +18,9 @@ package_single = False
 package_multi = False
 package_multi_lock = False
 
+product_simple = False
+product_build_order= True
+
 
 print("Checking current home")
 out = run("conan config home")
@@ -28,10 +34,10 @@ if init_graph:
 ############### Package pipeline ###################################
 # Simulates a change done by one developer to ai.cpp code (a patch/bug fix)
 # We do a change in one of the packages in the middle of 
-# the graph, bump its version to 1.0.1 and create it
+# the graph, bump its version to 1.1.0 and create it
 
 title("Package pipeline", c="*")
-print("Doing changes to AI and bumping it to ai/1.0.1 version")
+print("Doing changes to AI and bumping it to ai/1.1.0 version")
 run("git checkout -- ai") # In case ai had previous changes 
 replace("ai/src/ai.cpp", "Some Artificial", "SUPER BETTER Artificial")
 replace("ai/include/ai.h", "intelligence=0", "intelligence=50")
@@ -118,66 +124,62 @@ if package_multi_lock:
 
 title("Product pipeline", c="*")
 
-# Try to see if our main products keep working fine with that change ai/1.0.1
-# lets build the consumers game and mapviewer applications
-# to integrate the ai/1.0.1 changes
-title("Lets see if this change ai/1.1.0 integrates correctly downstream")
-clean()
-add_repo(PRODUCTS)
-add_repo(DEVELOP)
-out = run("conan install --requires=mapviewer/1.0")
-out = run("mapviewer", env_script="conanrun")
-assert "mapviewer/1.0:serving the game (Release)!" in out
+if product_simple:
+    # Try to see if our main products keep working fine with that change ai/1.1.0
+    # lets build the consumers game and mapviewer applications
+    # to integrate the ai/1.1.0 changes
+    title("Lets see if this change ai/1.1.0 integrates correctly downstream")
+    clean()
+    add_repo(PRODUCTS)
+    add_repo(DEVELOP)
+    with chdir("build"):
+        out = run("conan install --requires=mapviewer/1.0")
+        out = run("mapviewer", env_script="conanrun")
+        assert "mapviewer/1.0:serving the game (Release)!" in out
 
-out = run("conan install --requires=game/1.0", error=True)
-assert "ERROR: Missing prebuilt package for 'game/1.0'" in out
-out = run("conan install --requires=game/1.0 --build=missing")
-print(out)
-out = run("game", env_script="conanrun")
-assert "game/1.0:fun game (Release)!" in out
-assert "ai/1.1.0: SUPER BETTER Artificial Intelligence for aliens (Release)!" in out
-assert "ai/1.1.0: Intelligence level=50" in out
-print(out)
+        out = run("conan install --requires=game/1.0", error=True)
+        assert "ERROR: Missing prebuilt package for 'game/1.0'" in out
+        out = run("conan install --requires=game/1.0 --build=missing")
+        out = run("game", env_script="conanrun")
+        assert "game/1.0:fun game (Release)!" in out
+        assert "ai/1.1.0: SUPER BETTER Artificial Intelligence for aliens (Release)!" in out
+        assert "ai/1.1.0: Intelligence level=50" in out
 
+
+if product_build_order:
+    ############### Simple build order example ###################################
+    title("Introducing the build-order")
+    clean()
+
+    add_repo(PRODUCTS)
+    add_repo(DEVELOP)
+    shutil.rmtree("build", ignore_errors=True)
+    with chdir("build"):
+        run("conan graph build-order --requires=game/1.0 --build=missing --order-by=recipe --reduce --format=json", file_stdout="game_bo.json")
+        build_order = (open("game_bo.json", "r").read())
+        build_order = json.loads(build_order)
+        to_build = build_order["order"]
+        
+        for level in to_build:
+            for recipe in level:  # This can be executed in parallel
+                ref = recipe["ref"]
+                # For every ref, multiple binary packages are being built. This can be done in parallel too
+                # And often, for different OSs, they will need to be distributed to different build agents
+                for packages_level in recipe["packages"]:  # This is also a nested list, packages might have dependencies to each other, but not common
+                    for package in packages_level:  # This could be executed in parallel too
+                        build_args = package["build_args"]
+                        run(f"conan install {build_args}")
+
+        out = run("conan install --requires=game/1.0")
+        print(out)
+        out = run("game", env_script="conanrun")
+        assert "game/1.0:fun game (Release)!" in out
+        assert "ai/1.1.0: SUPER BETTER Artificial Intelligence for aliens (Release)!" in out
+        assert "ai/1.1.0: Intelligence level=50" in out
+        print(out)
 
 exit()
-############### Part 4 ###################################
-# If we are building different configurations, like Release
-# and Debug, something could change in between in deps.
-# Lets introduce a lockfile to avoid this
-print("- Part 4: Start using lockfiles -")
-run("conan lock create --requires=game/1.0 --lockfile-out=game.lock")
-# This change and ai/1.0.2 will not be used, it is after the lock
-replace("ai/src/ai.cpp", "SUPER BETTER Artificial", "AUTONOMOUSLY EVOLVED Artificial")
-out = run("conan create ai --version=1.0.2")
-assert "ai/1.0.2: AUTONOMOUSLY EVOLVED Artificial Intelligence for aliens (Release)!" in out
-# applying the lock, still ai/1.0.1 used
-out = run("conan install --requires=game/1.0 --build=missing --lockfile=game.lock")
-assert "ai/1.0.1" in out
-assert "ai/1.0.2" not in out
-out = run("game", env_script="conanrun")
-assert "ai/1.0.1: SUPER BETTER Artificial Intelligence for aliens (Release)!" in out
 
-
-############### Part 5 ###################################
-# What happens if the change is done in the public headers?
-# the minor version should be bumped, and that implies building
-# the intermediate dependencies too. Lets start doing the change
-print("- Part 5: Change a public header, bump minor version -")
-replace("ai/include/ai.h", "intelligence=0", "intelligence=50")
-out = run("conan create ai --version=1.1.0")
-assert "ai/1.1.0: AUTONOMOUSLY EVOLVED Artificial Intelligence for aliens (Release)!" in out
-assert "ai/1.1.0: Intelligence level=50" in out
-
-############### Part 6 ###################################
-# Lets see how the change in ai/1.1.0 requires building engine/1.0 too
-# as the change is in the public api and engine->ai
-print("- Part 6: Lets see if the minor 1.1.0 integrate downstream -")
-run("conan install --requires=mapviewer/1.0")  # no changes, all good and ready
-out = run("conan install --requires=game/1.0", error=True)
-assert "ERROR: Missing prebuilt package for 'game/1.0'" in out
-out = run("conan install --requires=game/1.0 --build=game/1.0", error=True)
-assert "ERROR: Missing prebuilt package for 'engine/1.0'" in out
 
 ############### Part 7 ###################################
 # Now that there are some cases that all the intermediate dependencies
