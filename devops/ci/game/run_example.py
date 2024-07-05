@@ -13,10 +13,10 @@ def replace(filepath, old, new):
     open(filepath, "w").write(new_content)
 
 
-init_graph = False
+init_graph = True
 package_single = False
 package_multi = False
-package_multi_lock = False
+package_multi_lock = True
 
 product_simple = False
 product_build_order = False
@@ -155,13 +155,15 @@ if product_simple:
         test_product("game", "Release")
 
 
-def execute_build_order(build_order_file, lockfile=None):
+def execute_build_order(build_order_file, lockfile=None, upload=False):
     build_order = (open(build_order_file, "r").read())
     print(build_order)
     build_order = json.loads(build_order)
     to_build = build_order["order"]
 
     print(f"---- Executing build-order: {build_order_file} -------")
+
+    open("uploaded.json", "w").write("{}")
     for level in to_build:
         for recipe in level:  # This can be executed in parallel
             ref = recipe["ref"]
@@ -173,7 +175,11 @@ def execute_build_order(build_order_file, lockfile=None):
                     filenames = package["filenames"]
                     build_type = "-s build_type=Debug" if any("debug" in f for f in filenames) else ""
                     lockfile_arg = f"--lockfile={lockfile}" if lockfile else ""
-                    run(f"conan install {build_args} {build_type} {lockfile_arg}")
+                    run(f"conan install {build_args} {build_type} {lockfile_arg} --format=json", file_stdout="graph.json")
+                    if upload:
+                        run("conan list --graph=graph.json --format=json", file_stdout="upload_build.json")
+                        run(f"conan upload -l=upload_build.json -r={PRODUCTS} -c --format=json", file_stdout="upload_build.json")
+                        run("conan pkglist merge -l uploaded.json -l upload_build.json --format=json", file_stdout="uploaded.json")
 
 
 if product_build_order:
@@ -235,11 +241,15 @@ if multi_product_build_order_lock:
 
         out = run("conan graph build-order-merge --file=game_release.json --file=game_debug.json --file=mapviewer_release.json --file=mapviewer_debug.json "
                   "--format=json --reduce", file_stdout="build_order.json")
-        execute_build_order("build_order.json", lockfile="conan.lock")
+        execute_build_order("build_order.json", lockfile="conan.lock", upload=True)
         # We are not uploading yet
         test_product("game", "Release")
         test_product("game", "Debug")
         test_product("mapviewer", "Release")
         test_product("mapviewer", "Debug")
 
-        #promote(PRODUCTS, DEVELOP, )
+        promote(PRODUCTS, DEVELOP, "uploaded.json")
+        clean()
+        add_repo(DEVELOP)
+        test_product("game", "Release")
+        test_product("game", "Debug")
