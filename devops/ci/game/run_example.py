@@ -1,8 +1,8 @@
 import json
 import shutil
 
-from init_project import DEVELOP, PACKAGES, PRODUCTS
-from init_project import init_project, run, clean, add_repo, title, chdir
+from project_setup import DEVELOP, PACKAGES, PRODUCTS
+from project_setup import project_setup, run, clean, add_repo, title, chdir
 
 
 def replace(filepath, old, new):
@@ -30,7 +30,7 @@ print("Current home is:", out)
 run("conan profile detect -f")
 
 if init_graph:
-    init_project()
+    project_setup()
 
 
 ############### Package pipeline ###################################

@@ -11,8 +11,8 @@ PACKAGES = "packages"
 PRODUCTS = "products"
 # TODO: This must be configured by users
 SERVER_URL = "http://localhost:8081/artifactory/api/conan"
-PASSWORD = ""
-
+USER = "admin"
+PASSWORD = "password"
 
 def run(cmd, error=False, env_script=None, file_stdout=None):
     if env_script is not None:
@@ -42,7 +42,7 @@ def clean():
 
 def add_repo(name):
     run(f"conan remote add {name} {SERVER_URL}/{name}")
-    run(f"conan remote login {name} admin -p {PASSWORD}")
+    run(f"conan remote login {name} {USER} -p {PASSWORD}")
 
 
 def title(msg, c="-"):
@@ -63,7 +63,7 @@ def chdir(newdir):
         os.chdir(old_path)
 
 
-def init_project():
+def project_setup():
     title("init_project: Preparation of the dependency graph and cleaning repositories")
     ############### Part 1 ###################################
     # Just create a project with a cool dependency graph, and
@@ -90,3 +90,7 @@ def init_project():
     add_repo(DEVELOP)
     run(f"conan upload * -r={DEVELOP} -c")
     clean()
+
+
+if __name__ == "__main__":
+    project_setup()
