@@ -78,20 +78,20 @@ if package_multi:
     # it could be distributed
     with chdir("ai"):
         run('conan create . --build="missing:ai/*" -s build_type=Release --format=json', file_stdout="graph.json")
-        run("conan list --graph=graph.json --graph-binaries=build --format=json", file_stdout="upload_release.json")
+        run("conan list --graph=graph.json --graph-binaries=build --format=json", file_stdout="built.json")
         add_repo(PACKAGES)
-        run(f"conan upload -l=upload_release.json -r={PACKAGES} -c --format=json", file_stdout="upload_release.json")
+        run(f"conan upload -l=built.json -r={PACKAGES} -c --format=json", file_stdout="uploaded_release.json")
         #clean()
         #add_repo(DEVELOP)
         run('conan create . --build="missing:ai/*" -s build_type=Debug --format=json', file_stdout="graph.json")
-        run("conan list --graph=graph.json --graph-binaries=build --format=json", file_stdout="upload_debug.json")
+        run("conan list --graph=graph.json --graph-binaries=build --format=json", file_stdout="built.json")
         # add_repo(PACKAGES)
-        run(f"conan upload -l=upload_debug.json -r={PACKAGES} -c --format=json", file_stdout="upload_debug.json")
+        run(f"conan upload -l=built.json -r={PACKAGES} -c --format=json", file_stdout="uploaded_debug.json")
 
         print("- Running a promotion -")
         # aggregate the package list
-        run("conan pkglist merge -l upload_release.json -l upload_debug.json --format=json", file_stdout="promote.json")
-        promote(PACKAGES, PRODUCTS, "upload.json")
+        run("conan pkglist merge -l uploaded_release.json -l uploaded_debug.json --format=json", file_stdout="uploaded.json")
+        promote(PACKAGES, PRODUCTS, "uploaded.json")
 
 
 ############### Package pipeline: Multi configuration Release/Debug ###################################
@@ -107,18 +107,18 @@ if package_multi_lock:
         clean()
         add_repo(DEVELOP)
         run('conan create . --build="missing:ai/*" -s build_type=Release --lockfile=conan.lock --format=json', file_stdout="graph.json")
-        run("conan list --graph=graph.json --graph-binaries=build --format=json", file_stdout="upload_release.json")
+        run("conan list --graph=graph.json --graph-binaries=build --format=json", file_stdout="built.json")
         add_repo(PACKAGES)
-        run(f"conan upload -l=upload_release.json -r={PACKAGES} -c --format=json", file_stdout="upload_release.json")
+        run(f"conan upload -l=built.json -r={PACKAGES} -c --format=json", file_stdout="uploaded_release.json")
 
         out = run('conan create . --build="missing:ai/*" -s build_type=Debug --lockfile=conan.lock --format=json', file_stdout="graph.json")
-        run("conan list --graph=graph.json --graph-binaries=build --format=json", file_stdout="upload_debug.json")
-        run(f"conan upload -l=upload_debug.json -r={PACKAGES} -c --format=json", file_stdout="upload_debug.json")
+        run("conan list --graph=graph.json --graph-binaries=build --format=json", file_stdout="built.json")
+        run(f"conan upload -l=built.json -r={PACKAGES} -c --format=json", file_stdout="uploaded_debug.json")
 
         print("- Running a promotion -")
         # aggregate the package list
-        run("conan pkglist merge -l upload_release.json -l upload_debug.json --format=json", file_stdout="upload.json")
-        promote(PACKAGES, PRODUCTS, "upload.json")
+        run("conan pkglist merge -l uploaded_release.json -l uploaded_debug.json --format=json", file_stdout="uploaded.json")
+        promote(PACKAGES, PRODUCTS, "uploaded.json")
 
 
 title("Product pipeline", c="*")
@@ -164,6 +164,7 @@ def execute_build_order(build_order_file, lockfile=None, upload=False):
     print(f"---- Executing build-order: {build_order_file} -------")
 
     open("uploaded.json", "w").write("{}")
+    pkg_lists = []
     for level in to_build:
         for recipe in level:  # This can be executed in parallel
             ref = recipe["ref"]
@@ -177,10 +178,12 @@ def execute_build_order(build_order_file, lockfile=None, upload=False):
                     lockfile_arg = f"--lockfile={lockfile}" if lockfile else ""
                     run(f"conan install {build_args} {build_type} {lockfile_arg} --format=json", file_stdout="graph.json")
                     if upload:
-                        run("conan list --graph=graph.json --format=json", file_stdout="upload_build.json")
-                        run(f"conan upload -l=upload_build.json -r={PRODUCTS} -c --format=json", file_stdout="upload_build.json")
-                        run("conan pkglist merge -l uploaded.json -l upload_build.json --format=json", file_stdout="uploaded.json")
+                        run("conan list --graph=graph.json --format=json", file_stdout="built.json")
+                        run(f"conan upload -l=built.json -r={PRODUCTS} -c --format=json", file_stdout=f"uploaded{len(pkg_list)}.json")
 
+    # Merge all received pkg lists from all jobs
+    pkg_list_arg = " ".join(f"-l uploaded{i}.json" for i in range(len(pkg_list)))
+    run(f"conan pkglist merge {pkg_list_arg} --format=json", file_stdout="uploaded.json")
 
 if product_build_order:
     title("Introducing a simple build-order to check ai/1.1.0 integration")
