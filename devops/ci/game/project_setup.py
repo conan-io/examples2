@@ -12,7 +12,7 @@ PRODUCTS = "products"
 # TODO: This must be configured by users
 SERVER_URL = "http://localhost:8081/artifactory/api/conan"
 USER = "admin"
-PASSWORD = "password"
+PASSWORD = "<password>"
 
 def run(cmd, error=False, env_script=None, file_stdout=None):
     if env_script is not None:
@@ -37,7 +37,7 @@ def run(cmd, error=False, env_script=None, file_stdout=None):
 
 def clean():
     run('conan remove "*" -c')  # Make sure no packages from last run
-    run("conan remote remove *")
+    run('conan remote remove "*"')
 
 
 def add_repo(name):
@@ -70,11 +70,12 @@ def project_setup():
     # and 2 consuming applications, everything with version ranges
     print("- Setup the project initial state -")
     clean()
+    run("conan profile detect -f")
     print("Cleaning server repos contents")
     for repo in (DEVELOP, PACKAGES, PRODUCTS):
         add_repo(repo)
-        run(f"conan remove * -c -r={repo}")
-        run("conan remote remove *")
+        run(f'conan remove "*" -c -r={repo}')
+        run('conan remote remove "*"')
 
     # create initial graph
     for build_type in ("Release", "Debug"):
@@ -88,7 +89,7 @@ def project_setup():
         out = run(f"conan create mapviewer -s build_type={build_type}")
         assert f"mapviewer/1.0:serving the game ({build_type})!" in out
     add_repo(DEVELOP)
-    run(f"conan upload * -r={DEVELOP} -c")
+    run(f'conan upload "*" -r={DEVELOP} -c')
     clean()
 
 

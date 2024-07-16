@@ -51,12 +51,12 @@ if package_single:
     title("Package pipeline, single configuration ")
     clean()
     add_repo(DEVELOP)
-    out = run("conan create ai --build=missing:ai/*")
+    out = run('conan create ai --build="missing:ai/*"')
     assert "ai/1.1.0: SUPER BETTER Artificial Intelligence for aliens (Release)!" in out
     assert "ai/1.1.0: Intelligence level=50" in out
     # We don't want to disrupt developers or CI
     add_repo(PRODUCTS)
-    run(f"conan upload ai* -r={PRODUCTS} -c")
+    run(f'conan upload "ai*" -r={PRODUCTS} -c')
 
 
 def promote(repo_src, repo_dst, pkg_list):
@@ -77,13 +77,13 @@ if package_multi:
     add_repo(DEVELOP)
     # it could be distributed
     with chdir("ai"):
-        run("conan create . --build=missing:ai/* -s build_type=Release --format=json", file_stdout="graph.json")
+        run('conan create . --build="missing:ai/*" -s build_type=Release --format=json', file_stdout="graph.json")
         run("conan list --graph=graph.json --graph-binaries=build --format=json", file_stdout="upload_release.json")
         add_repo(PACKAGES)
         run(f"conan upload -l=upload_release.json -r={PACKAGES} -c --format=json", file_stdout="upload_release.json")
         #clean()
         #add_repo(DEVELOP)
-        run("conan create . --build=missing:ai/* -s build_type=Debug --format=json", file_stdout="graph.json")
+        run('conan create . --build="missing:ai/*" -s build_type=Debug --format=json', file_stdout="graph.json")
         run("conan list --graph=graph.json --graph-binaries=build --format=json", file_stdout="upload_debug.json")
         # add_repo(PACKAGES)
         run(f"conan upload -l=upload_debug.json -r={PACKAGES} -c --format=json", file_stdout="upload_debug.json")
@@ -106,12 +106,12 @@ if package_multi_lock:
 
         clean()
         add_repo(DEVELOP)
-        run("conan create . --build=missing:ai/* -s build_type=Release --lockfile=conan.lock --format=json", file_stdout="graph.json")
+        run('conan create . --build="missing:ai/*" -s build_type=Release --lockfile=conan.lock --format=json', file_stdout="graph.json")
         run("conan list --graph=graph.json --graph-binaries=build --format=json", file_stdout="upload_release.json")
         add_repo(PACKAGES)
         run(f"conan upload -l=upload_release.json -r={PACKAGES} -c --format=json", file_stdout="upload_release.json")
 
-        out = run("conan create . --build=missing:ai/* -s build_type=Debug --lockfile=conan.lock --format=json", file_stdout="graph.json")
+        out = run('conan create . --build="missing:ai/*" -s build_type=Debug --lockfile=conan.lock --format=json', file_stdout="graph.json")
         run("conan list --graph=graph.json --graph-binaries=build --format=json", file_stdout="upload_debug.json")
         run(f"conan upload -l=upload_debug.json -r={PACKAGES} -c --format=json", file_stdout="upload_debug.json")
 
