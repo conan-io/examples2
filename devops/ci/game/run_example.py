@@ -163,7 +163,6 @@ def execute_build_order(build_order_file, lockfile=None, upload=False):
 
     print(f"---- Executing build-order: {build_order_file} -------")
 
-    open("uploaded.json", "w").write("{}")
     pkg_lists = []
     for level in to_build:
         for recipe in level:  # This can be executed in parallel
@@ -179,11 +178,14 @@ def execute_build_order(build_order_file, lockfile=None, upload=False):
                     run(f"conan install {build_args} {build_type} {lockfile_arg} --format=json", file_stdout="graph.json")
                     if upload:
                         run("conan list --graph=graph.json --format=json", file_stdout="built.json")
-                        run(f"conan upload -l=built.json -r={PRODUCTS} -c --format=json", file_stdout=f"uploaded{len(pkg_list)}.json")
+                        filename = f"uploaded{len(pkg_lists)}.json"
+                        run(f"conan upload -l=built.json -r={PRODUCTS} -c --format=json", file_stdout=filename)
+                        pkg_lists.append(filename)
 
-    # Merge all received pkg lists from all jobs
-    pkg_list_arg = " ".join(f"-l uploaded{i}.json" for i in range(len(pkg_list)))
-    run(f"conan pkglist merge {pkg_list_arg} --format=json", file_stdout="uploaded.json")
+    if upload:
+        # Merge all received pkg lists from all jobs
+        pkg_list_arg = " ".join(f"-l uploaded{i}.json" for i in range(len(pkg_lists)))
+        run(f"conan pkglist merge {pkg_list_arg} --format=json", file_stdout="uploaded.json")
 
 if product_build_order:
     title("Introducing a simple build-order to check ai/1.1.0 integration")
