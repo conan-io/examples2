@@ -26,8 +26,9 @@ class SayConan(ConanFile):
     def layout(self):
         cmake_layout(self)
 
-        self.cpp.source.includedirs = ["thelib/src"]
-        self.cpp.build.libdirs = ["thelib/src"]
+        # adjust the includedirs location, for the editing-mode
+        self.cpp.source.includedirs = [ os.path.join("thelib","src") ]
+        self.cpp.build.libdirs = [ os.path.join("thelib","src",self.cpp.build.libdirs[0]) ]
 
     def generate(self):
         tc = CMakeToolchain(self)
