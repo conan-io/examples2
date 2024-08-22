@@ -13,7 +13,7 @@ def replace(filepath, old, new):
     open(filepath, "w").write(new_content)
 
 
-init_graph = True
+setup_project = True
 package_single = False
 package_multi = False
 package_multi_lock = True
@@ -29,7 +29,7 @@ out = run("conan config home")
 print("Current home is:", out)
 run("conan profile detect -f")
 
-if init_graph:
+if setup_project:
     project_setup()
 
 

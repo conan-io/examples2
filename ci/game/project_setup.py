@@ -10,9 +10,10 @@ DEVELOP = "develop"
 PACKAGES = "packages"
 PRODUCTS = "products"
 # TODO: This must be configured by users
-SERVER_URL = "http://localhost:8081/artifactory/api/conan"
-USER = "admin"
-PASSWORD = "<password>"
+SERVER_URL = os.environ.get("ARTIFACTORY_URL", "http://localhost:8081/artifactory/api/conan")
+USER = os.environ.get("ARTIFACTORY_USER", "admin")
+PASSWORD = os.environ.get("ARTIFACTORY_PASSWORD", "password")
+
 
 def run(cmd, error=False, env_script=None, file_stdout=None):
     if env_script is not None:
