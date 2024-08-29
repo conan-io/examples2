@@ -8,8 +8,6 @@ void cancelPrevious() {
 
 def isPR = env.CHANGE_ID ? true : false
 
-LINUX_CONTAINER = 'conanio/ci-functional'
-
 def envInside(Map ctxt, Closure closure) {
     String randDir = UUID.randomUUID().toString().substring(0, 4)
     String venvDirectory = ctxt.runningUnix ? "${pwd()}/conanenv" : "${pwd()}\\conanenv"
@@ -105,7 +103,7 @@ def isMain() {
     return env.BRANCH_NAME == mainBranch
 }
 
-node('Linux') {
+node('LinuxFunctional') {
     
     try {
         cancelPrevious() 
@@ -138,24 +136,21 @@ node('Linux') {
                     linux: {
                         conanBranchesInstalls.each { branch ->
                             stage("${branch.name}: Run Linux examples") {
-                                docker.image(LINUX_CONTAINER).pull()
-                                docker.image(LINUX_CONTAINER).inside("--entrypoint=") {
-                                    def sourcedir = "/home/conan/"
-                                    def pyenvdir = "${sourcedir}.pyenv"
-                                    def pythonVersion = "3.9.2"
-                                    def command = "export PYENV_ROOT=${pyenvdir} && " \
-                                                + "export PATH=\"${pyenvdir}/versions/\${pythonVersion}/bin:${pyenvdir}/bin:\$PATH\" && " \
-                                                + "pyenv global ${pythonVersion} && " \
-                                                + "sudo /home/conan/select_cmake.sh 3.23.5 && sudo /home/conan/select_gcc.sh 11"
-                                    sh(script: command)
-                                    runExamples([python_host: 'python3',
-                                                shFunction: { data -> sh(data) },
-                                                isInsideDocker: true,
-                                                runningUnix: true,
-                                                examples: examples,
-                                                branch: branch,
-                                                extensions: ['.py', '.sh']])
-                                }
+                                def sourcedir = "/home/conan/"
+                                def pyenvdir = "${sourcedir}.pyenv"
+                                def pythonVersion = "3.9.2"
+                                def command = "export PYENV_ROOT=${pyenvdir} && " \
+                                            + "export PATH=\"${pyenvdir}/versions/\${pythonVersion}/bin:${pyenvdir}/bin:\$PATH\" && " \
+                                            + "pyenv global ${pythonVersion} && " \
+                                            + "sudo /home/conan/select_cmake.sh 3.23.5 && sudo /home/conan/select_gcc.sh 11"
+                                sh(script: command)
+                                runExamples([python_host: 'python3',
+                                            shFunction: { data -> sh(data) },
+                                            isInsideDocker: true,
+                                            runningUnix: true,
+                                            examples: examples,
+                                            branch: branch,
+                                            extensions: ['.py', '.sh']])
                             }
                         }
                     },
