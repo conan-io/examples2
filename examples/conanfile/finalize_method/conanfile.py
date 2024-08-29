@@ -37,9 +37,5 @@ class whoisconanRecipe(ConanFile):
         cmake.install()
 
     def finalize(self):
-        copy(
-            self, "file.txt", src=self.immutable_package_folder, dst=self.package_folder
-        )
-        save(self, os.path.join(self.package_folder, "bin", "whoami.txt"), getpass.getuser())
         copy(self, "*", src=self.immutable_package_folder, dst=self.package_folder)
-        rm(self, os.path.join("licenses", "LICENSE"), folder=self.package_folder)
+        save(self, os.path.join(self.package_folder, "bin", "whoami.txt"), getpass.getuser())
