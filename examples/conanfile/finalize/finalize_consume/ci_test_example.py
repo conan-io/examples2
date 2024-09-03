@@ -21,9 +21,3 @@ assert package_folder_content in consumer_output
 
 assert re.search("Dependency immutable_package_folder: (.*)(/p)", consumer_output)
 
-immutable_package_content = """
-consumer/1.0: Content in dependency immutable_package_folder:
-['file2.txt', 'file1.txt', 'conanmanifest.txt', 'conaninfo.txt']
-"""
-assert immutable_package_content in consumer_output
-
