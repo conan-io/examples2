@@ -11,7 +11,7 @@ try:
 
     # Install the Conan dependencies of Consumer's package
     with chdir("workspace"):
-        run("conan install consumer/conanfile.txt --build=missing --install-path install/conan")
+        run("conan install consumer/conanfile.txt --build=missing --output-folder install/conan")
 
         # Setup the environment to find Conan installed dependencies
         run("source install/conan/conanrosenv.sh")
