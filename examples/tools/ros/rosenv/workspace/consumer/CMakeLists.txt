@@ -12,11 +12,31 @@ message("[consumer] CMAKE_PREFIX_PATH env: $ENV{CMAKE_PREFIX_PATH}")
 message("[consumer] CMAKE_TOOLCHAIN_FILE env: $ENV{CMAKE_TOOLCHAIN_FILE}")
 message("[consumer] CMAKE_TOOLCHAIN_FILE: ${CMAKE_TOOLCHAIN_FILE}")
 
+#set(CMAKE_PREFIX_PATH "/home/danimtb/ros2-examples/conan_install_example/install/consumer" ${CMAKE_PREFIX_PATH})
+
+# Definition of CMAKE_PREFIX_PATH, CMAKE_XXXXX_PATH
+# The Conan local "generators" folder, where this toolchain is saved.
+#list(PREPEND CMAKE_PREFIX_PATH "/home/danimtb/ros2-examples/conan_install_example/install/consumer")
+
 # find dependencies
 find_package(ament_cmake REQUIRED)
 
 find_package(box2d REQUIRED)
 find_package(Boost REQUIRED)
+# find_package(Boost REQUIRED NO_DEFAULT_PATH)  # Does NOT find any Boost
+
+# WITH CMAKE_TOOLCHAIN_FILE
+# find_package(Boost REQUIRED)  # Finds system Boost if CMAKE_PREFIX_PATH not set
+# Commands:
+# $ conan install consumer/conanfile.txt --output-folder install -g CMakeDeps -g CMakeToolchain
+# $ colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=~/ros2-examples/conan_install_example/install/conan_toolchain.cmake
+
+# WITHOUT ANY ADDITIONAL PARAMETER
+# find_package(Boost 1.84.0 REQUIRED)  # WORKS
+# find_package(Boost REQUIRED HINTS "${CMAKE_INSTALL_PREFIX}")  # WORKS
+# Commands:
+# $ conan install consumer/conanfile.txt --output-folder install
+# $ colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
 
 message("Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
 message("Boost_LIBRARY_DIRS: ${Boost_LIBRARY_DIRS}")
