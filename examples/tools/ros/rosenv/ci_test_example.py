@@ -2,7 +2,7 @@ import os
 import platform
 import subprocess
 
-from test.examples_tools import chdir, run, windows_to_unix_path
+from test.examples_tools import chdir, run
 
 test_dir_path = os.path.dirname(os.path.realpath(__file__))
 if platform.system() == "Windows":
