@@ -1,27 +1,34 @@
 import os
 import platform
-import shutil
+import subprocess
 
-from test.examples_tools import chdir, run
+from test.examples_tools import chdir, run, windows_to_unix_path
 
+test_dir_path = os.path.dirname(os.path.realpath(__file__))
+if platform.system() == "Windows":
+    test_dir_path = test_dir_path.replace("/", "\\")
 
-try:
-    # Setup the ROS environment
-    run("source /opt/ros/humble/setup.bash")
+docker_command = f"docker run --rm -v {test_dir_path}:/mnt/local osrf/ros:humble-desktop bash -c \"cd mnt/local && ./docker_commands.sh\""
 
-    # Install the Conan dependencies of Consumer's package
-    with chdir("workspace"):
-        run("conan install consumer/conanfile.txt --build=missing --output-folder install/conan")
+run(docker_command)
 
-        # Setup the environment to find Conan installed dependencies
-        run("source install/conan/conanrosenv.sh")
-        # Perform the build
-        run("colcon build")
+# try:
+#     # Setup the ROS environment
+#     run("source /opt/ros/humble/setup.bash")
 
-        # Setup the run environment
-        run("source install/setup.bash")
-        # Run the app
-        run("ros2 run app main")
-finally:
-    # Remove all the bazel symlinks and clean its cache
-    shutil.rmtree("workspace/install", ignore_errors=True)
+#     # Install the Conan dependencies of Consumer's package
+#     with chdir("workspace"):
+#         run("conan install consumer/conanfile.txt --build=missing --output-folder install/conan")
+
+#         # Setup the environment to find Conan installed dependencies
+#         run("source install/conan/conanrosenv.sh")
+#         # Perform the build
+#         run("colcon build")
+
+#         # Setup the run environment
+#         run("source install/setup.bash")
+#         # Run the app
+#         run("ros2 run app main")
+# finally:
+#     # Remove all the bazel symlinks and clean its cache
+#     shutil.rmtree("workspace/install", ignore_errors=True)
