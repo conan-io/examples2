@@ -12,11 +12,6 @@ message("[consumer] CMAKE_PREFIX_PATH env: $ENV{CMAKE_PREFIX_PATH}")
 message("[consumer] CMAKE_TOOLCHAIN_FILE env: $ENV{CMAKE_TOOLCHAIN_FILE}")
 message("[consumer] CMAKE_TOOLCHAIN_FILE: ${CMAKE_TOOLCHAIN_FILE}")
 
-#set(CMAKE_PREFIX_PATH "/home/danimtb/ros2-examples/conan_install_example/install/consumer" ${CMAKE_PREFIX_PATH})
-
-# Definition of CMAKE_PREFIX_PATH, CMAKE_XXXXX_PATH
-# The Conan local "generators" folder, where this toolchain is saved.
-#list(PREPEND CMAKE_PREFIX_PATH "/home/danimtb/ros2-examples/conan_install_example/install/consumer")
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
