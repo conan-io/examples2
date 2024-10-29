@@ -3,17 +3,16 @@
 <package format="3">
   <name>consumer</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="danimtb@todo.todo">danimtb</maintainer>
-  <license>TODO: License declaration</license>
+  <description>Consumer application that prints a fancy string</description>
+  <maintainer email="danielm@jfrog.com">danimtb</maintainer>
+  <license>MIT</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
 
-  <!-- <depend>conan_box2d</depend>
-  <depend>conan_boost</depend> -->
+  <depend>str_printer</depend>
 
   <export>
     <build_type>ament_cmake</build_type>

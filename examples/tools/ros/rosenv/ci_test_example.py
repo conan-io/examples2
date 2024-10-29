@@ -16,9 +16,9 @@ run(docker_command)
 #     # Setup the ROS environment
 #     run("source /opt/ros/humble/setup.bash")
 
-#     # Install the Conan dependencies of Consumer's package
+#     # Install the Conan dependencies of str_printer's package
 #     with chdir("workspace"):
-#         run("conan install consumer/conanfile.txt --build=missing --output-folder install/conan")
+#         run("conan install str_printer/conanfile.txt --build=missing --output-folder install/conan")
 
 #         # Setup the environment to find Conan installed dependencies
 #         run("source install/conan/conanrosenv.sh")
@@ -27,8 +27,8 @@ run(docker_command)
 
 #         # Setup the run environment
 #         run("source install/setup.bash")
-#         # Run the app
-#         run("ros2 run app main")
+#         # Run the consumer
+#         run("ros2 run consumer main")
 # finally:
 #     # Remove all the bazel symlinks and clean its cache
 #     shutil.rmtree("workspace/install", ignore_errors=True)
