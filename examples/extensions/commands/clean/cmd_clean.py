@@ -1,8 +1,7 @@
 from conan.api.conan_api import ConanAPI
+from conan.api.input import UserInput
 from conan.api.output import ConanOutput, Color
 from conan.cli.command import OnceArgument, conan_command
-from conans.client.userio import UserInput
-
 
 recipe_color = Color.BRIGHT_BLUE
 removed_color = Color.BRIGHT_YELLOW
