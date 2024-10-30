@@ -12,7 +12,7 @@ find_package(str_printer REQUIRED)
 add_executable(main src/main.cpp)
 
 target_include_directories(main PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/app>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/consumer>
   $<INSTALL_INTERFACE:include>)
 
 target_compile_features(main PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
