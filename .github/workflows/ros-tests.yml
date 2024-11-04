@@ -28,7 +28,7 @@ jobs:
       run: |
         source /opt/ros/humble/setup.bash
         conan profile detect
-        cd examples2/examples/tools/ros/rosenv/workspace
+        cd examples/tools/ros/rosenv/workspace
         conan install str_printer/conanfile.txt --build=missing --output-folder install/conan
         source install/conan/conanrosenv.sh
         colcon build --packages-select str_printer
