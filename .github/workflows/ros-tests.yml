@@ -23,13 +23,11 @@ jobs:
         apt-get update && apt-get install -y python3 python3-pip
         python3 -m pip install conan
 
-    - name: Set up ROS environment
+    - name: Run example
+      shell: bash
       run: |
         source /opt/ros/humble/setup.bash
         conan profile detect
-
-    - name: Run example
-      run: |
         cd examples2/examples/tools/ros/rosenv/workspace
         conan install str_printer/conanfile.txt --build=missing --output-folder install/conan
         source install/conan/conanrosenv.sh
