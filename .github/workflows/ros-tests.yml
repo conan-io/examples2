@@ -1,0 +1,39 @@
+name: ROS and Conan Integration Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: osrf/ros:humble-desktop
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install pip and Conan
+      run: |
+        apt-get update && apt-get install -y python3 python3-pip
+        python3 -m pip install conan
+
+    - name: Set up ROS environment
+      run: |
+        source /opt/ros/humble/setup.bash
+        conan profile detect
+
+    - name: Run example
+      run: |
+        cd examples2/examples/tools/ros/rosenv/workspace
+        conan install str_printer/conanfile.txt --build=missing --output-folder install/conan
+        source install/conan/conanrosenv.sh
+        colcon build --packages-select str_printer
+        colcon build --packages-select consumer
+        source install/setup.bash
+        ros2 run consumer main
