@@ -27,4 +27,4 @@
 
 ### [tools.ros](ros)
 
-- Build [ROS packages inside their workspace](ros/rosenv/workspace/) using dependencies from Conan Center and consuming them also as transitive depdendencies.
+- Build [ROS packages inside their workspace](ros/rosenv/workspace/) using dependencies from Conan Center and consuming them also as transitive dependencies.
