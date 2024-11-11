@@ -79,3 +79,4 @@ examples/tools/google/bazeltoolchain/7_x/string_formatter/MODULE.bazel.lock
 examples/libraries/libcurl/ascii_art_color/conan/*
 examples/libraries/libcurl/ascii_art_color/asciiartgen/x64/*
 examples/libraries/libcurl/ascii_art_color/x64/Release/*
+examples/tools/ros/rosenv/workspace/*
