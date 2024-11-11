@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  test:
+  test_conan_release:
     runs-on: ubuntu-latest
     container:
       image: osrf/ros:humble-desktop
@@ -18,7 +18,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Configure
+    - name: Configure environment and install Conan release
       run: |
         apt-get update && apt-get install -y python3 python3-pip
         python3 -m pip install conan
@@ -27,14 +27,26 @@ jobs:
     - name: Run example with latest Conan release
       shell: bash
       run: |
-        ./examples/tools/ros/rosenv/workspace/test_ros.sh
+        cd examples/tools/ros/rosenv/workspace
+        ./test_ros.sh
 
-    - name: Uninstall Conan release and install Conan from develop2 branch
+  test_conan_develop2:
+    runs-on: ubuntu-latest
+    container:
+      image: osrf/ros:humble-desktop
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Configure environment and install Conan from develop2 branch
       run: |
-        python3 -m pip uninstall -y conan
+        apt-get update && apt-get install -y python3 python3-pip
         python3 -m pip install git+https://github.com/conan-io/conan.git
+        chmod +x ./examples/tools/ros/rosenv/workspace/test_ros.sh
 
     - name: Run example with Conan from repo
       shell: bash
       run: |
-        ./examples/tools/ros/rosenv/workspace/test_ros.sh
+        cd examples/tools/ros/rosenv/workspace
+        ./test_ros.sh
