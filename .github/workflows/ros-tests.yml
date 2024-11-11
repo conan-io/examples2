@@ -24,19 +24,14 @@ jobs:
         python3 -m pip install conan
         chmod +x ./examples/tools/ros/rosenv/workspace/test_ros.sh
 
-    - name: Run example with Conan release
-      # Set up ROS environment and run the example with Conan release version
+    - name: Run example with latest Conan release
       shell: bash
       run: |
         ./examples/tools/ros/rosenv/workspace/test_ros.sh
 
-    # Test with Conan version from develop2 branch
-    - name: Uninstall Conan release
+    - name: Uninstall Conan release and install Conan from develop2 branch
       run: |
         python3 -m pip uninstall -y conan
-
-    - name: Install Conan (from repo)
-      run: |
         python3 -m pip install git+https://github.com/conan-io/conan.git
 
     - name: Run example with Conan from repo
