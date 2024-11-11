@@ -31,10 +31,6 @@ jobs:
         cd examples/tools/ros/rosenv/workspace
         conan install str_printer/conanfile.txt --build=missing --output-folder install/conan
         source install/conan/conanrosenv.sh
-
-        cat install/conan/conanrosenv.sh
-        echo "CMAKE_TOOLCHAIN_FILE is set to: $CMAKE_TOOLCHAIN_FILE"
-        
         colcon build --packages-select str_printer
         colcon build --packages-select consumer
         source install/setup.bash
