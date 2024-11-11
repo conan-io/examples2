@@ -31,15 +31,7 @@ jobs:
       # Set up ROS environment and run the example with Conan release version
       shell: bash
       run: |
-        source /opt/ros/humble/setup.bash
-        conan profile detect
-        cd examples/tools/ros/rosenv/workspace
-        conan install str_printer/conanfile.txt --build=missing --output-folder install/conan
-        source install/conan/conanrosenv.sh
-        colcon build --packages-select str_printer
-        colcon build --packages-select consumer
-        source install/setup.bash
-        ros2 run consumer main
+        ./examples/tools/ros/rosenv/workspace/test_ros.sh
 
     # Test with Conan version from develop2 branch
     - name: Uninstall Conan release
@@ -53,12 +45,4 @@ jobs:
     - name: Run example with Conan from repo
       shell: bash
       run: |
-        source /opt/ros/humble/setup.bash
-        conan profile detect
-        cd examples/tools/ros/rosenv/workspace
-        conan install str_printer/conanfile.txt --build=missing --output-folder install/conan
-        source install/conan/conanrosenv.sh
-        colcon build --packages-select str_printer
-        colcon build --packages-select consumer
-        source install/setup.bash
-        ros2 run consumer main
+        ./examples/tools/ros/rosenv/workspace/test_ros.sh
