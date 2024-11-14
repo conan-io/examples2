@@ -1,0 +1,7 @@
+[requires]
+fmt/11.0.2
+
+[generators]
+CMakeDeps
+CMakeToolchain
+ROSEnv

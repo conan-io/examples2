@@ -24,3 +24,7 @@
 
 - Build a [Bazel 6.x compatible project](bazel/bazeltoolchain/6_x/string_formatter/) using Conan and [fmt](https://fmt.dev/). [Docs](https://docs.conan.io/2/examples/tools/google/bazeltoolchain/build_simple_bazel_project.rst)
 - Build a [Bazel >= 7.1 compatible project](bazel/bazeltoolchain/7_x/string_formatter/) using Conan and [fmt](https://fmt.dev/). [Docs](https://docs.conan.io/2/examples/tools/google/bazeltoolchain/build_simple_bazel_7x_project.rst)
+
+### [tools.ros](ros)
+
+- Build [ROS packages inside their workspace](ros/rosenv/workspace/) using dependencies from Conan Center and consuming them also as transitive dependencies.
