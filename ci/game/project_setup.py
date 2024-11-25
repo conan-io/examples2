@@ -36,16 +36,6 @@ def run(cmd, error=False, env_script=None, file_stdout=None):
     return output
 
 
-def clean():
-    run('conan remove "*" -c')  # Make sure no packages from last run
-    run('conan remote remove "*"')
-
-
-def add_repo(name):
-    run(f"conan remote add {name} {SERVER_URL}/{name}")
-    run(f"conan remote login {name} {USER} -p {PASSWORD}")
-
-
 def title(msg, c="-"):
     print("")
     print(c*80)
@@ -70,13 +60,14 @@ def project_setup():
     # Just create a project with a cool dependency graph, and
     # and 2 consuming applications, everything with version ranges
     print("- Setup the project initial state -")
-    clean()
+    run('conan remove "*" -c')  # Make sure no packages from last run
+    run("conan remote remove *")
     run("conan profile detect -f")
     print("Cleaning server repos contents")
-    for repo in (DEVELOP, PACKAGES, PRODUCTS):
-        add_repo(repo)
+    for repo in (PRODUCTS, DEVELOP, PACKAGES):
+        run(f"conan remote add {repo} {SERVER_URL}/{repo}")
+        run(f"conan remote login {repo} {USER} -p {PASSWORD}")
         run(f'conan remove "*" -c -r={repo}')
-        run('conan remote remove "*"')
 
     # create initial graph
     for build_type in ("Release", "Debug"):
@@ -89,9 +80,14 @@ def project_setup():
         assert f"game/1.0:fun game ({build_type})!" in out
         out = run(f"conan create mapviewer -s build_type={build_type}")
         assert f"mapviewer/1.0:serving the game ({build_type})!" in out
-    add_repo(DEVELOP)
+
     run(f'conan upload "*" -r={DEVELOP} -c')
-    clean()
+    run('conan remove "*" -c')  # Make sure no packages from last run
+
+    run('conan remote disable *')
+    run(f'conan remote enable {DEVELOP}')
+    print(run("conan remote list"))
+    print(run("conan list *"))
 
 
 if __name__ == "__main__":

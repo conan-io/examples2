@@ -2,7 +2,7 @@ import json
 import shutil
 
 from project_setup import DEVELOP, PACKAGES, PRODUCTS
-from project_setup import project_setup, run, clean, add_repo, title, chdir
+from project_setup import project_setup, run, title, chdir
 
 
 def replace(filepath, old, new):
@@ -13,10 +13,10 @@ def replace(filepath, old, new):
     open(filepath, "w").write(new_content)
 
 
-setup_project = True
+setup_project = False
 package_single = False
 package_multi = False
-package_multi_lock = True
+package_multi_lock = False
 
 product_simple = False
 product_build_order = False
@@ -49,21 +49,16 @@ replace("ai/conanfile.py", 'version = "1.0"', 'version = "1.1.0"')
 ############### Package pipeline: Single configuration ###################################
 if package_single:
     title("Package pipeline, single configuration ")
-    clean()
-    add_repo(DEVELOP)
     out = run('conan create ai --build="missing:ai/*"')
     assert "ai/1.1.0: SUPER BETTER Artificial Intelligence for aliens (Release)!" in out
     assert "ai/1.1.0: Intelligence level=50" in out
     # We don't want to disrupt developers or CI
-    add_repo(PRODUCTS)
+    run(f'conan remote enable {PRODUCTS}')
     run(f'conan upload "ai*" -r={PRODUCTS} -c')
+    run(f'conan remote disable {PRODUCTS}')
 
 
 def promote(repo_src, repo_dst, pkg_list):
-    clean()
-    # We don't want to disrupt developers or CI
-    add_repo(repo_src)
-    add_repo(repo_dst)
     # Promotion with Artifactory CE (slow, can be improved with art:promote --artifactory-ce)
     out = run(f"conan download --list={pkg_list} -r={repo_src} --format=json", file_stdout="promote.json")
     out = run(f"conan upload --list=promote.json -r={repo_dst} -c")
@@ -73,52 +68,60 @@ def promote(repo_src, repo_dst, pkg_list):
 ############### Package pipeline: Multi configuration Release/Debug ###################################
 if package_multi:
     title("Package pipeline, multi configuration")
-    clean()
-    add_repo(DEVELOP)
-    # it could be distributed
+    run('conan remove "*" -c')
+    # it could be distributed, both builds in parallel
     with chdir("ai"):
         run('conan create . --build="missing:ai/*" -s build_type=Release --format=json', file_stdout="graph.json")
         run("conan list --graph=graph.json --graph-binaries=build --format=json", file_stdout="built.json")
-        add_repo(PACKAGES)
+        run(f'conan remote enable {PACKAGES}')
         run(f"conan upload -l=built.json -r={PACKAGES} -c --format=json", file_stdout="uploaded_release.json")
-        #clean()
-        #add_repo(DEVELOP)
+        run(f'conan remote disable {PACKAGES}')
+
         run('conan create . --build="missing:ai/*" -s build_type=Debug --format=json', file_stdout="graph.json")
         run("conan list --graph=graph.json --graph-binaries=build --format=json", file_stdout="built.json")
-        # add_repo(PACKAGES)
+        run(f'conan remote enable {PACKAGES}')
         run(f"conan upload -l=built.json -r={PACKAGES} -c --format=json", file_stdout="uploaded_debug.json")
+        run(f'conan remote disable {PACKAGES}')
 
         print("- Running a promotion -")
         # aggregate the package list
         run("conan pkglist merge -l uploaded_release.json -l uploaded_debug.json --format=json", file_stdout="uploaded.json")
+        run(f'conan remote enable {PACKAGES}')
+        run(f'conan remote enable {PRODUCTS}')
         promote(PACKAGES, PRODUCTS, "uploaded.json")
+        run(f'conan remote disable {PACKAGES}')
+        run(f'conan remote disable {PRODUCTS}')
 
 
 ############### Package pipeline: Multi configuration Release/Debug ###################################
 if package_multi_lock:
     title("Package pipeline, multi configuration with Lockfiles")
-    clean()
+    run('conan remove "*" -c')
     with chdir("ai"):
-        add_repo(DEVELOP)
         # it could be distributed
         run("conan lock create . --lockfile-out=conan.lock")
         run("conan lock create . -s build_type=Debug --lockfile=conan.lock --lockfile-out=conan.lock")  # To make sure we cover all
 
-        clean()
-        add_repo(DEVELOP)
         run('conan create . --build="missing:ai/*" -s build_type=Release --lockfile=conan.lock --format=json', file_stdout="graph.json")
         run("conan list --graph=graph.json --graph-binaries=build --format=json", file_stdout="built.json")
-        add_repo(PACKAGES)
+        run(f'conan remote enable {PACKAGES}')
         run(f"conan upload -l=built.json -r={PACKAGES} -c --format=json", file_stdout="uploaded_release.json")
+        run(f'conan remote disable {PACKAGES}')
 
         out = run('conan create . --build="missing:ai/*" -s build_type=Debug --lockfile=conan.lock --format=json', file_stdout="graph.json")
         run("conan list --graph=graph.json --graph-binaries=build --format=json", file_stdout="built.json")
+        run(f'conan remote enable {PACKAGES}')
         run(f"conan upload -l=built.json -r={PACKAGES} -c --format=json", file_stdout="uploaded_debug.json")
+        run(f'conan remote disable {PACKAGES}')
 
         print("- Running a promotion -")
         # aggregate the package list
         run("conan pkglist merge -l uploaded_release.json -l uploaded_debug.json --format=json", file_stdout="uploaded.json")
+        run(f'conan remote enable {PACKAGES}')
+        run(f'conan remote enable {PRODUCTS}')
         promote(PACKAGES, PRODUCTS, "uploaded.json")
+        run(f'conan remote disable {PACKAGES}')
+        run(f'conan remote disable {PRODUCTS}')
 
 
 title("Product pipeline", c="*")
@@ -141,9 +144,8 @@ if product_simple:
     # lets build the consumers game and mapviewer applications
     # to integrate the ai/1.1.0 changes
     title("Lets see if this change ai/1.1.0 integrates correctly downstream")
-    clean()
-    add_repo(PRODUCTS)
-    add_repo(DEVELOP)
+    run('conan remove "*" -c')
+    run(f'conan remote enable {PRODUCTS}')
     with chdir("build"):
         out = run("conan install --requires=mapviewer/1.0")
         out = run("mapviewer", env_script="conanrun")
@@ -189,10 +191,8 @@ def execute_build_order(build_order_file, lockfile=None, upload=False):
 
 if product_build_order:
     title("Introducing a simple build-order to check ai/1.1.0 integration")
-    clean()
-
-    add_repo(PRODUCTS)
-    add_repo(DEVELOP)
+    run('conan remove "*" -c')
+    run(f'conan remote enable {PRODUCTS}')
     shutil.rmtree("build", ignore_errors=True)
     with chdir("build"):
         run("conan graph build-order --requires=game/1.0 --build=missing --order-by=recipe --reduce --format=json", file_stdout="game_build_order.json")
@@ -203,10 +203,8 @@ if product_build_order:
 
 if multi_product_build_order:
     title("Using a multi-product multi-configuration build-order")
-    clean()
-
-    add_repo(PRODUCTS)
-    add_repo(DEVELOP)
+    run('conan remove "*" -c')
+    run(f'conan remote enable {PRODUCTS}')
     shutil.rmtree("build", ignore_errors=True)
     with chdir("build"):
         # products = "game/1.0", "mapviewer/1.0"
@@ -227,10 +225,8 @@ if multi_product_build_order:
 
 if multi_product_build_order_lock:
     title("Using a multi-product multi-configuration build-order with lockfiles")
-    clean()
-
-    add_repo(PRODUCTS)
-    add_repo(DEVELOP)
+    run('conan remove "*" -c')
+    run(f'conan remote enable {PRODUCTS}')
     shutil.rmtree("build", ignore_errors=True)
     with chdir("build"):
         # products = "game/1.0", "mapviewer/1.0"
@@ -254,7 +250,7 @@ if multi_product_build_order_lock:
         test_product("mapviewer", "Debug")
 
         promote(PRODUCTS, DEVELOP, "uploaded.json")
-        clean()
-        add_repo(DEVELOP)
+        run('conan remove "*" -c')
+        run(f'conan remote disable {PRODUCTS}')
         test_product("game", "Release")
         test_product("game", "Debug")
