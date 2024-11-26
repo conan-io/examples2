@@ -50,3 +50,9 @@ jobs:
       run: |
         cd examples/tools/ros/rosenv/workspace
         ./test_ros.sh
+
+    - name: Run example with Conan from repo 2
+      shell: bash
+      run: |
+        cd examples/tools/ros/rosenv/workspace2
+        ./test_ros.sh
