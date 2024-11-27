@@ -1,4 +1,5 @@
 source /opt/ros/humble/setup.bash
+rosdep install --from-paths my_package/
 conan profile detect --force
 conan install my_package/conanfile.txt --build=missing --output-folder install/conan
 source install/conan/conanrosenv.sh
