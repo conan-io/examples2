@@ -18,7 +18,7 @@ find_package(yaml-cpp REQUIRED)
 add_executable(navigator src/main.cpp)
 
 target_compile_features(navigator PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
-ament_target_dependencies(package rclcpp rclcpp_action geometry_msgs nav2_msgs yaml-cpp)
+ament_target_dependencies(navigator rclcpp rclcpp_action nav2_msgs yaml-cpp)
 
 install(TARGETS navigator
   DESTINATION lib/${PROJECT_NAME})

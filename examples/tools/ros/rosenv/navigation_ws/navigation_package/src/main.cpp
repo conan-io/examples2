@@ -86,7 +86,7 @@ int main(int argc, char **argv) {
     }
 
     std::string yaml_file_path = argv[1];
-    rclcpp::spin(std::make_shared<YamlNavigationNode>(yaml_file_path));
+    std::make_shared<YamlNavigationNode>(yaml_file_path);
 
     rclcpp::shutdown();
     return 0;
