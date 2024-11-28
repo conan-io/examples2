@@ -1,10 +1,10 @@
 source /opt/ros/humble/setup.bash
 rosdep init
 rosdep update
-rosdep install --from-paths my_package/
+rosdep install --from-paths navigation_package/
 conan profile detect --force
-conan install my_package/conanfile.txt --build=missing --output-folder install/conan
+conan install navigation_package/conanfile.txt --build=missing --output-folder install/conan
 source install/conan/conanrosenv.sh
-colcon build --packages-select my_package
+colcon build --packages-select navigation_package
 source install/setup.bash
-ros2 run my_package package my_package/locations.yaml
+ros2 run navigation_package navigator navigation_package/locations.yaml

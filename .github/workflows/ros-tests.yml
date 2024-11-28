@@ -45,14 +45,14 @@ jobs:
         python3 -m pip install git+https://github.com/conan-io/conan.git
         chmod +x ./examples/tools/ros/rosenv/workspace/test_ros.sh
 
-    - name: Run example with Conan from repo
+    - name: Run printer example
       shell: bash
       run: |
         cd examples/tools/ros/rosenv/workspace
         ./test_ros.sh
 
-    - name: Run example with Conan from repo 2
+    - name: Run nagivator example
       shell: bash
       run: |
-        cd examples/tools/ros/rosenv/workspace2
+        cd examples/tools/ros/rosenv/navigation_ws
         ./test_ros.sh
