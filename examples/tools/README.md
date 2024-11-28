@@ -27,4 +27,5 @@
 
 ### [tools.ros](ros)
 
-- Build [ROS packages inside their workspace](ros/rosenv/workspace/) using dependencies from Conan Center and consuming them also as transitive dependencies.
+- Build [ROS packages inside their workspace](ros/rosenv/workspace) using the [fmt library from Conan Center](https://conan.io/center/recipes/fmt) and consuming them also as transitive dependencies.
+- Build a [ROS navigation package](ros/rosenv/navigation_ws) that sends goals to a mobile robot from a YAML file using the [yaml-cpp library from Conan Center](https://conan.io/center/recipes/yaml-cpp).
