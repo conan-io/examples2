@@ -83,5 +83,5 @@ examples/libraries/libcurl/ascii_art_color/x64/Release/*
 examples/tools/ros/rosenv/workspace/install/
 examples/tools/ros/rosenv/workspace/log/
 
-examples/tools/ros/rosenv/workspace2/install/
-examples/tools/ros/rosenv/workspace2/log/
+examples/tools/ros/rosenv/navigation_ws/install/
+examples/tools/ros/rosenv/navigation_ws/log/
