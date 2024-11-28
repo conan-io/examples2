@@ -60,7 +60,7 @@ private:
 
     void sendAllGoals() {
         for (const auto &location : locations_) {
-            RCLCPP_INFO(this->get_logger(), "Sending goal to %s: (%.2f, %.2f)", location.name.c_str(), location.x, location.y);
+            RCLCPP_INFO(this->get_logger(), "Sending %s goal (%.2f, %.2f) to robot", location.name.c_str(), location.x, location.y);
 
             auto goal_msg = NavigateToPose::Goal();
             goal_msg.pose.header.frame_id = "map";

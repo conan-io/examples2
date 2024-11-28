@@ -15,7 +15,7 @@ find_package(nav2_msgs REQUIRED)
 # Conan dependencies
 find_package(yaml-cpp REQUIRED)
 
-add_executable(navigator src/main.cpp)
+add_executable(navigator src/navigator.cpp)
 
 target_compile_features(navigator PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 ament_target_dependencies(navigator rclcpp rclcpp_action nav2_msgs yaml-cpp)
