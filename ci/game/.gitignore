@@ -1,0 +1,6 @@
+*.json
+game.lock
+conan.lock
+.conan2
+build
+__pycache__
