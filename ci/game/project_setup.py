@@ -66,7 +66,7 @@ def project_setup():
     print("Cleaning server repos contents")
     for repo in (PRODUCTS, DEVELOP, PACKAGES):
         run(f"conan remote add {repo} {SERVER_URL}/{repo}")
-        run(f"conan remote login {repo} {USER} -p {PASSWORD}")
+        run(f'conan remote login {repo} {USER} -p "{PASSWORD}"')
         run(f'conan remove "*" -c -r={repo}')
 
     # create initial graph
