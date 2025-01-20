@@ -61,7 +61,7 @@ def project_setup():
     # and 2 consuming applications, everything with version ranges
     print("- Setup the project initial state -")
     run('conan remove "*" -c')  # Make sure no packages from last run
-    run("conan remote remove *")
+    run('conan remote remove "*"')
     run("conan profile detect -f")
     print("Cleaning server repos contents")
     for repo in (PRODUCTS, DEVELOP, PACKAGES):
@@ -84,10 +84,10 @@ def project_setup():
     run(f'conan upload "*" -r={DEVELOP} -c')
     run('conan remove "*" -c')  # Make sure no packages from last run
 
-    run('conan remote disable *')
+    run('conan remote disable "*"')
     run(f'conan remote enable {DEVELOP}')
     print(run("conan remote list"))
-    print(run("conan list *"))
+    print(run('conan list "*"'))
 
 
 if __name__ == "__main__":
