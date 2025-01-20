@@ -126,6 +126,7 @@ node('LinuxFunctional') {
                     examples.add(example)
                 }
             }
+            examples = examples.sort()
             echo "Examples to run:\n - ${ examples.collect({ "$it" }).join('\n - ')}"
         }
 
