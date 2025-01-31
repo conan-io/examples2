@@ -5,7 +5,6 @@ import os
 
 
 class AppNCursesVersionConan(ConanFile):
-    name = "ncurses-version"
     settings = "os", "compiler", "build_type", "arch"
     generators = "CMakeDeps", "CMakeToolchain"
     package_type = "application"
@@ -23,10 +22,4 @@ class AppNCursesVersionConan(ConanFile):
         cmake.configure()
         cmake.build()
 
-    def package(self):
-        cmake = CMake(self)
-        cmake.install()
-
-    def package_info(self):
-        self.cpp_info.libdirs = []
-        self.cpp_info.includedirs = []
+        self.run(os.path.join(self.build_folder, "ncurses_version"), env="conanrun")
