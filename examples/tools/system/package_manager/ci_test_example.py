@@ -1,9 +1,14 @@
 from test.examples_tools import run
 import re
 import os
+import sys
 
 
 print("- Packaging system ncurses library using Conan -")
+
+if sys.platform != "linux":
+    print("INFO: Skipping test, only for Linux due to system requirements.")
+    sys.exit(0)
 
 confs = ["tools.system.package_manager:mode=install",
          "tools.system.package_manager:sudo=true",
