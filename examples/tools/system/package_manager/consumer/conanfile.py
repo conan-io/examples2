@@ -4,12 +4,15 @@ from conan.tools.cmake import cmake_layout, CMake
 import os
 
 
-class TestPackageConan(ConanFile):
+class AppNCursesVersionConan(ConanFile):
+    name = "ncurses-version"
     settings = "os", "compiler", "build_type", "arch"
     generators = "CMakeDeps", "CMakeToolchain"
+    package_type = "application"
+    exports_sources = "CMakeLists.txt", "ncurses_version.cpp"
 
     def requirements(self):
-        self.requires(self.tested_reference_str)
+        self.requires("ncurses/system")
 
     def layout(self):
         cmake_layout(self)
@@ -19,7 +22,10 @@ class TestPackageConan(ConanFile):
         cmake.configure()
         cmake.build()
 
-    def test(self):
-        if can_run(self):
-            bin_path = os.path.join(self.cpp.build.bindirs[0], "test_package")
-            self.run(bin_path, env="conanrun")
+    def package(self):
+        cmake = CMake(self)
+        cmake.install()
+
+    def package_info(self):
+        self.cpp_info.libdirs = []
+        self.cpp_info.includedirs = []
