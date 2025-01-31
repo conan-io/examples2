@@ -1,6 +1,7 @@
 from conan import ConanFile
 from conan.tools.system import package_manager
 from conan.tools.gnu import PkgConfig
+from conan.errors import ConanInvalidConfiguration
 
 required_conan_version = ">=2.0"
 
@@ -15,16 +16,14 @@ class SysNcursesConan(ConanFile):
     package_type = "shared-library"
     settings = "os", "arch", "compiler", "build_type"
 
-    def layout(self):
-        pass
-
     def package_id(self):
         self.info.clear()
 
-    def system_requirements(self):
+    def validate(self):
         if self.settings.os != "Linux":
-            return
+            raise ConanInvalidConfiguration(f"{self.ref} wraps a system package only supported by Linux.")
 
+    def system_requirements(self):
         dnf = package_manager.Dnf(self)
         dnf.install(["ncurses-devel"], update=True, check=True)
 
@@ -45,6 +44,5 @@ class SysNcursesConan(ConanFile):
         self.cpp_info.includedirs = []
         self.cpp_info.libdirs = []
 
-        if self.settings.os != "Linux":
-            pkg_config = PkgConfig(self, 'ncurses')
-            pkg_config.fill_cpp_info(self.cpp_info, is_system=True)
+        pkg_config = PkgConfig(self, 'ncurses')
+        pkg_config.fill_cpp_info(self.cpp_info, is_system=True)
