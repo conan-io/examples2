@@ -29,3 +29,7 @@
 
 - Build [ROS packages inside their workspace](ros/rosenv/workspace) using the [fmt library from Conan Center](https://conan.io/center/recipes/fmt) and consuming them also as transitive dependencies.
 - Build a [ROS navigation package](ros/rosenv/navigation_ws) that sends goals to a mobile robot from a YAML file using the [yaml-cpp library from Conan Center](https://conan.io/center/recipes/yaml-cpp).
+
+### [tools.system](system)
+
+- Wrap a [system package](system/package_manager/) using Conan and [ncurses](https://invisible-island.net/ncurses/). [Docs](TODO)
