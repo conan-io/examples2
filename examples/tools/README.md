@@ -32,4 +32,4 @@
 
 ### [tools.system](system)
 
-- Wrap a [system package](system/package_manager/) using Conan and [ncurses](https://invisible-island.net/ncurses/). [Docs](TODO)
+- Wrap a [system package](system/package_manager/) using Conan and [ncurses](https://invisible-island.net/ncurses/). [Docs](https://docs.conan.io/2/examples/tools/system/package_manager.html)
