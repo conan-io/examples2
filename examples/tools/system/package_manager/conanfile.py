@@ -20,8 +20,9 @@ class SysNcursesConan(ConanFile):
         self.info.clear()
 
     def validate(self):
-        if self.settings.os != "Linux":
-            raise ConanInvalidConfiguration(f"{self.ref} wraps a system package only supported by Linux.")
+        supported_os = ["Linux", "Macos"]
+        if self.settings.os not in supported_os:
+            raise ConanInvalidConfiguration(f"{self.ref} wraps a system package only supported by {supported_os}.")
 
     def system_requirements(self):
         dnf = package_manager.Dnf(self)
@@ -38,6 +39,9 @@ class SysNcursesConan(ConanFile):
 
         zypper = package_manager.Zypper(self)
         zypper.install(["ncurses"], update=True, check=True)
+
+        brew = package_manager.Brew(self)
+        brew.install(["ncurses"], update=True, check=True)
 
     def package_info(self):
         self.cpp_info.bindirs = []
