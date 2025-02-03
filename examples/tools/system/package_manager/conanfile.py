@@ -51,5 +51,9 @@ class SysNcursesConan(ConanFile):
         self.cpp_info.includedirs = []
         self.cpp_info.libdirs = []
 
+        self.cpp_info.set_property("cmake_file_name", "Curses")
+        self.cpp_info.set_property("cmake_target_name", "Curses::Curses")
+        self.cpp_info.set_property("cmake_additional_variables_prefixes", ["CURSES",])
+
         pkg_config = PkgConfig(self, 'ncurses')
         pkg_config.fill_cpp_info(self.cpp_info, is_system=True)
