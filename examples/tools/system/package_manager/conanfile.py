@@ -20,7 +20,7 @@ class SysNcursesConan(ConanFile):
         self.info.clear()
 
     def validate(self):
-        supported_os = ["Linux", "Macos"]
+        supported_os = ["Linux", "Macos", "FreeBSD"]
         if self.settings.os not in supported_os:
             raise ConanInvalidConfiguration(f"{self.ref} wraps a system package only supported by {supported_os}.")
 
