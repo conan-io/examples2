@@ -11,7 +11,7 @@ class AppNCursesVersionConan(ConanFile):
     exports_sources = "CMakeLists.txt", "ncurses_version.cpp"
 
     def requirements(self):
-        if self.settings.os in ["Linux", "Macos"]:
+        if self.settings.os in ["Linux", "Macos", "FreeBSD"]:
             self.requires("ncurses/system")
 
     def layout(self):

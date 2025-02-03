@@ -43,6 +43,9 @@ class SysNcursesConan(ConanFile):
         brew = package_manager.Brew(self)
         brew.install(["ncurses"], update=True, check=True)
 
+        pkg = package_manager.Pkg(self)
+        pkg.install(["ncurses"], update=True, check=True)
+
     def package_info(self):
         self.cpp_info.bindirs = []
         self.cpp_info.includedirs = []
