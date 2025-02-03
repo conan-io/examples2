@@ -13,7 +13,8 @@ if sys.platform != "linux":
 confs = ["tools.system.package_manager:mode=install",
          "tools.system.package_manager:sudo=true",
          "tools.build:verbosity=verbose",
-         "tools.compilation:verbosity=verbose"]
+         "tools.compilation:verbosity=verbose",
+         "user.examples.system_package:interactive=false"]
 
 out = run("conan create . {}".format(" ".join(["-c " + conf for conf in confs])))
 
@@ -22,7 +23,6 @@ assert "package(): WARN: No files in this package" in out
 
 print("- Consuming Conan package ncurses/system -")
 
-
 out = run("conan build consumer/ --name=ncurses-version --version=0.1.0 {}".format(" ".join(["-c " + conf for conf in confs])))
 
-assert "Conan 2.x Examples - Installed NCurses version" in out
+assert "Conan: Target declared 'ncurses::ncurses'" in out
