@@ -8,7 +8,7 @@ class AppNCursesVersionConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     generators = "CMakeDeps", "CMakeToolchain"
     package_type = "application"
-    exports_sources = "CMakeLists.txt", "ncurses_version.cpp"
+    exports_sources = "CMakeLists.txt", "ncurses_version.c"
 
     def requirements(self):
         if self.settings.os in ["Linux", "Macos", "FreeBSD"]:
