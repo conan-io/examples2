@@ -22,5 +22,4 @@ class AppNCursesVersionConan(ConanFile):
         cmake.configure()
         cmake.build()
 
-        if self.conf.get("user.examples.system_package:interactive", check_type=bool, default=True):
-            self.run(os.path.join(self.build_folder, "ncurses_version"), env="conanrun")
+        self.run(os.path.join(self.build_folder, "ncurses_version"), env="conanrun")
