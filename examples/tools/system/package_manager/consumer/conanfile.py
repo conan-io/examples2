@@ -10,8 +10,12 @@ class AppNCursesVersionConan(ConanFile):
     package_type = "application"
     exports_sources = "CMakeLists.txt", "ncurses_version.c"
 
+    @property
+    def _supported_os(self):
+        return ["Linux", "Macos", "FreeBSD"]
+
     def requirements(self):
-        if self.settings.os in ["Linux", "Macos", "FreeBSD"]:
+        if self.settings.os in _supported_os:
             self.requires("ncurses/system")
 
     def layout(self):
@@ -22,4 +26,5 @@ class AppNCursesVersionConan(ConanFile):
         cmake.configure()
         cmake.build()
 
-        self.run(os.path.join(self.build_folder, "ncurses_version"), env="conanrun")
+        if self.settings.os in _supported_os:
+            self.run(os.path.join(self.build_folder, "ncurses_version"), env="conanrun")
