@@ -1,5 +1,4 @@
 from test.examples_tools import run
-import re
 import os
 import sys
 
@@ -22,6 +21,10 @@ assert "package(): WARN: No files in this package" in out
 
 print("- Consuming Conan package ncurses/system -")
 
+os.environ["TERMINFO"] = "/usr/share/terminfo"
+
 out = run("conan build consumer/ --name=ncurses-version --version=0.1.0 {}".format(" ".join(["-c " + conf for conf in confs])))
+
+os.environ.pop("TERMINFO")
 
 assert "Conan: Target declared 'Curses::Curses'" in out
