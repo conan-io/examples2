@@ -15,7 +15,7 @@ class AppNCursesVersionConan(ConanFile):
         return ["Linux", "Macos", "FreeBSD"]
 
     def requirements(self):
-        if self.settings.os in _supported_os:
+        if self.settings.os in self._supported_os:
             self.requires("ncurses/system")
 
     def layout(self):
