@@ -26,5 +26,5 @@ class AppNCursesVersionConan(ConanFile):
         cmake.configure()
         cmake.build()
 
-        if self.settings.os in _supported_os:
+        if self.settings.os in self._supported_os:
             self.run(os.path.join(self.build_folder, "ncurses_version"), env="conanrun")
