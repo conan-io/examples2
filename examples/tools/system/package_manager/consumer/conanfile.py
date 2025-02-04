@@ -23,4 +23,4 @@ class AppNCursesVersionConan(ConanFile):
         cmake.build()
 
         app_path = os.path.join(self.build_folder, "ncurses_version")
-        self.output.info(f"The example application has been built with success.\nPlease, run it with: '{app_path}'")
+        self.output.info(f"The example application has been successfully built.\nPlease run the executable using: '{app_path}'")

@@ -22,4 +22,4 @@ print("- Consuming Conan package ncurses/system -")
 
 out = run("conan build consumer/ --name=ncurses-version --version=0.1.0 {}".format(" ".join(["-c " + conf for conf in confs])))
 
-assert "The example application has been built with success" in out
+assert "The example application has been successfully built" in out
