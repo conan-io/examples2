@@ -27,13 +27,12 @@ bitbake-layers add-layer ../meta-conan
 echo "INFO: Present layers"
 bitbake-layers show-layers
 
-
-echo 'IMAGE_INSTALL:append = " conan-mosquitto"' >> conf/local.conf
-
-echo "INFO: Fetching mosquitto"
-bitbake -v -c fetch conan-mosquitto
-
 if [ -n "${CONAN_YOCTO_BUILD_MOSQUITTO}" ]; then
+    echo 'IMAGE_INSTALL:append = " conan-mosquitto"' >> conf/local.conf
+
+    echo "INFO: Fetching mosquitto"
+    bitbake -v -c fetch conan-mosquitto
+
     echo "INFO: Building mosquitto"
     bitbake -v -c configure conan-mosquitto
     bitbake -v -c compile conan-mosquitto
