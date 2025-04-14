@@ -8,6 +8,8 @@ class SumConan(ConanFile):
     # No settings/options are necessary, this is header only
     exports_sources = "include/*"
     no_copy_source = True
+    # Important, define the package_type
+    package_type = "header-library"
 
     def package(self):
         # This will also copy the "include" folder
