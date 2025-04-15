@@ -13,7 +13,7 @@ class SumConan(ConanFile):
     no_copy_source = True
     generators = "CMakeToolchain", "CMakeDeps"
     # Important, define the package_type
-     package_type = "header-library"
+    package_type = "header-library"
 
     def validate(self):
         check_min_cppstd(self, 11)
