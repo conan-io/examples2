@@ -27,7 +27,8 @@ def envCreate(Map ctxt) {
     ctxt.shFunction("${ctxt.python_host} --version")
     if (ctxt.isInsideDocker) {
         // Alternate implementation because of https://issues.jenkins.io/browse/JENKINS-49076
-        // Always install latest pre-release
+        // Always install latest pre-release        
+        ctxt.shFunction("python -m pip install --upgrade pip")
         ctxt.shFunction("pip install ${ctxt.branch.branchInstall} --upgrade")
         ctxt.shFunction("pip install meson")
     }
