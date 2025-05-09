@@ -3,9 +3,7 @@ from test.examples_tools import run
 
 print("raylib example")
 
-# not using a conanfile because that will be created by the CLion plugin, in case someone just wants to 
-# copy this code to its folder so that the user does not find any conflicting file
-run("conan install --requires=raylib/5.5 --build=missing -g CMakeDeps -g CMakeToolchain --output-folder=build")
+run("conan install . --build=missing")
 
 # with presets
 
