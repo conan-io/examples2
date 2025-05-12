@@ -28,9 +28,10 @@ def envCreate(Map ctxt) {
     if (ctxt.isInsideDocker) {
         // Alternate implementation because of https://issues.jenkins.io/browse/JENKINS-49076
         // Always install latest pre-release        
-        ctxt.shFunction("python -m pip install --upgrade pip")
-        ctxt.shFunction("pip install ${ctxt.branch.branchInstall} --upgrade")
-        ctxt.shFunction("pip install meson")
+        ctxt.shFunction("${binPath}python -m pip install --upgrade pip")
+        ctxt.shFunction("${binPath}python -m pip uninstall -y conan")
+        ctxt.shFunction("${binPath}python -m pip install ${ctxt.branch.branchInstall} --upgrade")
+        ctxt.shFunction("${binPath}python -m pip install meson")
     }
     else {
         ctxt.shFunction("${ctxt.python_host} -m venv $venvDirectory")
