@@ -5,8 +5,6 @@ print("raylib example")
 
 run("conan install . --build=missing")
 
-# with presets
-
 if platform.system() == "Windows":
     run("cmake --preset conan-default")
     run("cmake --build --preset conan-release")
