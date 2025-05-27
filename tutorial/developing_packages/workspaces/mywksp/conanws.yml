@@ -1,0 +1,7 @@
+packages:
+  hello/1.0:
+    path: ../hello
+  say/1.0:
+    path: ../say
+products:
+- ../hello
