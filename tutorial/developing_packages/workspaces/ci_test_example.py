@@ -1,3 +1,4 @@
+import os
 import platform
 
 from conan import conan_version
@@ -5,6 +6,8 @@ from conan import conan_version
 from test.examples_tools import run, chdir
 
 print("- Workspaces and super builds -")
+
+os.environ["CONAN_WORKSPACE_ENABLE"] = "will_break_next"
 
 with chdir("mywksp"):
     run("conan workspace install")
