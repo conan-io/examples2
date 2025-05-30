@@ -1,0 +1,31 @@
+[settings]
+arch=wasm64
+build_type=Release
+compiler=apple-clang
+compiler.cppstd=gnu17
+compiler.cstd=gnu11
+compiler.libcxx=libc++
+compiler.version=17
+os=Emscripten
+
+[tool_requires]
+emsdk/[*]
+
+[conf]
+tools.build:cflags=['-sMEMORY64=1']
+tools.build:cxxflags=['-sMEMORY64=1']
+
+# In this early stage of wasm64, ALLOW_MEMORY_GROWTH is not having effect. Also it may not be the most efficient solution.
+# wasm64 for now needs to declare INITIAL_MEMORY as the maximum memory
+tools.build:exelinkflags=[ '-sMEMORY64=1', '-sALLOW_MEMORY_GROWTH=1', '-sMAXIMUM_MEMORY=16GB', '-sINITIAL_MEMORY=16GB' ]
+tools.build:sharedlinkflags=[ '-sMEMORY64=1', '-sALLOW_MEMORY_GROWTH=1', '-sMAXIMUM_MEMORY=16GB', '-sINITIAL_MEMORY=16GB' ]
+
+# Uncomment the following line to use emcc and em++ system compilers instead of conan packaged ones
+# tools.build:compiler_executables={'c':'emcc', 'cpp':'em++'}
+
+# General config
+tools.build:verbosity=verbose
+tools.compilation:verbosity=verbose
+
+# Distinguish between wasm32 and wasm64 architecture
+tools.cmake.cmake_layout:build_folder_vars=['settings.build_type', 'settings.arch']

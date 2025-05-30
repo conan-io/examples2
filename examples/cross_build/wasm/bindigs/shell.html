@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en-us">
+  <body>
+    <h1>Conan C++ WebAssembly Example</h1>
+    <br />
+    <div id="status">Downloading...</div>
+    <div>
+      <progress value="0" max="100" id="progress" hidden="1"></progress>
+    </div>
+    <textarea id="output" rows="8" style="width: 100%"></textarea>
+    <hr />
+
+    <!-- Example of calling JS from C -->
+    <button onclick="printMessage()">Print Message</button>
+    <hr />
+
+    <!-- Example of a simple invocation to fibonachi -->
+    <input type="number" id="fibInput" placeholder="e.g., 10" />
+    <button onclick="fibExample()">Compute Fibonacci</button>
+    <p id="fibResult"></p>
+    <hr />
+
+    <!-- Example of a function call using two buffers -->
+    <button onclick="pressBtn()">Click me to increase counter!</button>
+    <p id="counterResult"></p>
+    <hr />
+
+    <!-- Example of a function call using a Float32Array and Eigen -->
+    <input
+      type="text"
+      id="numbersInput"
+      placeholder="e.g., 42.2, 2.1, 8"
+      size="50"
+    />
+    <button onclick="sumExample()">Compute Float32 Sum with Eigen</button>
+    <p id="sumResult"></p>
+
+    <script type="text/javascript">
+      var statusElement = document.getElementById("status");
+      var progressElement = document.getElementById("progress");
+
+      var Module = {
+        print: (function () {
+          var element = document.getElementById("output");
+          if (element) element.value = ""; // clear browser cache
+          return (...args) => {
+            var text = args.join(" ");
+            console.log(text);
+            if (element) {
+              element.value += text + "\n";
+              element.scrollTop = element.scrollHeight; // focus on bottom
+            }
+          };
+        })(),
+        setStatus: (text) => {
+          Module.setStatus.last ??= { time: Date.now(), text: "" };
+          if (text === Module.setStatus.last.text) return;
+          var m = text.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);
+          var now = Date.now();
+          if (m && now - Module.setStatus.last.time < 30) return; // if this is a progress update, skip it if too soon
+          Module.setStatus.last.time = now;
+          Module.setStatus.last.text = text;
+          if (m) {
+            text = m[1];
+            progressElement.value = parseInt(m[2]) * 100;
+            progressElement.max = parseInt(m[4]) * 100;
+            progressElement.hidden = false;
+          } else {
+            progressElement.value = null;
+            progressElement.max = null;
+            progressElement.hidden = true;
+          }
+          statusElement.innerHTML = text;
+        },
+        totalDependencies: 0,
+        monitorRunDependencies: (left) => {
+          this.totalDependencies = Math.max(this.totalDependencies, left);
+          Module.setStatus(
+            left
+              ? "Preparing... (" +
+                  (this.totalDependencies - left) +
+                  "/" +
+                  this.totalDependencies +
+                  ")"
+              : "All downloads complete.",
+          );
+        },
+      };
+      Module.setStatus("Downloading...");
+      window.onerror = () => {
+        Module.setStatus("Exception thrown, see JavaScript console");
+        Module.setStatus = (text) => {
+          if (text) console.error("[post-exception status] " + text);
+        };
+      };
+
+      // Example of auto string handle by WASM on simple string parameter passing
+      const printMessage = () => {
+        var printer = Module.ccall(
+          "printMessage",
+          null,
+          ["string"],
+          ["Hello from C++ WebAssembly!"],
+        );
+      };
+
+      // Example of a simple invocation to fibonachi
+      const fibExample = () => {
+        var fib = Module.cwrap("fib", "number", ["number"]); // returns a number
+        var input = parseInt(document.getElementById("fibInput").value);
+        if (isNaN(input)) {
+          alert("Please enter a valid integer.");
+          return;
+        }
+        var result = fib(input);
+        document.getElementById("fibResult").textContent =
+          "Fibonacci of " + input + " is: " + result;
+      };
+
+      var value = 0; // (static) value to increment by one
+      const pressBtn = () => {
+        var addOne = Module.cwrap("addOne", null, ["number", "number"]); // void function
+        // alloc 4 bytes of memory for the input and 4 for the output (32-bit integers)
+        var input_ptr = Module._malloc(4);
+        var output_ptr = Module._malloc(4);
+
+        Module.setValue(input_ptr, value, "i32"); // set the value in WASM memory
+        addOne(input_ptr, output_ptr); // call the WASM function
+        var result = Module.getValue(output_ptr, "i32"); // extract the result from WASM memory
+        value = result;
+        document.getElementById("counterResult").textContent = "Sum: " + result;
+
+        // dealloc memory to avoid memory leaks
+        Module._free(input_ptr);
+        Module._free(output_ptr);
+      };
+
+      const sumExample = () => {
+        var sumArray = Module.cwrap("sumArray", "number", ["number", "number"]);
+        // Get the input string and split by commas
+        const inputStr = document.getElementById("numbersInput").value;
+        const numberStrings = inputStr.split(",").map((s) => s.trim());
+
+        // Convert to Float32Array
+        const inputArray = new Float32Array(numberStrings.map(Number));
+        var len = inputArray.length;
+        var bytesPerElement = inputArray.BYTES_PER_ELEMENT;
+        var inputPtr = Module._malloc(len * bytesPerElement);
+        Module.HEAPF32.set(inputArray, inputPtr / bytesPerElement);
+        var result = sumArray(inputPtr, len);
+        Module._free(inputPtr);
+        document.getElementById("sumResult").textContent = "Sum: " + result;
+      };
+    </script>
+    {{{ SCRIPT }}}
+  </body>
+</html>

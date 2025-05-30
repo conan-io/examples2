@@ -1,0 +1,26 @@
+[settings]
+arch=wasm
+build_type=Release
+compiler=apple-clang
+compiler.cppstd=gnu17
+compiler.cstd=gnu11
+compiler.libcxx=libc++
+compiler.version=17
+os=Emscripten
+
+[tool_requires]
+emsdk/[*]
+
+[conf]
+tools.build:exelinkflags=['-sALLOW_MEMORY_GROWTH=1', '-sMAXIMUM_MEMORY=4GB', '-sINITIAL_MEMORY=64MB' ]
+tools.build:sharedlinkflags=[ '-sALLOW_MEMORY_GROWTH=1', '-sMAXIMUM_MEMORY=4GB', '-sINITIAL_MEMORY=64MB' ]
+
+# Uncomment the following line to use emcc and em++ system compilers instead of conan packaged ones
+# tools.build:compiler_executables={'c':'emcc', 'cpp':'em++'}
+
+# Verbosity
+tools.build:verbosity=verbose
+tools.compilation:verbosity=verbose
+
+# Distinguish between wasm32 and wasm64 architecture
+tools.cmake.cmake_layout:build_folder_vars=['settings.build_type', 'settings.arch']
