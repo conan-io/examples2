@@ -9,6 +9,8 @@ It has minor modifications:
     - `-sUSE_GLFW=3 -sASYNCIFY`: see [raylib web manual](https://github.com/raysan5/raylib/wiki/Working-for-Web-(HTML5)#23-using-cmake) for a deeper explanation
     - `--shell-file`: generate the html code from the template
 
+![image](https://github.com/user-attachments/assets/941b5922-edb6-400f-9d38-ba805fc8a3ab)
+
 
 ## Build and run
 
