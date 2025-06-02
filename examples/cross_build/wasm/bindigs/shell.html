@@ -96,7 +96,7 @@
 
       // Example of auto string handle by WASM on simple string parameter passing
       const printMessage = () => {
-        var printer = Module.ccall(
+        Module.ccall(
           "printMessage",
           null,
           ["string"],
@@ -106,48 +106,51 @@
 
       // Example of a simple invocation to fibonachi
       const fibExample = () => {
-        var fib = Module.cwrap("fib", "number", ["number"]); // returns a number
-        var input = parseInt(document.getElementById("fibInput").value);
+        const fib = Module.cwrap("fib", "number", ["number"]); // returns a number
+        const input = parseInt(document.getElementById("fibInput").value);
         if (isNaN(input)) {
           alert("Please enter a valid integer.");
           return;
         }
-        var result = fib(input);
+        const result = fib(input);
         document.getElementById("fibResult").textContent =
           "Fibonacci of " + input + " is: " + result;
       };
 
       var value = 0; // (static) value to increment by one
       const pressBtn = () => {
-        var addOne = Module.cwrap("addOne", null, ["number", "number"]); // void function
+        const addOne = Module.cwrap("addOne", null, ["number", "number"]); // void function
         // alloc 4 bytes of memory for the input and 4 for the output (32-bit integers)
-        var input_ptr = Module._malloc(4);
-        var output_ptr = Module._malloc(4);
+        const inputPtr = Module._malloc(4);
+        const outputPtr = Module._malloc(4);
 
-        Module.setValue(input_ptr, value, "i32"); // set the value in WASM memory
-        addOne(input_ptr, output_ptr); // call the WASM function
-        var result = Module.getValue(output_ptr, "i32"); // extract the result from WASM memory
+        Module.setValue(inputPtr, value, "i32");
+        addOne(inputPtr, outputPtr);
+        const result = Module.getValue(outputPtr, "i32");
         value = result;
         document.getElementById("counterResult").textContent = "Sum: " + result;
 
         // dealloc memory to avoid memory leaks
-        Module._free(input_ptr);
-        Module._free(output_ptr);
+        Module._free(inputPtr);
+        Module._free(outputPtr);
       };
 
       const sumExample = () => {
-        var sumArray = Module.cwrap("sumArray", "number", ["number", "number"]);
+        const sumArray = Module.cwrap("sumArray", "number", [
+          "number",
+          "number",
+        ]);
         // Get the input string and split by commas
         const inputStr = document.getElementById("numbersInput").value;
         const numberStrings = inputStr.split(",").map((s) => s.trim());
 
         // Convert to Float32Array
         const inputArray = new Float32Array(numberStrings.map(Number));
-        var len = inputArray.length;
-        var bytesPerElement = inputArray.BYTES_PER_ELEMENT;
-        var inputPtr = Module._malloc(len * bytesPerElement);
+        const len = inputArray.length;
+        const bytesPerElement = inputArray.BYTES_PER_ELEMENT;
+        const inputPtr = Module._malloc(len * bytesPerElement);
         Module.HEAPF32.set(inputArray, inputPtr / bytesPerElement);
-        var result = sumArray(inputPtr, len);
+        const result = sumArray(inputPtr, len);
         Module._free(inputPtr);
         document.getElementById("sumResult").textContent = "Sum: " + result;
       };
