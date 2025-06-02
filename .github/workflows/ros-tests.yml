@@ -18,6 +18,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    - name: Update ROS signing key (per ROS migration guide)
+      run: |
+        sudo rm /usr/share/keyrings/ros2-latest-archive-keyring.gpg
+        sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros2-latest-archive-keyring.gpg
+
     - name: Configure environment and install Conan release
       run: |
         apt-get update && apt-get install -y python3 python3-pip
@@ -38,6 +43,11 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+
+    - name: Update ROS signing key (per ROS migration guide)
+      run: |
+        sudo rm /usr/share/keyrings/ros2-latest-archive-keyring.gpg
+        sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros2-latest-archive-keyring.gpg
 
     - name: Configure environment and install Conan from develop2 branch
       run: |
