@@ -2,7 +2,8 @@ import platform
 from test.examples_tools import chdir, run
 
 run("conan build . --build=missing --profile:host ../profiles/wasm32")
-run("conan build . --build=missing --profile:host ../profiles/wasm64")
+# wasm64 not yet added to conan-io: https://github.com/conan-io/conan/pull/18400
+# run("conan build . --build=missing --profile:host ../profiles/wasm64")
 
 if platform.system() == "Windows":
     with chdir("build"):
