@@ -1,4 +1,4 @@
-# WASM 32 bit vs 64 bit projet comparison
+# WASM 32 bit vs 64 bit project comparison
 
 
 This basic example aims to show the differences between cross compiling a project with `arch=wasm` (which stands for `wasm32` bits)
@@ -51,4 +51,20 @@ Failed after allocating 16352 MiB ~ 15 GiB
 
 The difference is notable, the 4 GB limitation does not exist more in a `64 bit` architecture.
 The dynamic memory limit could be easily increased by modifying the profile.
+
+
+## Binary inspection
+
+Another way of determining if a WASM lib is 32 or 64 bit, `wasm-objdump` command can be used (must be downloaded first):
+
+```sh
+$ wasm-objdump -d build/release-wasm/wasm-alloc.wasm | grep '\.load'
+```
+This should output `i32.load`. 
+
+But the following should show plenty of `i64.load`, indicating `64-bit` operations:
+
+```sh
+$ wasm-objdump -d build/release-wasm64/wasm-alloc.wasm | grep '\.load'
+```
 
