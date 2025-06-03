@@ -9,19 +9,7 @@ class WasmExampleRecipe(ConanFile):
     name = "wasm-example"
     version = "1.0"
     package_type = "application"
-
-    # Optional metadata
-    license = "<Put the package license here>"
-    author = "<Put your name here> <And your email here>"
-    url = "<Package recipe repository url here, for issues about the package>"
-    description = "<Description of exe package here>"
-    topics = ("<Put some tag here>", "<here>", "<and here>")
-
-    # Binary configuration
     settings = "os", "compiler", "build_type", "arch"
-
-    # Sources are located in the same place as this recipe, copy them to the recipe
-    exports_sources = "CMakeLists.txt", "src/*"
 
     def layout(self):
         cmake_layout(self)
@@ -33,13 +21,19 @@ class WasmExampleRecipe(ConanFile):
         deps = CMakeDeps(self)
         deps.generate()
         tc = CMakeToolchain(self)
+
+        tc.extra_exelinkflags.append(
+            "-sEXPORTED_FUNCTIONS=['_malloc','_free'] \
+            -sEXPORTED_RUNTIME_METHODS=['ccall','cwrap','getValue','setValue'] \
+            -sENVIRONMENT=web \
+            -sALLOW_MEMORY_GROWTH=1 \
+            -sNO_EXIT_RUNTIME=1 \
+            --shell-file ${CMAKE_SOURCE_DIR}/shell.html"
+        )
+
         tc.generate()
 
     def build(self):
         cmake = CMake(self)
         cmake.configure()
         cmake.build()
-
-    def package(self):
-        cmake = CMake(self)
-        cmake.install()

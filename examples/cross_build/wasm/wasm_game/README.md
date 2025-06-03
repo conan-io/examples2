@@ -4,8 +4,9 @@ This project is a copy of our [raylib](https://github.com/conan-io/examples2/tre
 
 It has minor modifications:
 
-- C++ source code has been modified in order to accept mouse clicks as inputs as it is more convenient for a webpage
-- `CMakeLists.txt` has been modified in order to link against raylib correctly using WASM
+- C++ source code has been slightly modified in order to accept mouse clicks as inputs as it is more convenient for a webpage
+- `CMakeLists.txt` has been modified in order to generate a `html` target which can bee opened by a web browser
+- `conanfile.py` `generate()` method has been modified in order to link against raylib correctly using WASM
     - `-sUSE_GLFW=3 -sASYNCIFY`: see [raylib web manual](https://github.com/raysan5/raylib/wiki/Working-for-Web-(HTML5)#23-using-cmake) for a deeper explanation
     - `--shell-file`: generate the html code from the template
 

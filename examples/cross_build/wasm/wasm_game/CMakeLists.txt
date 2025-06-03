@@ -9,5 +9,5 @@ target_link_libraries(wasm_game raylib)
 
 # Set the executable suffix to .html in order to generate a html page by
 # Emscripten (there is no way of setting this from a user toolchain or
-# conanfile as it is later overriden by the emscripten toolchain)
+# conanfile as it is later overridden by the Emscripten toolchain)
 set(CMAKE_EXECUTABLE_SUFFIX ".html")
