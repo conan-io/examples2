@@ -12,7 +12,9 @@ if platform.system() == "Windows":
         # run("generators\\conanbuild.bat && node --version && node release-wasm64\\wasm-alloc.js")
 else: 
     with chdir("build/release-wasm"):
-        run(". generators/conanbuild.sh && node --version && node release-wasm/wasm-alloc.js")
-        # Needs at least Node.js 24.0.0
-        # run(". generators/conanbuild.sh && node --version && node release-wasm64/wasm-alloc.js")
+        run(". generators/conanbuild.sh && node --version && node wasm-alloc.js")
+
+    # Needs at least Node.js 24.0.0
+    # with chdir("build/release-wasm64"):
+    #     run(". generators/conanbuild.sh && node --version && node wasm-alloc.js")
 
