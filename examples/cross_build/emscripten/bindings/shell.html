@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en-us">
   <body>
-    <h1>Conan C++ WebAssembly Example</h1>
+    <h1>Conan C++ Emscripten Example</h1>
     <br />
     <div id="status">Downloading...</div>
     <div>
@@ -12,6 +12,9 @@
 
     <!-- Example of calling JS from C -->
     <button onclick="printMessage()">Print Message</button>
+    <hr />
+
+    <button onclick="getZlibVersion()">Print Zlib version</button>
     <hr />
 
     <!-- Example of a simple invocation to fibonachi -->
@@ -102,6 +105,9 @@
           ["string"],
           ["Hello from C++ WebAssembly!"],
         );
+      };
+      const getZlibVersion = () => {
+        Module.ccall("getZlibVersion", null, [], []);
       };
 
       // Example of a simple invocation to fibonachi

@@ -1,8 +1,10 @@
 #include <Eigen/Core>
 #include <cstdint>
 #include <emscripten/emscripten.h>
+#include <fmt/printf.h>
 #include <iostream>
 #include <string>
+#include <zlib.h>
 
 #ifdef __cplusplus
 #define EXTERN extern "C"
@@ -36,18 +38,22 @@ EXTERN EMSCRIPTEN_KEEPALIVE void addOne(int32_t *input, int32_t *output) {
 }
 
 EXTERN EMSCRIPTEN_KEEPALIVE float sumArray(const float *data, int32_t size) {
-  // print data input
-  std::cout << "Data input: ";
+  fmt::print("Data input: ");
   for (int i = 0; i < size; ++i) {
-    std::cout << data[i] << " ";
+    fmt::print("{} ", data[i]);
   }
   std::cout << std::endl;
   Eigen::Map<const Eigen::ArrayXf> vec(data, size);
   return vec.sum();
 }
 
+EXTERN EMSCRIPTEN_KEEPALIVE void getZlibVersion() {
+  fmt::print("Zlib version being used: {}\n", zlibVersion());
+}
+
 int main() {
   std::cout << "Hello World!" << std::endl;
   auto data = new float[5]{1.0f, 2.0f, 3.0f, 4.0f, 5.0f};
   std::cout << sumArray(data, 5) << std::endl;
+  fmt::print(zlibVersion());
 }

@@ -1,0 +1,8 @@
+include(base)
+
+[settings]
+arch=wasm
+
+[conf]
+tools.build:exelinkflags+=['-sMAXIMUM_MEMORY=4GB', '-sINITIAL_MEMORY=64MB']
+tools.build:sharedlinkflags+=['-sMAXIMUM_MEMORY=4GB', '-sINITIAL_MEMORY=64MB']
