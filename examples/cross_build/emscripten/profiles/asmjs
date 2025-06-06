@@ -1,0 +1,8 @@
+include(base)
+
+[settings]
+arch=asm.js
+
+[conf]
+tools.build:exelinkflags+=['-sMAXIMUM_MEMORY=2GB', '-sINITIAL_MEMORY=64MB']
+tools.build:sharedlinkflags+=['-sMAXIMUM_MEMORY=2GB', '-sINITIAL_MEMORY=64MB']
