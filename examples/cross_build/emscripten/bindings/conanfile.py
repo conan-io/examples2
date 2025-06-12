@@ -1,5 +1,6 @@
 from conan import ConanFile
 from conan.tools.cmake import CMake, CMakeDeps, CMakeToolchain, cmake_layout
+from conan.errors import ConanInvalidConfiguration
 
 
 class WasmExampleRecipe(ConanFile):
@@ -15,6 +16,10 @@ class WasmExampleRecipe(ConanFile):
         self.requires("eigen/3.4.0")
         self.requires("zlib/1.3.1")
         self.requires("fmt/11.1.4")
+
+    def validate(self):
+        if self.settings.os != "Emscripten":
+            raise ConanInvalidConfiguration("This example is only supported on Emscripten.")
 
     def generate(self):
         deps = CMakeDeps(self)

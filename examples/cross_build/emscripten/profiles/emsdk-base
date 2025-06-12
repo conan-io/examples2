@@ -1,31 +1,21 @@
 # Note: this profile uses emsdk package from Conan Center Index 
-# To use a local emsdk installation could be done by:
-# a) Define a platform_tool_requires ensuring CC, CXX, etc are defined correctly in PATH
-#  [platform_tool_requires]
-#  emsdk/<version>
-# b) Define compiler_executables
-#  tools.build:compiler_executables={'c':'emcc', 'cpp':'em++'}
-# c) Define buildenv
-#  [buildenv]
-#  CC=<path/to/emcc>
-#  CXX=<path/to/em++>
-#  AR ..
+# To use a local emsdk installation use -pr:h <wasm32/wasm64/asmjs> -pr:h emsdk-native
 
 [settings]
 build_type=Release
 compiler=emcc
 compiler.cppstd=17  
 compiler.libcxx=libc++
-compiler.version=4.0.9
+compiler.version=4.0.10
 os=Emscripten
 
 [tool_requires]
-emsdk/4.0.9
+emsdk/4.0.10
 ninja/[*]
 
 [conf]
-tools.build:exelinkflags=['-sALLOW_MEMORY_GROWTH=1']
-tools.build:sharedlinkflags=['-sALLOW_MEMORY_GROWTH=1']
+tools.build:exelinkflags+=['-sALLOW_MEMORY_GROWTH=1']
+tools.build:sharedlinkflags+=['-sALLOW_MEMORY_GROWTH=1']
 
 # Set Ninja as default generator as it is faster and will sove issues on Windows
 tools.cmake.cmaketoolchain:generator=Ninja
@@ -36,4 +26,3 @@ tools.compilation:verbosity=verbose
 
 # Distinguish between architectures
 tools.cmake.cmake_layout:build_folder_vars=['settings.build_type', 'settings.arch']
-

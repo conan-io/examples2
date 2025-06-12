@@ -1,0 +1,15 @@
+include(./emsdk-base)
+
+[platform_tool_requires]
+emsdk/4.0.10
+
+[conf]
+tools.build:compiler_executables={'c':'emcc', 'cpp':'em++'}
+
+[buildenv]
+CC=emcc
+CXX=em++
+AR=emar
+NM=emnm
+RANLIB=emranlib
+STRIP=emstrip

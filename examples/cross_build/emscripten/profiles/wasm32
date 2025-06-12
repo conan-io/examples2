@@ -1,4 +1,4 @@
-include(base)
+include(./emsdk-base)
 
 [settings]
 arch=wasm
@@ -6,3 +6,5 @@ arch=wasm
 [conf]
 tools.build:exelinkflags+=['-sMAXIMUM_MEMORY=4GB', '-sINITIAL_MEMORY=64MB']
 tools.build:sharedlinkflags+=['-sMAXIMUM_MEMORY=4GB', '-sINITIAL_MEMORY=64MB']
+
+#tools.build:exelinkflags+=['-sMIN_NODE_VERSION=230000']

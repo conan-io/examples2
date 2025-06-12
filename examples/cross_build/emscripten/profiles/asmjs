@@ -1,4 +1,4 @@
-include(base)
+include(./emsdk-base)
 
 [settings]
 arch=asm.js
