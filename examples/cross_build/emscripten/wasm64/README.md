@@ -4,11 +4,12 @@
 This basic example aims to show the differences between cross compiling a project with `arch=wasm` (which stands for `wasm32` bits)
 and `arch=wasm64` the newly introduced architecture which supports WebAssembly 64-bits.
 
+To
 
 To compile the project in 32 bits follow this instructions:
 
 ```sh
-$ conan build . -pr ../profiles/wasm32
+$ conan build . -pr emsdk/wasm32
 $ node build/release-wasm/wasm-alloc.js
 
 Current allocated: 1 GiB

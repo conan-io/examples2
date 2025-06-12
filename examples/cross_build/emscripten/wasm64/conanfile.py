@@ -11,6 +11,9 @@ class WasmAllocatorRecipe(ConanFile):
     def layout(self):
         cmake_layout(self)
 
+    def requirements(self):
+        self.requires("icu/74.2")
+
     def generate(self):
         deps = CMakeDeps(self)
         deps.generate()
