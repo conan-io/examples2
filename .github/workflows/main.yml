@@ -1,0 +1,68 @@
+name: Run Conan Examples
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      examples: ${{ steps.find.outputs.examples }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Find examples
+        id: find
+        run: |
+          examples=$(find . -name 'ci_test_example.*' | grep -E '\.py$|\.sh$' | sort | jq -R -s -c 'split("\n")[:-1]')
+          echo "examples=$examples" >> $GITHUB_OUTPUT
+
+  run-macos:
+    needs: prepare
+    runs-on: macos-14
+    strategy:
+      matrix:
+        branch: [ "conan", "develop2" ]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.9"
+
+      - name: Install Conan and tools
+        run: |
+          pip install -e "git+https://github.com/conan-io/conan.git@${{ matrix.branch }}#egg=conan"
+          pip install meson
+
+      - name: Cache Homebrew packages
+        id: cache-brew
+        uses: actions/cache@v4
+        with:
+          path: ~/Library/Caches/Homebrew
+          key: ${{ runner.os }}-brew
+
+      - name: Install homebrew dependencies
+        run: |
+          brew install xcodegen make libtool zlib autoconf automake ninja
+
+      - name: Run examples
+        run: |
+          examples=${{ needs.prepare.outputs.examples }}
+          echo "$examples" | jq -r '.[]' | while read example; do
+            echo "Running $example"
+            dir=$(dirname "$example")
+            script=$(basename "$example")
+            cd "$dir"
+            chmod +x "$script"
+            ./$(basename "$script") || exit 1
+            cd -
+          done
