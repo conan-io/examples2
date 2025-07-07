@@ -28,7 +28,7 @@ if platform.system() == "Windows":
         assert "Debug configuration!" in cmd_out
 
     # Build for Release with shared libraries
-    run("conan install . --output-folder=build --build=missing -s build_type=Release --options=zlib/1.2.11:shared=True")
+    run("conan install . --output-folder=build --build=missing -s build_type=Release --options=zlib/1.3.1:shared=True")
     with chdir("build"):
         command = []
         command.append("conanbuild.bat")
@@ -68,7 +68,7 @@ else:
         assert "Debug configuration!" in cmd_out
 
     # Build for Release with shared libraries
-    run("conan install . --output-folder=build --build=missing -s build_type=Release --options=zlib/1.2.11:shared=True")
+    run("conan install . --output-folder=build --build=missing -s build_type=Release --options=zlib/1.3.1:shared=True")
     with chdir("build"):
         command = []
         command.append(". ./conanbuild.sh")

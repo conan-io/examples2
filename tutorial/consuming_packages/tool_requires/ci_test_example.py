@@ -15,9 +15,9 @@ if platform.system() == "Windows":
         command.append("deactivate_conanbuild.bat")
         command.append("cmake --build . --config Release")
         cmd_out = run(" && ".join(command))
-        assert "Building with CMake version: 3.22.6" in cmd_out
+        assert "Building with CMake version: 3.27.9" in cmd_out
         cmd_out = run("Release\\compressor.exe")
-        assert "ZLIB VERSION: 1.2.11" in cmd_out
+        assert "ZLIB VERSION: 1.3.1" in cmd_out
 else:
     run("conan install . --output-folder=cmake-build-release --build=missing")
     with chdir("cmake-build-release"):
@@ -27,6 +27,6 @@ else:
         command.append(". ./deactivate_conanbuild.sh")
         command.append("cmake --build .")
         cmd_out = run(" && ".join(command))
-        assert "Building with CMake version: 3.22.6" in cmd_out
+        assert "Building with CMake version: 3.27.9" in cmd_out
         cmd_out = run("./compressor")
-        assert "ZLIB VERSION: 1.2.11" in cmd_out
+        assert "ZLIB VERSION: 1.3.1" in cmd_out

@@ -33,7 +33,7 @@ def run_example(output_folder=""):
             run(" && ".join(command))
             cmd_out = run("./compressor")
 
-    assert "ZLIB VERSION: 1.2.11" in cmd_out
+    assert "ZLIB VERSION: 1.3.1" in cmd_out
 
 
 print("- Understanding the flexibility of using conanfile.py vs conanfile.txt -")
