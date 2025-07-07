@@ -35,6 +35,11 @@ def run_example(output_folder=""):
 
     assert "ZLIB VERSION: 1.3.1" in cmd_out
 
+    # Make sure ``conan build`` works in every platform
+    if os.path.exists("build"):
+        shutil.rmtree("build")
+    run("conan build .")
+
 
 print("- Understanding the flexibility of using conanfile.py vs conanfile.txt -")
 
