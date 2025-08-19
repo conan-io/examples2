@@ -1,4 +1,4 @@
-include(default)
+include(clang20)
 
 [settings]
 compiler.sanitizer=AddressUndefinedBehavior

@@ -11,6 +11,3 @@ tools.build:cxxflags=['/fsanitize=address']
 tools.build:cflags=['-fsanitize=address']
 tools.build:cxxflags=['-fsanitize=address']
 {% endif %}
-
-[runenv]
-ASAN_OPTIONS=log_path={{ package_metadata_folder }}/sanitizer

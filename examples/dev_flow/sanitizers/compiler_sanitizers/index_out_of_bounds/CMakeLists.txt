@@ -3,8 +3,6 @@ project(index_out_of_bounds LANGUAGES CXX)
 
 add_executable(index_out_of_bounds main.cpp)
 target_compile_features(index_out_of_bounds PUBLIC cxx_std_11)
-target_compile_options(index_out_of_bounds PRIVATE -fsanitize=address)
-target_link_options(index_out_of_bounds PRIVATE -fsanitize=address)
 
 include(GNUInstallDirs)
 install(TARGETS index_out_of_bounds

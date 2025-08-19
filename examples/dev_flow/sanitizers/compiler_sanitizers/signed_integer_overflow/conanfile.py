@@ -3,8 +3,8 @@ from conan.tools.cmake import CMake, cmake_layout, CMakeToolchain
 
 required_conan_version = ">=2.1.0"
 
-class IndexOutOfBoundsConan(ConanFile):
-    name = "index_out_of_bounds"
+class SignedIntegerOverflowConan(ConanFile):
+    name = "signed_integer_overflow"
     version = "0.1.0"
     settings = "os", "arch", "compiler", "build_type"
     exports_sources = "CMakeLists.txt", "main.cpp"
