@@ -6,6 +6,19 @@ This example follows the documented page https://docs.conan.io/2/examples/dev_fl
 
 Here are some examples of using compiler sanitizers with Conan.
 
+### Configuring Custom Settings
+
+Before trying to build using the profiles prepared to work with sanitizers, you may want to configure some custom settings in your Conan home.
+It's not needed to modify the `settings.yml` file, instead, you can install a custom settings using [settings_user.yml](https://docs.conan.io/2/reference/config_files/settings.html#settings-user-yml)
+
+```
+cp settings_user.yml $(conan config home)
+```
+
+This setting allows you to customize the behavior of the sanitizers, enabling or disabling specific checks as needed.
+Be aware once it's installed in your Conan home, it will affect all your projects using Conan, asking for the setting `compiler.sanitizer` always.
+In order to disable it, just remove the `settings_user.yml` file from your Conan home.
+
 ### Signed Integer Overflow
 
 This example demonstrates how to detect signed integer overflow using compiler sanitizers. The provided C++ code intentionally causes a signed integer overflow, which can be detected when running the program with the appropriate sanitizer flags.
