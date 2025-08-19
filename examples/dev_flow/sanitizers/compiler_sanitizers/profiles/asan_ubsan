@@ -1,0 +1,8 @@
+include(default)
+
+[settings]
+compiler.sanitizer=AddressUndefinedBehavior
+
+[conf]
+tools.build:cflags=['-fsanitize=address,undefined']
+tools.build:cxxflags=['-fsanitize=address,undefined']
