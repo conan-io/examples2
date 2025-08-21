@@ -4,10 +4,6 @@ include(default)
 compiler.sanitizer=Address
 
 [conf]
-{% if compiler == "msvc" %}
-tools.build:cflags=['/fsanitize=address']
-tools.build:cxxflags=['/fsanitize=address']
-{% else %}
 tools.build:cflags=['-fsanitize=address']
 tools.build:cxxflags=['-fsanitize=address']
-{% endif %}
+tools.build:exelinkflags=['-fsanitize=address']
