@@ -8,3 +8,4 @@ compiler.sanitizer=AddressUndefinedBehavior
 tools.build:cflags=['-fsanitize=address,undefined']
 tools.build:cxxflags=['-fsanitize=address,undefined']
 tools.build:exelinkflags=['-fsanitize=address,undefined']
+tools.build:sharedlinkflags+=["-fsanitize=address"]
