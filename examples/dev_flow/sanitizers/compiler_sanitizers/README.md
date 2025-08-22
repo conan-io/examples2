@@ -16,8 +16,6 @@ cp settings_user.yml $(conan config home)
 ```
 
 This setting allows you to customize the behavior of the sanitizers, enabling or disabling specific checks as needed.
-Be aware once it's installed in your Conan home, it will affect all your projects using Conan, asking for the setting `compiler.sanitizer` always.
-In order to disable it, just remove the `settings_user.yml` file from your Conan home.
 
 ### Signed Integer Overflow
 
