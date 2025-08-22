@@ -3,8 +3,6 @@ project(signed_integer_overflow LANGUAGES CXX)
 
 add_executable(signed_integer_overflow main.cpp)
 target_compile_features(signed_integer_overflow PUBLIC cxx_std_11)
-target_compile_options(signed_integer_overflow PRIVATE -fsanitize=address)
-target_link_options(signed_integer_overflow PRIVATE -fsanitize=address)
 
 include(GNUInstallDirs)
 install(TARGETS signed_integer_overflow

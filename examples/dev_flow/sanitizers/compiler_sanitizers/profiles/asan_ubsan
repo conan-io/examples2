@@ -1,6 +1,7 @@
 include(default)
 
 [settings]
+build_type=Debug
 compiler.sanitizer=AddressUndefinedBehavior
 
 [conf]
