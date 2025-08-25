@@ -6,7 +6,25 @@ from conan.cli.command import OnceArgument, conan_command
 recipe_color = Color.BRIGHT_BLUE
 removed_color = Color.BRIGHT_YELLOW
 
-# TRIGGER CI
+def _search_recipes(app, query: str, remote=None):
+    """"
+    Searches recipes in local cache or in a remote.
+    Extracted from conan/api/subapi/list.py
+    """
+    only_none_user_channel = False
+    if query and query.endswith("@"):
+        only_none_user_channel = True
+        query = query[:-1]
+
+    if remote:
+        refs = app.remote_manager.search_recipes(remote, query)
+    else:
+        refs = app.cache.search_recipes(query)
+    ret = []
+    for r in refs:
+        if not only_none_user_channel or (r.user is None and r.channel is None):
+            ret.append(r)
+    return sorted(ret)
 
 @conan_command(group="Custom commands")
 def clean(conan_api: ConanAPI, parser, *args):
@@ -29,7 +47,7 @@ def clean(conan_api: ConanAPI, parser, *args):
     output_remote = remote or "Local cache"
 
     # Getting all the recipes
-    recipes = conan_api.search.recipes("*/*", remote=remote)
+    recipes = _search_recipes(conan_api.app, "*/*", remote=remote)
     if recipes and not confirmation("Do you want to remove all the recipes revisions and their packages ones, "
                                     "except the latest package revision from the latest recipe one?"):
         return
