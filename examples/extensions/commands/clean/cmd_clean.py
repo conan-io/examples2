@@ -6,6 +6,7 @@ from conan.cli.command import OnceArgument, conan_command
 recipe_color = Color.BRIGHT_BLUE
 removed_color = Color.BRIGHT_YELLOW
 
+# TRIGGER CI
 
 @conan_command(group="Custom commands")
 def clean(conan_api: ConanAPI, parser, *args):
