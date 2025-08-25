@@ -29,20 +29,20 @@ def clean(conan_api: ConanAPI, parser, *args):
     output_remote = remote or "Local cache"
 
     # Get all recipes and packages, where recipe revision is not the latest
-    pkg_list = conan_api.list.select(ListPattern("*/*#!latest:*#*", rrev=None, prev=None), remote=remote)
+    pkg_list = conan_api.list.select(ListPattern("*/*#!latest", rrev=None, prev=None), remote=remote)
     if pkg_list and not confirmation("Do you want to remove all the recipes revisions and their packages ones, "
                                     "except the latest package revision from the latest recipe one?"):
         out.writeln("Aborted")
         return
 
     # Remove all packages for old recipe revisions
-    for recipe_ref, recipe_bundle in pkg_list.refs().items():
+    for recipe_ref in pkg_list.refs().keys():
         conan_api.remove.recipe(recipe_ref, remote=remote)
         out.writeln(f"Removed recipe revision: {recipe_ref.repr_notime()} "
                     f"and all its package revisions [{output_remote}]", fg=removed_color)
 
     # Get all package revisions from the latest recipe revision, except the latest package revision
-    pkg_list = conan_api.list.select(ListPattern("*/*#latest:*#!latest", rrev=None, prev=None), remote=remote)
+    pkg_list = conan_api.list.select(ListPattern("*/*:*#!latest", rrev=None, prev=None), remote=remote)
     for recipe_ref, recipe_bundle in pkg_list.refs().items():
         pkg_list = PackagesList.prefs(recipe_ref, recipe_bundle)
         for pkg_ref in pkg_list.keys():
