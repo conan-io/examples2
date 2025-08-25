@@ -1,4 +1,5 @@
 from conan.api.conan_api import ConanAPI
+from conan.internal.conan_app import ConanBasicApp
 from conan.api.input import UserInput
 from conan.api.output import ConanOutput, Color
 from conan.cli.command import OnceArgument, conan_command
@@ -47,7 +48,8 @@ def clean(conan_api: ConanAPI, parser, *args):
     output_remote = remote or "Local cache"
 
     # Getting all the recipes
-    recipes = _search_recipes(conan_api.app, "*/*", remote=remote)
+    conan_app - ConanBasicApp(conan_api)
+    recipes = _search_recipes(conan_app, "*/*", remote=remote)
     if recipes and not confirmation("Do you want to remove all the recipes revisions and their packages ones, "
                                     "except the latest package revision from the latest recipe one?"):
         return
