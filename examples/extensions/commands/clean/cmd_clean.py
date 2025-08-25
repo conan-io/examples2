@@ -48,7 +48,7 @@ def clean(conan_api: ConanAPI, parser, *args):
     output_remote = remote or "Local cache"
 
     # Getting all the recipes
-    conan_app - ConanBasicApp(conan_api)
+    conan_app = ConanBasicApp(conan_api)
     recipes = _search_recipes(conan_app, "*/*", remote=remote)
     if recipes and not confirmation("Do you want to remove all the recipes revisions and their packages ones, "
                                     "except the latest package revision from the latest recipe one?"):
