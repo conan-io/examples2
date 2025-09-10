@@ -6,7 +6,7 @@ with chdir("tool"):
     run('conan create .')
 
 with chdir("consumer"):
-    cmd_out = run('conan create .')
+    cmd_out = run('conan create . --build-require')
     assert re.search("Security Scanner: The path '.*' is secure!", cmd_out)
     assert "MY_VAR=23" in cmd_out
 
