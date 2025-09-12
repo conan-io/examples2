@@ -18,8 +18,8 @@ class SumConan(ConanFile):
     def validate(self):
         check_min_cppstd(self, 11)
 
-    def requirements(self):
-        self.test_requires("gtest/1.11.0")
+    def build_requirements(self):
+        self.test_requires("gtest/1.17.0")
 
     def layout(self):
         cmake_layout(self)
