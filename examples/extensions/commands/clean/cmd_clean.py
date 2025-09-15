@@ -1,3 +1,5 @@
+from conan.api.model.list import ListPattern
+from conan.api.model.refs import RecipeReference
 from conan.api.conan_api import ConanAPI
 from conan.api.input import UserInput
 from conan.api.output import ConanOutput, Color
@@ -28,13 +30,17 @@ def clean(conan_api: ConanAPI, parser, *args):
     output_remote = remote or "Local cache"
 
     # Getting all the recipes
-    recipes = conan_api.search.recipes("*/*", remote=remote)
+    recipes = conan_api.list.select(ListPattern("*/*"), remote=remote)
     if recipes and not confirmation("Do you want to remove all the recipes revisions and their packages ones, "
                                     "except the latest package revision from the latest recipe one?"):
         return
-    for recipe in recipes:
-        out.writeln(f"{str(recipe)}", fg=recipe_color)
-        all_rrevs = conan_api.list.recipe_revisions(recipe, remote=remote)
+    for k,v in recipes.recipes.items():
+        # sort by timestamp
+        all_rrevs = sorted([(id,ts["timestamp"]) for (id,ts) in v["revisions"].items()],
+                           key=lambda x: x[1],
+                           reverse=True,)
+        all_rrevs = [x for x in map(lambda x: RecipeReference.loads(f"{k}#{x[0]}"), all_rrevs)]
+        out.writeln(f"{all_rrevs}", fg=recipe_color)
         latest_rrev = all_rrevs[0] if all_rrevs else None
         for rrev in all_rrevs:
             if rrev != latest_rrev:
@@ -42,7 +48,7 @@ def clean(conan_api: ConanAPI, parser, *args):
                 out.writeln(f"Removed recipe revision: {rrev.repr_notime()} "
                             f"and all its package revisions [{output_remote}]", fg=removed_color)
             else:
-                packages = conan_api.list.packages_configurations(rrev, remote=remote)
+                packages = conan_api.list._packages_configurations(rrev, remote=remote)
                 for package_ref in packages:
                     all_prevs = conan_api.list.package_revisions(package_ref, remote=remote)
                     latest_prev = all_prevs[0] if all_prevs else None
@@ -50,3 +56,4 @@ def clean(conan_api: ConanAPI, parser, *args):
                        if prev != latest_prev:
                            conan_api.remove.package(prev, remote=remote)
                            out.writeln(f"Removed package revision: {prev.repr_notime()} [{output_remote}]", fg=removed_color)
+
