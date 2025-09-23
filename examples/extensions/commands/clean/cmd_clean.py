@@ -36,18 +36,18 @@ def clean(conan_api: ConanAPI, parser, *args):
         return
 
     # Split the package list into recipe bundles based on their recipe reference
-    for ref_bundle in pkg_list.split():
-        latest = max(ref_bundle.items(), key=lambda item: item[0])[0]
+    for sub_pkg_list in pkg_list.split():
+        latest = max(sub_pkg_list.items(), key=lambda item: item[0])[0]
         out.writeln(f"Keeping recipe revision: {latest.repr_notime()} "
                     f"and its latest package revisions [{output_remote}]", fg=recipe_color)
-        for pkg_ref, pkg_bundle in ref_bundle.items():
+        for pref, packages in sub_pkg_list.items():
             # For the latest recipe revision, keep the latest package revision only
-            if latest == pkg_ref:
-                if pkg_bundle:
+            if latest == pref:
+                if packages:
                     # Use PkgReference.timestamp to get the latest package revision. No __lt__ defined
-                    latest_pref = max(pkg_bundle.keys(), key=lambda p: p.timestamp)
+                    latest_pref = max(packages.keys(), key=lambda p: p.timestamp)
                     out.writeln(f"Keeping package revision: {latest_pref.repr_notime()} [{output_remote}]", fg=recipe_color)
-                    for pref in pkg_bundle.keys():
+                    for pref in packages:
                         if latest_pref != pref:
                             conan_api.remove.package(pref, remote=remote)
                             out.writeln(f"Removed package revision: {pref.repr_notime()} [{output_remote}]", fg=removed_color)
