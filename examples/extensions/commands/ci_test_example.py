@@ -57,10 +57,10 @@ with tmp_dir("clean_other"):
     run("conan create .")  # different RREV (this is the latest one)
 
 if conan_version >= "2.21.0-dev":
-    run("conan list '*/*#*:*#*' --format=json --out-file=list.json")
-    all_packages = json.load(open("list.json"))
-    run("conan list '*/*#latest:*#latest' --format=json --out-file=list.json")
-    latest_packages = json.load(open("list.json"))
+    output = run("conan list '*/*#*:*#*' --format=json ")
+    all_packages = json.loads("\n".join(output.splitlines()[1:]))
+    output = run("conan list '*/*#latest:*#latest' --format=json")
+    latest_packages = json.loads("\n".join(output.splitlines()[1:]))
     assert all_packages != latest_packages, "Make sure we have some old revisions to clean"
     # 3. Run "conan clean" command: Cleaning all the non-latest RREVs (and its packages) and PREVs
     output = run("conan clean --force")
@@ -71,8 +71,8 @@ if conan_version >= "2.21.0-dev":
     assert "Removed recipe revision: clean_other/1.0#" not in output
     assert "Removed package revision: clean_hello/1.0#" not in output
     # Make sure latest revisions are still there
-    run("conan list '*/*#*:*#*' --format=json --out-file=list.json")
-    listed_after = json.load(open("list.json"))
+    output = run("conan list '*/*#*:*#*' --format=json")
+    listed_after = json.loads("\n".join(output.splitlines()[1:]))
     assert json.dumps(latest_packages, sort_keys=True) == json.dumps(listed_after, sort_keys=True)
 else:
     warnings.warn("Skipping 'conan clean' test because it requires Conan 2.21 due new API list.")
