@@ -53,6 +53,6 @@ def clean(conan_api: ConanAPI, parser, *args):
                             out.writeln(f"Removed package revision: {pref.repr_notime()} [{output_remote}]", fg=removed_color)
             else:
                 # Otherwise, remove all outdated recipe revisions and their packages
-                conan_api.remove.recipe(pkg_ref, remote=remote)
-                out.writeln(f"Removed recipe revision: {pkg_ref.repr_notime()} "
+                conan_api.remove.recipe(pref, remote=remote)
+                out.writeln(f"Removed recipe revision: {pref.repr_notime()} "
                             f"and all its package revisions [{output_remote}]", fg=removed_color)
