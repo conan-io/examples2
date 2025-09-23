@@ -35,24 +35,23 @@ def clean(conan_api: ConanAPI, parser, *args):
         out.writeln("Aborted")
         return
 
-    # Split the package list into recipe bundles based on their recipe reference
+    # Split the package list into based on their recipe reference
     for sub_pkg_list in pkg_list.split():
         latest = max(sub_pkg_list.items(), key=lambda item: item[0])[0]
         out.writeln(f"Keeping recipe revision: {latest.repr_notime()} "
                     f"and its latest package revisions [{output_remote}]", fg=recipe_color)
-        for pref, packages in sub_pkg_list.items():
+        for rref, packages in sub_pkg_list.items():
             # For the latest recipe revision, keep the latest package revision only
-            if latest == pref:
-                if packages:
-                    # Use PkgReference.timestamp to get the latest package revision. No __lt__ defined
-                    latest_pref = max(packages.keys(), key=lambda p: p.timestamp)
-                    out.writeln(f"Keeping package revision: {latest_pref.repr_notime()} [{output_remote}]", fg=recipe_color)
-                    for pref in packages:
-                        if latest_pref != pref:
-                            conan_api.remove.package(pref, remote=remote)
-                            out.writeln(f"Removed package revision: {pref.repr_notime()} [{output_remote}]", fg=removed_color)
+            if latest == rref:
+                # Get the latest package timestamp for each package_id
+                latest_pref_list = [max([p for p in packages if p.package_id == pkg_id], key=lambda p: p.timestamp)
+                                    for pkg_id in {p.package_id for p in packages}]
+                for pref in packages:
+                    if pref not in latest_pref_list:
+                        conan_api.remove.package(pref, remote=remote)
+                        out.writeln(f"Removed package revision: {pref.repr_notime()} [{output_remote}]", fg=removed_color)
             else:
                 # Otherwise, remove all outdated recipe revisions and their packages
-                conan_api.remove.recipe(pref, remote=remote)
-                out.writeln(f"Removed recipe revision: {pref.repr_notime()} "
+                conan_api.remove.recipe(rref, remote=remote)
+                out.writeln(f"Removed recipe revision: {rref.repr_notime()} "
                             f"and all its package revisions [{output_remote}]", fg=removed_color)

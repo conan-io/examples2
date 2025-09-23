@@ -73,6 +73,6 @@ if conan_version >= "2.21.0-dev":
     # Make sure latest revisions are still there
     output = run("conan list '*/*#*:*#*' --format=json")
     listed_after = json.loads("\n".join(output.splitlines()[1:]))
-    assert json.dumps(latest_packages, sort_keys=True) == json.dumps(listed_after, sort_keys=True)
+    assert latest_packages == listed_after
 else:
     warnings.warn("Skipping 'conan clean' test because it requires Conan 2.21 due new API list.")
