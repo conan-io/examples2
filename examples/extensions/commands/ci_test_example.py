@@ -59,10 +59,8 @@ with tmp_dir("clean_other"):
 if conan_version >= "2.21.0-dev":
     run("conan list '*/*#*:*#*' --format=json --out-file=list.json")
     all_packages = json.load(open("list.json"))
-    print(f"BEFORE - ALL PACKAGES: {all_packages}")
     run("conan list '*/*#latest:*#latest' --format=json --out-file=list.json")
     latest_packages = json.load(open("list.json"))
-    print(f"BEFORE - LATEST PACKAGES: {latest_packages}")
     assert all_packages != latest_packages, "Make sure we have some old revisions to clean"
     # 3. Run "conan clean" command: Cleaning all the non-latest RREVs (and its packages) and PREVs
     output = run("conan clean --force")
@@ -75,7 +73,6 @@ if conan_version >= "2.21.0-dev":
     # Make sure latest revisions are still there
     run("conan list '*/*#*:*#*' --format=json --out-file=list.json")
     listed_after = json.load(open("list.json"))
-    print(f"AFTER - LISTED PACKAGES: {listed_after}")
-    assert latest_packages == listed_after
+    assert json.dumps(latest_packages, sort_keys=True) == json.dumps(listed_after, sort_keys=True)
 else:
     warnings.warn("Skipping 'conan clean' test because it requires Conan 2.21 due new API list.")
