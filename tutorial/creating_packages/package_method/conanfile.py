@@ -52,7 +52,9 @@ class helloRecipe(ConanFile):
     def requirements(self):
         if self.options.with_fmt:
             self.requires("fmt/8.1.1")
-        self.test_requires("gtest/1.11.0")
+
+    def build_requirements(self):
+        self.test_requires("gtest/1.17.0")
 
     def layout(self):
         cmake_layout(self)
