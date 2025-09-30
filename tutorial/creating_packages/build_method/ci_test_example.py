@@ -7,6 +7,6 @@ out = run(f"conan create . -s compiler.cppstd=17 --build=missing --build=hello*"
 
 assert "Running 1 test from 1 test suite." in out
 
-out = run(f"conan create . --build=missing --build=hello* -c tools.build:skip_test=True")
+out = run(f"conan create . -s compiler.cppstd=17 --build=missing --build=hello* -c tools.build:skip_test=True")
 
 assert "Running 1 test from 1 test suite." not in out
