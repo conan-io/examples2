@@ -1,66 +1,79 @@
-# FIXME: uncomment and fix once the Conan API is refactored in Conan 2.21
+import os
+import warnings
+import json
 
-# import os
+from test.examples_tools import run, tmp_dir
+from conan import conan_version
 
-# from test.examples_tools import run, tmp_dir
+non_deterministic_conanfile = """\
+from datetime import datetime
 
-
-# non_deterministic_conanfile = """\
-# from datetime import datetime
-
-# from conan import ConanFile
-# from conan.tools.files import copy
-
-
-# class HelloConan(ConanFile):
-#     name = "{name}"
-#     version = "1.0"
-#     {comment}
-
-#     def build(self):
-#         with open("random.txt", "w") as f:
-#             f.write(str(datetime.now()))
-
-#     def package(self):
-#         # Packaging a random content, the package revision will be different every time
-#         copy(self, "random.txt", self.source_folder, self.package_folder)
-# """
+from conan import ConanFile
+from conan.tools.files import copy
 
 
-# def install_clean_command():
-#     clean_command = os.path.join(os.path.dirname(os.path.realpath(__file__)), "clean")
-#     commands_folder = os.path.join("extensions", "commands")
-#     run(f"conan config install {clean_command} -tf {commands_folder}")
+class HelloConan(ConanFile):
+    name = "{name}"
+    version = "1.0"
+    {comment}
+
+    def build(self):
+        with open("random.txt", "w") as f:
+            f.write(str(datetime.now()))
+
+    def package(self):
+        # Packaging a random content, the package revision will be different every time
+        copy(self, "random.txt", self.source_folder, self.package_folder)
+"""
 
 
-# # At first, copy the commands into the ${CONAN_HOME}/extensions/commands folder
-# install_clean_command()
+def install_clean_command():
+    clean_command = os.path.join(os.path.dirname(os.path.realpath(__file__)), "clean")
+    commands_folder = os.path.join("extensions", "commands")
+    run(f"conan config install {clean_command} -tf {commands_folder}")
 
-# # 1. Check the custom command is appearing in conan help
-# output = run("conan -h")
-# assert "commands\nclean" in output.replace("\r\n", "\n")
-# # 2. Create several packages
-# with tmp_dir("clean_hello"):
-#     # Library (changing PREV each time)
-#     with open(os.path.join("conanfile.py"), "w") as f:
-#         f.write(non_deterministic_conanfile.format(name="clean_hello", comment=""))
-#     run("conan create .")
-#     run("conan create .")  # different PREV (this is the latest one)
 
-# with tmp_dir("clean_other"):
-#     with open(os.path.join("conanfile.py"), "w") as f:
-#         f.write(non_deterministic_conanfile.format(name="clean_other", comment=""))
-#     run("conan create .")
-#     # Changing RREV
-#     with open(os.path.join("conanfile.py"), "w") as f:
-#         f.write(non_deterministic_conanfile.format(name="clean_other", comment="# Changing RREV"))
-#     run("conan create .")  # different RREV (this is the latest one)
+# At first, copy the commands into the ${CONAN_HOME}/extensions/commands folder
+install_clean_command()
 
-# # 3. Run "conan clean" command: Cleaning all the non-latest RREVs (and its packages) and PREVs
-# output = run("conan clean --force")
-# assert "Removed package revision: clean_hello/1.0#" in output  # removing earlier PREV from clean_hello
-# assert "Removed recipe revision: clean_other/1.0#" in output  # removing earlier RREV from clean_other
-# # Now, it should have removed nothing
-# output = run("conan clean --force")
-# assert "Removed recipe revision: clean_other/1.0#" not in output
-# assert "Removed package revision: clean_hello/1.0#" not in output
+# 1. Check the custom command is appearing in conan help
+output = run("conan -h")
+assert "commands\nclean" in output.replace("\r\n", "\n")
+# 2. Create several packages
+with tmp_dir("clean_hello"):
+    # Library (changing PREV each time)
+    with open(os.path.join("conanfile.py"), "w") as f:
+        f.write(non_deterministic_conanfile.format(name="clean_hello", comment=""))
+    run("conan create .")
+    run("conan create .")  # different PREV (this is the latest one)
+
+with tmp_dir("clean_other"):
+    with open(os.path.join("conanfile.py"), "w") as f:
+        f.write(non_deterministic_conanfile.format(name="clean_other", comment=""))
+    run("conan create .")
+    # Changing RREV
+    with open(os.path.join("conanfile.py"), "w") as f:
+        f.write(non_deterministic_conanfile.format(name="clean_other", comment="# Changing RREV"))
+    run("conan create .")  # different RREV (this is the latest one)
+
+if conan_version >= "2.21.0-dev":
+    output = run("conan list '*/*#*:*#*' --format=json ")
+    all_packages = json.loads("\n".join(output.splitlines()[1:]))
+    output = run("conan list '*/*#latest:*#latest' --format=json")
+    latest_packages = json.loads("\n".join(output.splitlines()[1:]))
+    if all_packages == latest_packages:
+        warnings.warn("Skipping 'conan clean' test because there are no old revisions to clean.")
+    # 3. Run "conan clean" command: Cleaning all the non-latest RREVs (and its packages) and PREVs
+    output = run("conan clean --force")
+    assert "Removed package revision: clean_hello/1.0#" in output  # removing earlier PREV from clean_hello
+    assert "Removed recipe revision: clean_other/1.0#" in output  # removing earlier RREV from clean_other
+    # Now, it should have removed nothing
+    output = run("conan clean --force")
+    assert "Removed recipe revision: clean_other/1.0#" not in output
+    assert "Removed package revision: clean_hello/1.0#" not in output
+    # Make sure latest revisions are still there
+    output = run("conan list '*/*#*:*#*' --format=json")
+    listed_after = json.loads("\n".join(output.splitlines()[1:]))
+    assert latest_packages == listed_after
+else:
+    warnings.warn("Skipping 'conan clean' test because it requires Conan 2.21 due new API list.")
