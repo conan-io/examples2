@@ -12,7 +12,7 @@ jobs:
   test_conan_release:
     runs-on: ubuntu-latest
     container:
-      image: osrf/ros:humble-desktop
+      image: osrf/ros:kilted-desktop
 
     steps:
     - name: Checkout repository
@@ -33,7 +33,7 @@ jobs:
   test_conan_develop2:
     runs-on: ubuntu-latest
     container:
-      image: osrf/ros:humble-desktop
+      image: osrf/ros:kilted-desktop
 
     steps:
     - name: Checkout repository
