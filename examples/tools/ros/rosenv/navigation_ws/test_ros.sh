@@ -1,3 +1,6 @@
+pipx ensurepath
+source ~/.bashrc
+
 source /opt/ros/kilted/setup.bash
 rosdep init
 rosdep update
