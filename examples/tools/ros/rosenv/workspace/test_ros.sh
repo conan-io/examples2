@@ -1,4 +1,5 @@
-source /opt/ros/humble/setup.bash
+pipx ensurepath
+source /opt/ros/kilted/setup.bash
 conan profile detect --force
 conan install str_printer/conanfile.txt --build=missing --output-folder install/conan
 source install/conan/conanrosenv.sh
