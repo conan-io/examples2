@@ -43,7 +43,10 @@ jobs:
       run: |
         apt-get update && apt-get install -y python3 python3-pip python3-venv pipx
         pipx install git+https://github.com/conan-io/conan.git
+        pipx ensurepath
+        source ~/.bashrc
         chmod +x ./examples/tools/ros/rosenv/workspace/test_ros.sh
+        chmod +x ./examples/tools/ros/rosenv/navigation_ws/test_ros.sh
 
     - name: Run printer example
       shell: bash
