@@ -1,4 +1,5 @@
 pipx ensurepath
+source ~/.bashrc
 source /opt/ros/kilted/setup.bash
 conan profile detect --force
 conan install str_printer/conanfile.txt --build=missing --output-folder install/conan
