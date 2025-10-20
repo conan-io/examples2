@@ -20,7 +20,7 @@ jobs:
 
     - name: Configure environment and install Conan release
       run: |
-        apt-get update && apt-get install -y python3 python3-pip python3-venv pipx
+        apt-get update && apt-get install -y python3 python3-pip python3-venv pipx ros-kilted-nav2-msgs
         pipx install conan
         chmod +x ./examples/tools/ros/rosenv/workspace/test_ros.sh
         chmod +x ./examples/tools/ros/rosenv/navigation_ws/test_ros.sh
@@ -48,7 +48,7 @@ jobs:
 
     - name: Configure environment and install Conan from develop2 branch
       run: |
-        apt-get update && apt-get install -y python3 python3-pip python3-venv pipx
+        apt-get update && apt-get install -y python3 python3-pip python3-venv pipx ros-kilted-nav2-msgs
         pipx install git+https://github.com/conan-io/conan.git
         chmod +x ./examples/tools/ros/rosenv/workspace/test_ros.sh
         chmod +x ./examples/tools/ros/rosenv/navigation_ws/test_ros.sh
