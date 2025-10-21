@@ -1,4 +1,7 @@
-source /opt/ros/humble/setup.bash
+pipx ensurepath
+source ~/.bashrc
+
+source /opt/ros/kilted/setup.bash
 rosdep init
 rosdep update
 rosdep install --from-paths navigation_package/
