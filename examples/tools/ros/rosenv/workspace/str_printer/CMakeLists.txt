@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.15)
 project(str_printer)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -16,7 +16,7 @@ target_include_directories(str_printer PUBLIC
   $<INSTALL_INTERFACE:include>)
 
 target_compile_features(str_printer PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
-ament_target_dependencies(str_printer fmt)
+target_link_libraries(str_printer PUBLIC fmt::fmt)
 
 ament_export_targets(str_printerTargets HAS_LIBRARY_TARGET)
 ament_export_dependencies(fmt)

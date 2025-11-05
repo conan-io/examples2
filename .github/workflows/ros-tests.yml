@@ -12,7 +12,7 @@ jobs:
   test_conan_release:
     runs-on: ubuntu-latest
     container:
-      image: osrf/ros:humble-desktop
+      image: osrf/ros:kilted-desktop
 
     steps:
     - name: Checkout repository
@@ -20,20 +20,27 @@ jobs:
 
     - name: Configure environment and install Conan release
       run: |
-        apt-get update && apt-get install -y python3 python3-pip
-        python3 -m pip install conan
+        apt-get update && apt-get install -y python3 python3-pip python3-venv pipx ros-kilted-nav2-msgs
+        pipx install conan
         chmod +x ./examples/tools/ros/rosenv/workspace/test_ros.sh
+        chmod +x ./examples/tools/ros/rosenv/navigation_ws/test_ros.sh
 
-    - name: Run example with latest Conan release
+    - name: Run printer example
       shell: bash
       run: |
         cd examples/tools/ros/rosenv/workspace
         ./test_ros.sh
 
+    - name: Run navigator example
+      shell: bash
+      run: |
+        cd examples/tools/ros/rosenv/navigation_ws
+        ./test_ros.sh
+
   test_conan_develop2:
     runs-on: ubuntu-latest
     container:
-      image: osrf/ros:humble-desktop
+      image: osrf/ros:kilted-desktop
 
     steps:
     - name: Checkout repository
@@ -41,9 +48,10 @@ jobs:
 
     - name: Configure environment and install Conan from develop2 branch
       run: |
-        apt-get update && apt-get install -y python3 python3-pip
-        python3 -m pip install git+https://github.com/conan-io/conan.git
+        apt-get update && apt-get install -y python3 python3-pip python3-venv pipx ros-kilted-nav2-msgs
+        pipx install git+https://github.com/conan-io/conan.git
         chmod +x ./examples/tools/ros/rosenv/workspace/test_ros.sh
+        chmod +x ./examples/tools/ros/rosenv/navigation_ws/test_ros.sh
 
     - name: Run printer example
       shell: bash
