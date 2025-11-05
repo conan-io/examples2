@@ -1,7 +1,9 @@
 import os
+import warnings
+import json
 
 from test.examples_tools import run, tmp_dir
-
+from conan import conan_version
 
 non_deterministic_conanfile = """\
 from datetime import datetime
@@ -54,11 +56,24 @@ with tmp_dir("clean_other"):
         f.write(non_deterministic_conanfile.format(name="clean_other", comment="# Changing RREV"))
     run("conan create .")  # different RREV (this is the latest one)
 
-# 3. Run "conan clean" command: Cleaning all the non-latest RREVs (and its packages) and PREVs
-output = run("conan clean --force")
-assert "Removed package revision: clean_hello/1.0#" in output  # removing earlier PREV from clean_hello
-assert "Removed recipe revision: clean_other/1.0#" in output  # removing earlier RREV from clean_other
-# Now, it should have removed nothing
-output = run("conan clean --force")
-assert "Removed recipe revision: clean_other/1.0#" not in output
-assert "Removed package revision: clean_hello/1.0#" not in output
+if conan_version >= "2.21.0-dev":
+    output = run("conan list '*/*#*:*#*' --format=json ")
+    all_packages = json.loads("\n".join(output.splitlines()[1:]))
+    output = run("conan list '*/*#latest:*#latest' --format=json")
+    latest_packages = json.loads("\n".join(output.splitlines()[1:]))
+    if all_packages == latest_packages:
+        warnings.warn("Skipping 'conan clean' test because there are no old revisions to clean.")
+    # 3. Run "conan clean" command: Cleaning all the non-latest RREVs (and its packages) and PREVs
+    output = run("conan clean --force")
+    assert "Removed package revision: clean_hello/1.0#" in output  # removing earlier PREV from clean_hello
+    assert "Removed recipe revision: clean_other/1.0#" in output  # removing earlier RREV from clean_other
+    # Now, it should have removed nothing
+    output = run("conan clean --force")
+    assert "Removed recipe revision: clean_other/1.0#" not in output
+    assert "Removed package revision: clean_hello/1.0#" not in output
+    # Make sure latest revisions are still there
+    output = run("conan list '*/*#*:*#*' --format=json")
+    listed_after = json.loads("\n".join(output.splitlines()[1:]))
+    assert latest_packages == listed_after
+else:
+    warnings.warn("Skipping 'conan clean' test because it requires Conan 2.21 due new API list.")
