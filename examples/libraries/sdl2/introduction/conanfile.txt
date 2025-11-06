@@ -1,7 +1,10 @@
 [requires]
 sdl_image/[~2.6]
 sdl_ttf/[~2.0]
-sdl/[~2.28] 
+sdl/[~2.28]
+
+[options]
+libtiff/*:lzma=False
 
 [generators]
 CMakeToolchain
