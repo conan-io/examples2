@@ -88,9 +88,8 @@ jobs:
             example_dir=$(dirname "$example_normalized")
             example_file=$(basename "$example_normalized")
             
-            echo "========================================="
-            echo "Running example: $example_dir"
-            echo "========================================="
+            # Start group for this example
+            echo "::group::Running example: $example_dir"
             
             cd "${{ github.workspace }}/$example_dir" || exit 1
             
@@ -107,4 +106,7 @@ jobs:
             fi
             
             cd "${{ github.workspace }}" || exit 1
+            
+            # End group for this example
+            echo "::endgroup::"
           done <<< "$EXAMPLES"
