@@ -1,5 +1,6 @@
 import platform
 import os
+import shutil
 
 from conan import conan_version
 
@@ -55,6 +56,11 @@ with chdir("say"):
         run(f"cmake --build --preset {prefix_preset_name}release")
 
 with chdir("hello"):
+    # Clean hello build to ensure it uses the updated say library
+    hello_build_path = "build"
+    if os.path.exists(hello_build_path):
+        shutil.rmtree(hello_build_path)
+    
     if platform.system() == "Windows":        
         run(f"cmake --build --preset {prefix_preset_name}release")
         run(f"cmake --build --preset {prefix_preset_name}debug")
