@@ -25,7 +25,7 @@ try:
     print("\n- Conan installing all the files into the build folder -\n")
     run("conan install . --build=missing")
     print("\n- Running bazel build command to compile the demo bazel target -\n")
-    run("bazel --bazelrc=./conan/conan_bzl.rc build --config=conan-config //main:demo")
+    run("bazel --noenable_bzlmod --bazelrc=./conan/conan_bzl.rc build --config=conan-config //main:demo")
     print("\n- Running the application 'demo' created -\n")
     if platform.system() == "Windows":
         run("bazel-bin\\main\\demo.exe")
