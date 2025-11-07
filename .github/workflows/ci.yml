@@ -59,11 +59,13 @@ jobs:
             EXAMPLES=$(find . -name "ci_test_example.*" -type f \( -name "*.py" -o -name "*.sh" \) | sort)
           fi
           
-          # Filter out examples that require specific versions not available in CI
-          # Bazel examples require specific Bazel versions (6.3.2, 7.1.2) that are not installed in GitHub Actions runners
+          # Filter out examples that require specific versions or tools not available in CI
+          # FIXME: Bazel examples require specific Bazel versions (6.3.2, 7.1.2) that are not installed in GitHub Actions runners
           EXAMPLES=$(echo "$EXAMPLES" | grep -v "bazeltoolchain" || true)
+          # FIXME: Cross-building examples require cross-compilation toolchains (e.g., arm-linux-gnueabihf-gcc-9) that are not installed in GitHub Actions runners
+          EXAMPLES=$(echo "$EXAMPLES" | grep -v "cross_building" || true)
           
-          # Filter out tensorflow examples in PRs
+          # FIXME: Filter out tensorflow examples in PRs
           IS_PR="${{ github.event_name == 'pull_request' }}"
           if [[ "$IS_PR" == "true" ]]; then
             EXAMPLES=$(echo "$EXAMPLES" | grep -v tensorflow || true)
