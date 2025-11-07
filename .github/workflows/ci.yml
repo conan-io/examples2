@@ -30,6 +30,10 @@ jobs:
         with:
           cmake-version: "3.23"
       
+      - name: Install autotools (macOS)
+        if: runner.os == 'macOS'
+        run: brew install automake autoconf
+      
       - name: Install Conan
         shell: bash
         run: |
