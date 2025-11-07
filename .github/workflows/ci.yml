@@ -41,6 +41,7 @@ jobs:
           fi
           pip install meson
           conan --version
+          conan profile detect --force
       
       - name: Find and run examples
         shell: bash
