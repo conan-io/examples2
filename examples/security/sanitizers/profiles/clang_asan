@@ -1,0 +1,14 @@
+include(default)
+
+[settings]
+build_type=Debug
+compiler.sanitizer=Address
+
+[conf]
+tools.build:cflags=['-fsanitize=address']
+tools.build:cxxflags=['-fsanitize=address']
+tools.build:exelinkflags=['-fsanitize=address']
+tools.build:sharedlinkflags+=["-fsanitize=address"]
+
+[runenv]
+ASAN_OPTIONS="halt_on_error=1:detect_leaks=1"
