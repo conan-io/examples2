@@ -59,6 +59,10 @@ jobs:
             EXAMPLES=$(find . -name "ci_test_example.*" -type f \( -name "*.py" -o -name "*.sh" \) | sort)
           fi
           
+          # Filter out examples that require specific versions not available in CI
+          # Bazel examples require specific Bazel versions (6.3.2, 7.1.2) that are not installed in GitHub Actions runners
+          EXAMPLES=$(echo "$EXAMPLES" | grep -v "bazeltoolchain" || true)
+          
           # Filter out tensorflow examples in PRs
           IS_PR="${{ github.event_name == 'pull_request' }}"
           if [[ "$IS_PR" == "true" ]]; then
@@ -73,7 +77,7 @@ jobs:
           echo "Examples to run:"
           echo "$EXAMPLES"
           
-          # Run each example
+          # Run each example in separate groups for better log organization
           set -e
           while IFS= read -r example; do
             if [[ -z "$example" ]]; then
@@ -84,9 +88,8 @@ jobs:
             example_dir=$(dirname "$example_normalized")
             example_file=$(basename "$example_normalized")
             
-            echo "========================================="
-            echo "Running example: $example_dir"
-            echo "========================================="
+            # Use GitHub Actions log grouping for better organization
+            echo "::group::Run example: $example_dir"
             
             cd "${{ github.workspace }}/$example_dir" || exit 1
             
@@ -103,4 +106,5 @@ jobs:
             fi
             
             cd "${{ github.workspace }}" || exit 1
+            echo "::endgroup::"
           done <<< "$EXAMPLES"
