@@ -42,6 +42,7 @@ jobs:
       - name: Find and run examples
         shell: bash
         run: |
+          export PYTHONPATH="${{ github.workspace }}${PYTHONPATH:+:$PYTHONPATH}"
           
           # Find all ci_test_example files
           if [[ "${{ runner.os }}" == "Windows" ]]; then
