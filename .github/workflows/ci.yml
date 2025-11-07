@@ -78,7 +78,6 @@ jobs:
           echo "$EXAMPLES"
           
           # Run each example in separate groups for better log organization
-          set -e
           while IFS= read -r example; do
             if [[ -z "$example" ]]; then
               continue
@@ -89,22 +88,39 @@ jobs:
             example_file=$(basename "$example_normalized")
             
             # Use GitHub Actions log grouping for better organization
-            echo "::group::Run example: $example_dir"
+            # Each example runs in its own collapsible section
+            echo ""
+            echo "::notice::Running example: $example_dir"
+            echo "========================================="
             
+            set +e
             cd "${{ github.workspace }}/$example_dir" || exit 1
             
             if [[ "$example_file" == *.py ]]; then
-              python "$example_file"
+              python "$example_file" 2>&1
+              EXIT_CODE=$?
             elif [[ "$example_file" == *.sh ]]; then
-              bash "$example_file"
+              bash "$example_file" 2>&1
+              EXIT_CODE=$?
             elif [[ "$example_file" == *.bat ]]; then
               if [[ "${{ runner.os }}" == "Windows" ]]; then
-                cmd //c "$example_file"
+                cmd //c "$example_file" 2>&1
+                EXIT_CODE=$?
               else
                 echo "Skipping .bat file on non-Windows platform"
+                EXIT_CODE=0
               fi
+            else
+              EXIT_CODE=1
             fi
             
             cd "${{ github.workspace }}" || exit 1
-            echo "::endgroup::"
+            echo "========================================="
+            echo ""
+            set -e
+            
+            if [[ $EXIT_CODE -ne 0 ]]; then
+              echo "ERROR: Example $example_dir failed with exit code $EXIT_CODE"
+              exit $EXIT_CODE
+            fi
           done <<< "$EXAMPLES"
