@@ -56,6 +56,7 @@ else:
         cmd_out = run("./compressor")
         assert "Release configuration!" in cmd_out
 
+    run("rm -rf build")
     run("conan install . --output-folder=build --build=missing -s build_type=Debug")
     with chdir("build"):
         command = []
