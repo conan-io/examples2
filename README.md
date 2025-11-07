@@ -29,3 +29,5 @@ Sources for the [examples section](https://docs.conan.io/2/examples.html) of the
 ### [Libraries examples](examples/libraries)
 
 ### [Graph examples](examples/graph)
+
+### [Security examples](examples/security)
