@@ -23,6 +23,10 @@ assert cmd_out.count("bye: Release!") == 1
 # Do a modification to one component, to verify it is used correctly
 replace(os.path.join("greetings", "src", "bye.cpp"), "bye:", "adios:")
 run("conan build greetings")
+# Clean app build to ensure it uses the updated library
+app_build_path = os.path.join("app", "build")
+if os.path.exists(app_build_path):
+    shutil.rmtree(app_build_path)
 cmd_out = run("conan build app")
 assert cmd_out.count("hello: Release!") == 2
 assert cmd_out.count("adios: Release!") == 1

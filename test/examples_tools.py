@@ -1,6 +1,7 @@
 import os
 import subprocess
 import shutil
+import sys
 from contextlib import contextmanager
 import time
 
@@ -49,7 +50,10 @@ def run(cmd, error=False):
     output = ''
     
     for line in iter(process.stdout.readline, ''):
-        print(line, end='', flush=True)
+        # Write directly to stdout to preserve GitHub Actions workflow commands
+        # This ensures ::group:: and ::endgroup:: are detected by GitHub Actions
+        sys.stdout.write(line)
+        sys.stdout.flush()
         output += line
 
     ret = process.wait()
@@ -64,18 +68,3 @@ def run(cmd, error=False):
         raise Exception(f"Cmd succeeded (failure expected): {cmd}\n{output}")
 
     return output
-
-
-def replace(file_path, text, replace):
-    with open(file_path, "r") as f:
-        content = f.read()
-    content2 = content.replace(text, replace)
-    assert content != content2
-    with open(file_path, "w") as f:
-        f.write(content2)
-
-
-def load(file_path):
-    with open(file_path, "r") as f:
-        content = f.read()
-    return content
