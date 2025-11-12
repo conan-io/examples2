@@ -32,8 +32,6 @@ jobs:
 
       - name: Install Bazel
         uses: bazel-contrib/setup-bazel@0.15.0
-        env:
-          USE_BAZEL_VERSION : "7.1.2"
         with:
           bazelisk-version: "1.27.0"
 
@@ -56,6 +54,8 @@ jobs:
 
       - name: Find and run examples
         shell: bash
+        env:
+          USE_BAZEL_VERSION : "7.1.2"
         run: |
           export PYTHONPATH="${{ github.workspace }}${PYTHONPATH:+:$PYTHONPATH}"
 
