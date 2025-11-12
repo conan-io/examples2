@@ -32,8 +32,10 @@ jobs:
 
       - name: Install Bazel
         uses: bazel-contrib/setup-bazel@0.15.0
+        env:
+          USE_BAZEL_VERSION : "7.1.2"
         with:
-          bazelisk-version: "7.1.2"
+          bazelisk-version: "1.27.0"
 
       - name: Install autotools (macOS)
         if: runner.os == 'macOS'
