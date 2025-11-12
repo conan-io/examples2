@@ -1,5 +1,6 @@
 import platform
 import os
+import shutil
 
 from conan import conan_version
 
@@ -55,7 +56,16 @@ with chdir("say"):
         run(f"cmake --build --preset {prefix_preset_name}release")
 
 with chdir("hello"):
-    if platform.system() == "Windows":        
+    # Clean hello build to ensure it uses the updated say library
+    hello_build_path = "build"
+    if os.path.exists(hello_build_path):
+        shutil.rmtree(hello_build_path)
+    
+    # Reconfigure CMake after cleaning the build directory
+    if platform.system() == "Windows":
+        run("conan install . -s build_type=Release")
+        run("conan install . -s build_type=Debug")
+        run(f"cmake --preset {prefix_preset_name}default")
         run(f"cmake --build --preset {prefix_preset_name}release")
         run(f"cmake --build --preset {prefix_preset_name}debug")
         cmd_out = run("build\Release\hello.exe")
@@ -63,6 +73,8 @@ with chdir("hello"):
         cmd_out = run("build\Debug\hello.exe")
         assert "say/1.0: Bye World Debug!" in cmd_out
     else:
+        run("conan install . -s build_type=Release")
+        run(f"cmake --preset {prefix_preset_name}release")
         run(f"cmake --build --preset {prefix_preset_name}release")
         cmd_out = run("./build/Release/hello")
         assert "say/1.0: Bye World Release!" in cmd_out

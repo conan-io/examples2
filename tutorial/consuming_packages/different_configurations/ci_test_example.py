@@ -56,6 +56,7 @@ else:
         cmd_out = run("./compressor")
         assert "Release configuration!" in cmd_out
 
+    run("rm -rf build")
     run("conan install . --output-folder=build --build=missing -s build_type=Debug")
     with chdir("build"):
         command = []
@@ -68,6 +69,7 @@ else:
         assert "Debug configuration!" in cmd_out
 
     # Build for Release with shared libraries
+    run("rm -rf build")
     run("conan install . --output-folder=build --build=missing -s build_type=Release --options=zlib/1.3.1:shared=True")
     with chdir("build"):
         command = []
