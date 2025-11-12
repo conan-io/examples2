@@ -32,6 +32,7 @@ jobs:
           cmake-version: "3.23"
 
       - name: Install Bazel
+        if: matrix.folder == 'examples'
         uses: bazel-contrib/setup-bazel@0.15.0
         with:
           bazelisk-version: "1.27.0"
@@ -59,9 +60,9 @@ jobs:
         run: |
           export PYTHONPATH="${{ github.workspace }}${PYTHONPATH:+:$PYTHONPATH}"
 
-          cd ${{ github.workspace }}/examples/tools/google/bazeltoolchain/6_x/string_formatter/
+          cd "${{ github.workspace }}/examples/tools/google/bazeltoolchain/6_x/string_formatter/"
           USE_BAZEL_VERSION=6.3.2 python ci_test_example.py
-          cd ${{ github.workspace }}/examples/tools/google/bazeltoolchain/7_x/string_formatter/
+          cd "${{ github.workspace }}/examples/tools/google/bazeltoolchain/7_x/string_formatter/"
           USE_BAZEL_VERSION=7.1.2 python ci_test_example.py
 
       - name: Find and run examples
