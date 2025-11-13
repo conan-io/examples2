@@ -65,8 +65,6 @@ jobs:
           fi
 
           # Filter out examples that require specific versions or tools not available in CI
-          # FIXME: Bazel examples require specific Bazel versions (6.3.2, 7.1.2) that are not installed in GitHub Actions runners
-          EXAMPLES=$(echo "$EXAMPLES" | grep -v "bazeltoolchain" || true)
           # FIXME: Cross-building examples require cross-compilation toolchains (e.g., arm-linux-gnueabihf-gcc-9) that are not installed in GitHub Actions runners
           EXAMPLES=$(echo "$EXAMPLES" | grep -v "cross_building" || true)
 
