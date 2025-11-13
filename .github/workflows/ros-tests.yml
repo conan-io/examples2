@@ -4,9 +4,13 @@ on:
   push:
     branches:
       - main
+    paths:
+      - examples/tools/ros/**
   pull_request:
     branches:
       - main
+    paths:
+      - examples/tools/ros/**
 
 jobs:
   test_conan_release:
