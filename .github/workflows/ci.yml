@@ -62,15 +62,43 @@ jobs:
 
           IS_PR="${{ github.event_name == 'pull_request' }}"
           if [[ "$IS_PR" == "true" ]]; then
-            echo "Pull request detected - finding affected folders"
-            CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
-            echo "Changed files:"
-            echo "$CHANGED_FILES"
+            echo "Pull request detected - finding affected directories"
 
-            # Extract unique top-level directories from changed files
-            AFFECTED_FOLDERS=$(echo "$CHANGED_FILES" | cut -d'/' -f1 | sort -u)
-            echo "Affected folders:"
-            echo "$AFFECTED_FOLDERS"
+            # Get changed files between base and HEAD (exclude deletions)
+            CHANGED_FILES=$(git diff --name-only --diff-filter=ACMRT origin/${{ github.base_ref }}...HEAD)
+            echo "Changed files:"
+            printf '%s\n' "$CHANGED_FILES"
+
+            # Compute candidate directories from changed files and keep only those
+            # that actually contain at least one ci_test_example.* file under them.
+            AFFECTED_DIRS=""
+            while IFS= read -r f; do
+              [[ -z "$f" ]] && continue
+              # Build full directory chain for the file
+              dir=$(dirname "$f")
+              # Normalize to ./ prefix
+              dir="./$dir"
+              # Walk down from deepest to root and pick the first that contains a matching example
+              selected=""
+              while [[ "$dir" != "." && -z "$selected" ]]; do
+                if find "$dir" -type f -name "ci_test_example.*" \( -name "*.py" -o -name "*.sh" -o -name "*.bat" \) -print -quit | grep -q .; then
+                  selected="$dir"
+                  break
+                fi
+                # Move one level up
+                dir="${dir%/*}"
+                [[ -z "$dir" ]] && dir="."
+              done
+              # If none found in ancestors, skip
+              if [[ -n "$selected" ]]; then
+                AFFECTED_DIRS="${AFFECTED_DIRS}${selected}"$'\n'
+              fi
+            done <<< "$CHANGED_FILES"
+
+            # Deduplicate and show
+            AFFECTED_DIRS=$(printf '%s' "$AFFECTED_DIRS" | sed '/^$/d' | sort -u)
+            echo "Affected directories (deepest with examples):"
+            printf '%s\n' "$AFFECTED_DIRS"
           fi
 
           # Find all ci_test_example files
@@ -80,19 +108,20 @@ jobs:
             EXAMPLES=$(find . -name "ci_test_example.*" -type f \( -name "*.py" -o -name "*.sh" \) | sort)
           fi
 
-          # Filter examples to only affected folders in PRs
-          if [[ "$IS_PR" == "true" && -n "$AFFECTED_FOLDERS" ]]; then
+          if [[ "$IS_PR" == "true" && -n "$AFFECTED_DIRS" ]]; then
             FILTERED_EXAMPLES=""
-            while IFS= read -r folder; do
-              if [[ -n "$folder" ]]; then
-                FOLDER_EXAMPLES=$(echo "$EXAMPLES" | grep "^\\./$folder/" || true)
-                if [[ -n "$FOLDER_EXAMPLES" ]]; then
-                  FILTERED_EXAMPLES="${FILTERED_EXAMPLES}${FOLDER_EXAMPLES}"$'\n'
-                fi
+            while IFS= read -r dir; do
+              [[ -z "$dir" ]] && continue
+              # Escape for grep
+              dir_escaped=$(printf '%s\n' "$dir/" | sed 's/[.[\*^$(){}+?|/]/\\&/g')
+              MATCHES=$(printf '%s\n' "$EXAMPLES" | grep "^${dir_escaped}" || true)
+              if [[ -n "$MATCHES" ]]; then
+                FILTERED_EXAMPLES="${FILTERED_EXAMPLES}${MATCHES}"$'\n'
               fi
-            done <<< "$AFFECTED_FOLDERS"
-            EXAMPLES=$(echo "$FILTERED_EXAMPLES" | sed '/^$/d')
-            echo "Filtered to affected folders only"
+            done <<< "$AFFECTED_DIRS"
+            EXAMPLES=$(printf '%s\n' "$FILTERED_EXAMPLES" | sed '/^$/d' | sort -u)
+            echo "Filtered to affected directories only:"
+            printf '%s\n' "$EXAMPLES"
           fi
 
           # Filter out examples that require specific versions or tools not available in CI
