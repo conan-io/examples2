@@ -20,6 +20,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -58,11 +60,39 @@ jobs:
         run: |
           export PYTHONPATH="${{ github.workspace }}${PYTHONPATH:+:$PYTHONPATH}"
 
+          IS_PR="${{ github.event_name == 'pull_request' }}"
+          if [[ "$IS_PR" == "true" ]]; then
+            echo "Pull request detected - finding affected folders"
+            CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+            echo "Changed files:"
+            echo "$CHANGED_FILES"
+
+            # Extract unique top-level directories from changed files
+            AFFECTED_FOLDERS=$(echo "$CHANGED_FILES" | cut -d'/' -f1 | sort -u)
+            echo "Affected folders:"
+            echo "$AFFECTED_FOLDERS"
+          fi
+
           # Find all ci_test_example files
           if [[ "${{ runner.os }}" == "Windows" ]]; then
             EXAMPLES=$(find . -name "ci_test_example.*" -type f \( -name "*.py" -o -name "*.bat" \) | sort)
           else
             EXAMPLES=$(find . -name "ci_test_example.*" -type f \( -name "*.py" -o -name "*.sh" \) | sort)
+          fi
+
+          # Filter examples to only affected folders in PRs
+          if [[ "$IS_PR" == "true" && -n "$AFFECTED_FOLDERS" ]]; then
+            FILTERED_EXAMPLES=""
+            while IFS= read -r folder; do
+              if [[ -n "$folder" ]]; then
+                FOLDER_EXAMPLES=$(echo "$EXAMPLES" | grep "^\\./$folder/" || true)
+                if [[ -n "$FOLDER_EXAMPLES" ]]; then
+                  FILTERED_EXAMPLES="${FILTERED_EXAMPLES}${FOLDER_EXAMPLES}"$'\n'
+                fi
+              fi
+            done <<< "$AFFECTED_FOLDERS"
+            EXAMPLES=$(echo "$FILTERED_EXAMPLES" | sed '/^$/d')
+            echo "Filtered to affected folders only"
           fi
 
           # Filter out examples that require specific versions or tools not available in CI
