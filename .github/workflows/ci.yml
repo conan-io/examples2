@@ -52,16 +52,6 @@ jobs:
           conan --version
           conan profile detect --force
 
-      - name: Run Bazel examples
-        shell: bash
-        run: |
-          export PYTHONPATH="${{ github.workspace }}${PYTHONPATH:+:$PYTHONPATH}"
-
-          cd "${{ github.workspace }}/examples/tools/google/bazeltoolchain/6_x/string_formatter/"
-          USE_BAZEL_VERSION=6.3.2 python ci_test_example.py
-          cd "${{ github.workspace }}/examples/tools/google/bazeltoolchain/7_x/string_formatter/"
-          USE_BAZEL_VERSION=7.1.2 python ci_test_example.py
-
       - name: Find and run examples
         shell: bash
         run: |
