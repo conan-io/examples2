@@ -48,6 +48,10 @@ def compatibility(conanfile):
     if compiler == "apple-clang" and compiler_version == "17":
         factors.append([{"compiler.version": "13"}])
 
+    # Linux GCC 13->11 fallback compatibility
+    if compiler == "gcc" and compiler_version == "13":
+        factors.append([{"compiler.version": "11"}])
+
     # Combine factors to compute all possible configurations
     combinations = _factors_combinations(factors)
     # Final compatibility settings combinations to check
