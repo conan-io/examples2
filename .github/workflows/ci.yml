@@ -51,6 +51,9 @@ jobs:
           pip install meson
           conan --version
           conan profile detect --force
+          conan_home=$(conan config home)
+          mkdir -p "${conan_home}/extensions/plugins/compatibility"
+          cp "${GITHUB_WORKSPACE}/.github/conan/compatibility.py" "${conan_home}/extensions/plugins/compatibility/compatibility.py"
 
       - name: Find and run examples
         shell: bash
