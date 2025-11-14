@@ -3,6 +3,9 @@ from test.examples_tools import run
 
 print("SDL2 getting started with Game Development and Conan")
 
+run("git clone --depth 1 https://github.com/conan-io/conan-center-index.git")
+run("conan create conan-center-index/recipes/xz_utils/all --version=5.8.1")
+
 run("conan install . -c tools.system.package_manager:mode=install "
     "-c tools.system.package_manager:sudo=True --build=missing")
 
