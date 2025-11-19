@@ -23,6 +23,8 @@ build_type=Debug
 tools.android:ndk_path={}
 """
 
+# Trigger CI
+
 ndk_path = os.environ.get("ANDROID_NDK") or os.environ.get("ANDROID_NDK_HOME")
 
 if ndk_path:
