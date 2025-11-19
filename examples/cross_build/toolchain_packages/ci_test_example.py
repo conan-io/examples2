@@ -2,7 +2,6 @@ import platform
 
 from test.examples_tools import chdir, run
 
-# Trigger CI
 
 if platform.system() == "Linux":
 

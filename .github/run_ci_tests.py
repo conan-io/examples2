@@ -129,11 +129,6 @@ def filter_exclusions(examples, is_pr) -> list:
     filtered = []
 
     for example in examples:
-        # FIXME: Cross-building examples require cross-compilation toolchains
-        # (e.g., arm-linux-gnueabihf-gcc-9) that are not installed in GitHub Actions runners
-        #if "cross_building" in example:
-        #    continue
-
         # FIXME: Filter out tensorflow examples in PRs
         if is_pr and "tensorflow" in example:
             continue
