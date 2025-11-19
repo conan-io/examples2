@@ -118,12 +118,11 @@ def filter_examples_by_dirs(examples, affected_dirs) -> list:
 
     return sorted(set(filtered))
 
-def filter_exclusions(examples, is_pr) -> list:
+def filter_exclusions(examples) -> list:
     """
     FIXME: Filter out broken examples after GitHub Actions migration
 
     :param examples: list of example file paths
-    :param is_pr: bool - whether this is a pull request
     :returns: filtered list of example file paths
     """
     filtered = []
@@ -135,7 +134,7 @@ def filter_exclusions(examples, is_pr) -> list:
             continue
 
         # FIXME: Filter out tensorflow examples in PRs
-        if is_pr and "tensorflow" in example:
+        if "tensorflow" in example:
             continue
 
         filtered.append(example)
@@ -205,7 +204,7 @@ def main():
             print(example)
 
     # FIXME: Filter out some non-working examples in GitHub Actions
-    examples = filter_exclusions(examples, is_pr)
+    examples = filter_exclusions(examples)
 
     print("\nExamples to run:")
     for example in examples:
