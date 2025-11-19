@@ -11,12 +11,12 @@ profile = """
 
 [settings]
 os=Android
-os.api_level=21
+os.api_level=27
 arch=armv8
 compiler=clang
-compiler.version=12
+compiler.version=18
 compiler.libcxx=c++_static
-compiler.cppstd=14
+compiler.cppstd=17
 build_type=Debug    
 
 [conf]
