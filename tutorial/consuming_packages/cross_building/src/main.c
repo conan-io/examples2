@@ -27,6 +27,8 @@ int main(void) {
     printf("Compressed size is: %zu\n", strlen(buffer_out));
 
     printf("ZLIB VERSION: %s\n", zlibVersion());
-    
+
     return EXIT_SUCCESS;
 }
+
+// TRigger CI
