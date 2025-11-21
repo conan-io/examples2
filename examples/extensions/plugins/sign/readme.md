@@ -7,7 +7,7 @@ To run the package signing example, make sure you are using Conan with the chang
 
 Steps to test the example:
 
-- Copy the ``sign.py`` file to your Conan home at ```CONAN_HOME/extensions/plugins/sign/sing.py```.
+- Copy the ``sign.py`` file to your Conan home at ```CONAN_HOME/extensions/plugins/sign/sign.py```.
 - Generate your signing keys (see comment at the top of sign.py) and place them next to the ``sign.py`` file.
 - Generate a new project to test the sign and verify commands: ``conan new cmake_lib -d name=hello -d version=1.0``.
 - Create the package: ``conan create``.
