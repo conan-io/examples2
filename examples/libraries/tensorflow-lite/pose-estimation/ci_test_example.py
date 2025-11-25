@@ -4,7 +4,7 @@ from test.examples_tools import run
 print("Pose estimation example with Tensorflow Lite and OpenCV")
 
 install_cmd = "conan install . -c tools.system.package_manager:mode=install " \
-              "-c tools.system.package_manager:sudo=True -s compiler.cppstd=17 --build=missing "
+              "-c tools.system.package_manager:sudo=true -s compiler.cppstd=17 --build=missing "
 
 if platform.system() == "Windows":
     install_cmd += "-c tools.cmake.cmaketoolchain:system_version=10.0" # to force CMake pick a newer SDK
