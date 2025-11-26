@@ -36,6 +36,13 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Find gradlew executable
+        id: find-gradlew
+        run: find / -type f -name gradlew
+
       - name: Install CMake
         uses: jwlawson/actions-setup-cmake@v1.14
         with:
