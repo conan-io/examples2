@@ -30,4 +30,5 @@ if ndk_path:
         fd.write(profile)
 
     run("gradle assembleDebug")
+    run("gradle --stop")
     assert os.path.exists(os.path.join("app", "build", "outputs", "apk", "debug", "app-debug.apk"))
