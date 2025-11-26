@@ -1,5 +1,5 @@
 [requires]
-raylib/5.0
+raylib/5.5
 
 [generators]
 CMakeToolchain
