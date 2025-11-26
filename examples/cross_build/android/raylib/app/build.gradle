@@ -44,6 +44,8 @@ android {
     externalNativeBuild {
         cmake {
             path file('src/main/cpp/CMakeLists.txt')
+            cppFlags '-v'
+            arguments("-DCMAKE_TOOLCHAIN_FILE=conan_android_toolchain.cmake")
             version '3.22.1'
         }
     }
