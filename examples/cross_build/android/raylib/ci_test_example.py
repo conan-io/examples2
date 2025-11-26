@@ -29,4 +29,4 @@ if ndk_path:
     with open("android", "w") as _f:
         _f.write(profile)
 
-    run("gradlew assembleDebug")
+    run("gradle assembleDebug")
