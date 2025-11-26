@@ -1,15 +1,15 @@
-#include <vector>
-
 #include <jni.h>
 #include <android/log.h>
 #include <android/native_activity.h>
-
 #include "raylib.h"
+#include <vector>
 
+#define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "RaylibApp", __VA_ARGS__))
 
 extern "C" {
 
 int main() {
+    LOGI("Starting Raylib");
     // --- Initialization ---
     const int screenW = 800;
     const int screenH = 450;
@@ -19,26 +19,28 @@ int main() {
     // --- Player Setup ---
     Rectangle player = { 100, screenH - 80, 40, 60 };
     float vy = 0;
-    const float gravity = 1000.0f;
-    const float jumpImpulse = -450.0f;
+    const float gravity      = 1000.0f;
+    const float jumpImpulse  = -450.0f;
 
     // --- Ground Definition ---
     const int groundY = screenH - 20;
 
     // --- Obstacle Management ---
     std::vector<Rectangle> obstacles;
-    float spawnTimer = 0.0f;
-    float spawnInterval = 1.2f;
-    const float obstacleSpeed = 300.0f;
+    float spawnTimer     = 0.0f;
+    float spawnInterval  = 1.2f;
+    const float obstacleSpeed    = 300.0f;
 
     const float minSpawnInterval = 0.8f;
     const float maxSpawnInterval = 1.6f;
-    const int minObsWidth = 40;
-    const int maxObsWidth = 120;
+
+    const int   minObsWidth      = 40;
+    const int   maxObsWidth      = 120;
 
     // --- Game State Variables ---
-    int score = 0;
+    int  score    = 0;
     bool gameOver = false;
+    float gameOverTimer = 0.0f;
 
     // --- Back button double press logic ---
     float backPressTime = 0.0f;
@@ -67,17 +69,14 @@ int main() {
             }
         }
 
+
         if (!gameOver) {
-            // Jump logic - using touch instead of keyboard
+            // Jump logic
             if (GetTouchPointCount() > 0 && player.y + player.height >= groundY) {
                 vy = jumpImpulse;
             }
-
-            // Apply gravity
             vy += gravity * dt;
             player.y += vy * dt;
-
-            // Ground collision
             if (player.y + player.height > groundY) {
                 player.y = groundY - player.height;
                 vy = 0;
@@ -87,11 +86,11 @@ int main() {
             spawnTimer += dt;
             if (spawnTimer >= spawnInterval) {
                 spawnTimer = 0.0f;
-                spawnInterval = GetRandomValue(int(minSpawnInterval*100),
-                                              int(maxSpawnInterval*100)) / 100.0f;
+                // recalc next interval
+                spawnInterval = GetRandomValue(int(minSpawnInterval*100), int(maxSpawnInterval*100)) / 100.0f;
+                // random width
                 int w = GetRandomValue(minObsWidth, maxObsWidth);
-                obstacles.push_back({ float(screenW), float(groundY - 40),
-                                     float(w), 40.0f });
+                obstacles.push_back({ float(screenW), float(groundY - 40), float(w), 40.0f });
             }
 
             // Move & collide obstacles
@@ -99,27 +98,27 @@ int main() {
                 obstacles[i].x -= obstacleSpeed * dt;
                 if (CheckCollisionRecs(player, obstacles[i])) {
                     gameOver = true;
+                    gameOverTimer = 0.0f; // Reset timer on game over
                 }
             }
-
-            // Remove off-screen obstacles & increment score
-            if (!obstacles.empty() &&
-                obstacles.front().x + obstacles.front().width < 0) {
+            // Remove off-screen & score
+            if (!obstacles.empty() && obstacles.front().x + obstacles.front().width < 0) {
                 obstacles.erase(obstacles.begin());
                 score++;
             }
         }
         else {
-            // Accepting restart
-            if (GetTouchPointCount() > 0) {
-                // Reset everything
+            gameOverTimer += dt;
+            // Want to wait 2 seconds before accepting the restart
+            if (GetTouchPointCount() > 0 && gameOverTimer > 1.0f) {
+                // reset everything
                 player.y = screenH - 80;
                 vy = 0;
                 obstacles.clear();
-                spawnTimer = 0.0f;
+                spawnTimer    = 0.0f;
                 spawnInterval = 1.2f;
-                score = 0;
-                gameOver = false;
+                score         = 0;
+                gameOver      = false;
             }
         }
 
