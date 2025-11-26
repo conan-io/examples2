@@ -39,16 +39,16 @@ android {
         ndk {
             abiFilters 'arm64-v8a'
         }
-    }
 
-    externalNativeBuild {
-        cmake {
-            path file('src/main/cpp/CMakeLists.txt')
-            cppFlags '-v'
-            arguments("-DCMAKE_TOOLCHAIN_FILE=conan_android_toolchain.cmake")
-            version '3.22.1'
+        externalNativeBuild {
+            cmake {
+                cppFlags '-v'
+                arguments("-DCMAKE_TOOLCHAIN_FILE=conan_android_toolchain.cmake", "-DANDROID_STL=c++_shared")
+            }
         }
     }
+
+
 
     buildTypes {
         release {
