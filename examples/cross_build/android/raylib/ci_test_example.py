@@ -25,6 +25,7 @@ tools.android:ndk_path={}
 ndk_path = os.environ.get("ANDROID_NDK") or os.environ.get("ANDROID_NDK_HOME")
 if ndk_path:
     profile = profile.format(ndk_path)
+    os.makedirs(os.path.join("app", "build"), exist_ok=True)
     with open(os.path.join("app", "build", "android"), "w") as fd:
         fd.write(profile)
 
