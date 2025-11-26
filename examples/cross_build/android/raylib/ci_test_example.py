@@ -23,10 +23,9 @@ tools.android:ndk_path={}
 """
 
 ndk_path = os.environ.get("ANDROID_NDK") or os.environ.get("ANDROID_NDK_HOME")
-
 if ndk_path:
     profile = profile.format(ndk_path)
-    with open("android", "w") as _f:
-        _f.write(profile)
+    with open(os.path.join("app", "src", "main", "cpp", "android"), "w") as fd:
+        fd.write(profile)
 
     run("gradle assembleDebug")
