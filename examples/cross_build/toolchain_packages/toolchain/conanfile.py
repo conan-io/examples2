@@ -52,12 +52,8 @@ class ArmToolchainPackage(ConanFile):
 
     def build(self):
         toolchain, sha = self._get_toolchain(self.settings_target.arch)
-        # INFO: ARM server does not like default Conan user-agent. It returns a frontpage HTML instead of the tarball.
-        headers={"User-Agent": "Wget/1.20.3 (linux-gnu)", "Accept": "*/*"}
-        get(self, f"https://developer.arm.com/-/media/Files/downloads/gnu/13.2.rel1/binrel/arm-gnu-toolchain-13.2.rel1-x86_64-{toolchain}.tar.xz",
-            headers=headers,
-            sha256=sha,
-            strip_root=True)
+        get(self, f"https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu/13.2.rel1/binrel/arm-gnu-toolchain-13.2.rel1-x86_64-{toolchain}.tar.xz",
+            sha256=sha, strip_root=True)            
 
     def package(self):
         toolchain, _ = self._get_toolchain(self.settings_target.arch)
