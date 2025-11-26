@@ -52,7 +52,7 @@ class ArmToolchainPackage(ConanFile):
 
     def build(self):
         toolchain, sha = self._get_toolchain(self.settings_target.arch)
-        get(self, f"https://developer.arm.com/-/media/Files/downloads/gnu/13.2.rel1/binrel/arm-gnu-toolchain-13.2.rel1-x86_64-{toolchain}.tar.xz",
+        get(self, f"https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu/13.2.rel1/binrel/arm-gnu-toolchain-13.2.rel1-x86_64-{toolchain}.tar.xz",
             sha256=sha, strip_root=True)            
 
     def package(self):
