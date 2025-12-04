@@ -26,6 +26,7 @@ from conan.tools.pkg_signing.plugin import (create_summary_content, get_summary_
 
 
 def _run_command(command):
+    ConanOutput().info(f"Running command: {' '.join(command)}")
     result = subprocess.run(
         command,
         stdout=subprocess.PIPE,
@@ -77,18 +78,23 @@ def verify(ref, artifacts_folder, signature_folder, files, **kwargs):
     # The provider is useful to choose the correct public key to verify packages with
     provider = summary.get("provider")
     if provider != "conan-client":
-        return f"Warn: The provider does not match (conan-client [expected] != {provider} [actual])"
+        raise ConanException(f"The provider does not match (conan-client [expected] != {provider} [actual])."
+                             f"Cannot get a public key to verify the package")
 
-    # openssl dgst -sha256 -verify public_key.pem -signature document.sig document.txt
-    openssl_verify_cmd = [
-        "openssl",
-        "dgst",
-        "-sha256",
-        "-verify", pubkey_filepath,
-        "-signature", signature_filepath,
-        summary_filepath,
-    ]
-    try:
-        _run_command(openssl_verify_cmd)
-    except Exception as exc:
-        raise ConanException(f"Error verifying signature {signature_filepath}: {exc}")
+    method = summary.get("method")
+    if method == "openssl-dgst":
+        # openssl dgst -sha256 -verify public_key.pem -signature document.sig document.txt
+        openssl_verify_cmd = [
+            "openssl",
+            "dgst",
+            "-sha256",
+            "-verify", pubkey_filepath,
+            "-signature", signature_filepath,
+            summary_filepath,
+        ]
+        try:
+            _run_command(openssl_verify_cmd)
+        except Exception as exc:
+            raise ConanException(f"Error verifying signature {signature_filepath}: {exc}")
+    else:
+        raise ConanException(f"Sign method {method} not supported. Cannot verify package")
