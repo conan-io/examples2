@@ -22,12 +22,13 @@ assert cmd_out.count("bye: Release!") == 1
 
 # Do a modification to one component, to verify it is used correctly
 replace(os.path.join("greetings", "src", "bye.cpp"), "bye:", "adios:")
-run("conan build greetings")
 
 # Force a clean build for the editable package to avoid timestamp issues
 greetings_build_path = os.path.join("greetings", "build")
 if os.path.exists(greetings_build_path):
     shutil.rmtree(greetings_build_path)
+
+run("conan build greetings")
 
 # Clean app build to ensure it uses the updated library
 app_build_path = os.path.join("app", "build")
