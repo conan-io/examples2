@@ -12,4 +12,6 @@
 
 ### [GameDev Raylib: Running on Android](android/raylib)
 
-- Learn how to port your Raylib C++ game to Android using Android Studio, the NDK, and Conan for dependency management. [Blog](https://blog.conan.io/cpp/gamedev/android/conan/raylib/2025/11/24/GameDev-Raylib-Android.html)
+- Learn how to port your Raylib C++ game to Android using Android Studio, the NDK, and Conan for dependency management.
+  Configure the Android NDK path by adding `ANDROID_NDK` environment variable pointing to your NDK installation.
+  [Blog](https://blog.conan.io/cpp/gamedev/android/conan/raylib/2025/11/24/GameDev-Raylib-Android.html)
