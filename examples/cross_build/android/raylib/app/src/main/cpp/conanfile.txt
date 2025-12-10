@@ -1,0 +1,9 @@
+[requires]
+raylib/5.5
+
+[generators]
+CMakeToolchain
+CMakeDeps
+
+[layout]
+cmake_layout
