@@ -10,7 +10,7 @@ run("git clone https://github.com/pytorch/examples.git")
 shutil.copy("conanfile.txt", "examples/cpp/regression/conanfile.txt")
 
 with chdir("examples/cpp/regression"):
-    run("conan install -b=missing")
+    run("conan install -b=missing -s compiler.cppstd=17")
 
     # with presets
 
