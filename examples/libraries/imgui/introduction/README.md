@@ -4,5 +4,3 @@
 
 ## Walkthough
 This example has a [blog post](https://blog.conan.io/2019/06/26/An-introduction-to-the-Dear-ImGui-library.html).
-
-# remove after checking that this one triggers
