@@ -73,8 +73,8 @@ def find_affected_directories(base_ref) -> list:
         selected = None
 
         while str(current) != "." and not selected:
-            # Check if this directory contains any ci_test_example files
-            has_example = any(current.glob("**/ci_test_example.*"))
+            # Check if this directory directly contains any ci_test_example files
+            has_example = any(current.glob("ci_test_example.*"))
             if has_example:
                 selected = str(current)
                 break
