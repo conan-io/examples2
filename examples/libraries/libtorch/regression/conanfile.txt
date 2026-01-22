@@ -1,0 +1,9 @@
+[requires]
+libtorch/[*]
+
+[generators]
+CMakeToolchain
+CMakeDeps
+
+[layout]
+cmake_layout
