@@ -9,7 +9,8 @@ run("git clone --depth 1 https://github.com/pytorch/examples.git")
 shutil.copy("conanfile.txt", "examples/cpp/regression/conanfile.txt")
 
 with chdir("examples/cpp/regression"):
-    run("conan install -b=missing -s compiler.cppstd=gnu17")
+    cppstd = "17" if platform.system() == "Windows" else "gnu17"
+    run(f"conan install -b=missing -s compiler.cppstd={cppstd}")
 
     if platform.system() == "Windows":
         run("cmake --preset conan-default")
