@@ -10,7 +10,7 @@ shutil.copy("conanfile.txt", "examples/cpp/regression/conanfile.txt")
 
 with chdir("examples/cpp/regression"):
     cppstd = "17" if platform.system() == "Windows" else "gnu17"
-    run(f"conan install -b=missing -s compiler.cppstd={cppstd}")
+    run(f"conan install -b=missing -s compiler.cppstd={cppstd} --update")
 
     if platform.system() == "Windows":
         run("cmake --preset conan-default")
