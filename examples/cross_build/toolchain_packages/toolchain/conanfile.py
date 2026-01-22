@@ -1,6 +1,6 @@
 import os
 from conan import ConanFile
-from conan.tools.files import get, copy, download
+from conan.tools.files import get, copy, save
 from conan.errors import ConanInvalidConfiguration
 from conan.tools.scm import Version
 
@@ -48,7 +48,12 @@ class ArmToolchainPackage(ConanFile):
                                             "Only 13.X versions are supported for the compiler.")
 
     def source(self):
-        download(self, "https://developer.arm.com/GetEula?Id=37988a7c-c40e-4b78-9fd1-62c20b507aa8", "LICENSE", verify=False)
+        # The ARM toolchain is distributed under GPL-3.0-only license
+        # Reference: https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads
+        save(self, "LICENSE", "ARM GNU Toolchain\n"
+             "License: GNU General Public License v3.0 (GPL-3.0-only)\n"
+             "https://www.gnu.org/licenses/gpl-3.0.html\n\n"
+             "EULA: https://developer.arm.com/GetEula?Id=37988a7c-c40e-4b78-9fd1-62c20b507aa8\n")
 
     def build(self):
         toolchain, sha = self._get_toolchain(self.settings_target.arch)
@@ -60,7 +65,7 @@ class ArmToolchainPackage(ConanFile):
         dirs_to_copy = [toolchain, "bin", "include", "lib", "libexec"]
         for dir_name in dirs_to_copy:
             copy(self, pattern=f"{dir_name}/*", src=self.build_folder, dst=self.package_folder, keep_path=True)
-        copy(self, "LICENSE", src=self.build_folder, dst=os.path.join(self.package_folder, "licenses"), keep_path=False)
+        copy(self, "LICENSE", src=self.source_folder, dst=os.path.join(self.package_folder, "licenses"), keep_path=False)
 
     def package_id(self):
         self.info.settings_target = self.settings_target
