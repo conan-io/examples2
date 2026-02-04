@@ -22,8 +22,6 @@ import os
 import subprocess
 from conan.api.output import ConanOutput
 from conan.errors import ConanException
-from conan.tools.pkg_signing.plugin import (get_manifest_filepath, load_manifest,
-                                            load_signatures, verify_files_checksums)
 
 
 def _run_command(command):
@@ -43,7 +41,7 @@ def _run_command(command):
 
 
 def sign(ref, artifacts_folder, signature_folder, **kwargs):
-    provider = "conan-client"  # This maps to the folder containing the signing keys (for simplicity)
+    provider = "your-organization"  # This maps to the folder containing the signing keys (for simplicity)
     manifest_filepath = get_manifest_filepath(signature_folder)
     signature_filename = "pkgsign-manifest.json.sig"
     signature_filepath = os.path.join(signature_folder, signature_filename)
@@ -66,27 +64,28 @@ def sign(ref, artifacts_folder, signature_folder, **kwargs):
         raise ConanException(f"Error signing artifact {summary_filepath}: {exc}")
     return [{"method": "openssl-dgst",
              "provider": provider,
-             "sign_artifacts": {"signature": signature_filename}}]
+             "sign_artifacts": {
+                "manifest": "pkgsign-manifest.json",
+                "signature": signature_filename}}]
 
 
 def verify(ref, artifacts_folder, signature_folder, files, **kwargs):
-    verify_files_checksums(signature_folder, files)
-
-    signature = load_signatures(signature_folder).get("signatures")[0]
+    signatures = os.path.join(signature_folder, "pkgsign-signatures.json")
+    signature = json.loads(open(signatures).read()).get("signatures")[0]
     signature_filename = signature.get("sign_artifacts").get("signature")
     signature_filepath = os.path.join(signature_folder, signature_filename)
     if not os.path.isfile(signature_filepath):
         raise ConanException("Signature file does not exist")
 
     # The provider is useful to choose the correct public key to verify packages with
-    expected_provider = "conan-client"
+    expected_provider = "your-organization"
     signature_provider = signature.get("provider")
     if signature_provider != expected_provider:
         raise ConanException(f"The provider does not match ({expected_provider} [expected] != {signature_provider} "
                               "[actual]). Cannot get a public key to verify the package")
-    pubkey_filepath = os.path.join(os.path.dirname(__file__), "conan-client", "public_key.pem")
+    pubkey_filepath = os.path.join(os.path.dirname(__file__), expected_provider, "public_key.pem")
 
-    manifest_filepath = get_manifest_filepath(signature_folder)
+    manifest_filepath =os.path.join(signature_folder, "pkgsign-manifest.json")
     signature_method = signature.get("method")
     if signature_method == "openssl-dgst":
         # openssl dgst -sha256 -verify public_key.pem -signature document.sig document.txt
