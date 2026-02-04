@@ -20,3 +20,6 @@ assert "[Package sign] Summary: OK=2, FAILED=0" in output
 output = run("conan cache verify hello/1.0")
 assert "Package verified for reference hello/1.0" in output
 assert "[Package sign] Summary: OK=2, FAILED=0" in output
+
+conan_home = run("conan config home")
+os.rmdir(os.path.join(conan_home, "extensions", "plugins", "sign"))
