@@ -1,11 +1,12 @@
 import os
-import shutil
 
 from test.examples_tools import run, tmp_dir
 
 run("git clone https://github.com/conan-io/conan-extensions.git")
-run("openssl genpkey -algorithm RSA -out conan-extensions/plugins/openssl_sign/your-organization/private_key.pem -pkeyopt rsa_keygen_bits:2048")
-run("openssl pkey -in conan-extensions/plugins/openssl_sign/your-organization/private_key.pem -pubout -out conan-extensions/plugins/openssl_sign/your-organization/public_key.pem")
+provider_folder = os.path.join("conan-extensions", "plugins", "openssl_sign", "your-organization")
+os.makedirs(provider_folder)
+run(f"openssl genpkey -algorithm RSA -out {provider_folder}/private_key.pem -pkeyopt rsa_keygen_bits:2048")
+run(f"openssl pkey -in {provider_folder}/private_key.pem -pubout -out {provider_folder}/public_key.pem")
 
 run("conan config install conan-extensions -t dir --source-folder plugins/openssl_sign --target-folder plugins/sign")
 
