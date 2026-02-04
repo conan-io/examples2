@@ -61,6 +61,7 @@ def sign(ref, artifacts_folder, signature_folder, **kwargs):
     ]
     try:
         _run_command(openssl_sign_cmd)
+        ConanOutput().success(f"Package signed for reference {ref}")
     except Exception as exc:
         raise ConanException(f"Error signing artifact {summary_filepath}: {exc}")
     return [{"method": "openssl-dgst",
@@ -100,6 +101,7 @@ def verify(ref, artifacts_folder, signature_folder, files, **kwargs):
         ]
         try:
             _run_command(openssl_verify_cmd)
+            ConanOutput().success(f"Package verified for reference {ref}")
         except Exception as exc:
             raise ConanException(f"Error verifying signature {signature_filepath}: {exc}")
     else:

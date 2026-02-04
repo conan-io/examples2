@@ -15,6 +15,8 @@ run("conan new cmake_lib -d name=hello -d version=1.0")
 run("conan create")
 
 output = run("conan cache sign hello/1.0")
-assert "kk" in output
+assert "Package signed for reference hello/1.0" in output
+assert "[Package sign] Summary: OK=2, FAILED=0" in output
 output = run("conan cache verify hello/1.0")
-assert "kk" in output
+assert "Package verified for reference hello/1.0" in output
+assert "[Package sign] Summary: OK=2, FAILED=0" in output
