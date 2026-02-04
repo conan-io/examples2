@@ -13,13 +13,14 @@ And extract the public key:
     $ openssl pkey -in private_key.pem -pubout -out public_key.pem
 
 The private_key.pem and public_key.pem files should be placed inside a folder named withe the provider's name
-('conan-client' for this example). The conan-client folder should be next to this plugins's file sign.py
+('my-organization' for this example). The 'my-organization' folder should be next to this plugins's file sign.py
 (inside the CONAN_HOME/extensions/plugins/sing folder).
 """
 
-
 import os
+import json
 import subprocess
+
 from conan.api.output import ConanOutput
 from conan.errors import ConanException
 
@@ -42,7 +43,7 @@ def _run_command(command):
 
 def sign(ref, artifacts_folder, signature_folder, **kwargs):
     provider = "your-organization"  # This maps to the folder containing the signing keys (for simplicity)
-    manifest_filepath = get_manifest_filepath(signature_folder)
+    manifest_filepath = os.path.join(signature_folder, "pkgsign-manifest.json")
     signature_filename = "pkgsign-manifest.json.sig"
     signature_filepath = os.path.join(signature_folder, signature_filename)
     if os.path.isfile(signature_filepath):
