@@ -42,7 +42,7 @@ def _run_command(command):
 
 
 def sign(ref, artifacts_folder, signature_folder, **kwargs):
-    provider = "your-organization"  # This maps to the folder containing the signing keys (for simplicity)
+    provider = "my-organization"  # This maps to the folder containing the signing keys (for simplicity)
     manifest_filepath = os.path.join(signature_folder, "pkgsign-manifest.json")
     signature_filename = "pkgsign-manifest.json.sig"
     signature_filepath = os.path.join(signature_folder, signature_filename)
@@ -63,7 +63,7 @@ def sign(ref, artifacts_folder, signature_folder, **kwargs):
         _run_command(openssl_sign_cmd)
         ConanOutput().success(f"Package signed for reference {ref}")
     except Exception as exc:
-        raise ConanException(f"Error signing artifact {summary_filepath}: {exc}")
+        raise ConanException(f"Error signing artifact")
     return [{"method": "openssl-dgst",
              "provider": provider,
              "sign_artifacts": {
@@ -80,7 +80,7 @@ def verify(ref, artifacts_folder, signature_folder, files, **kwargs):
         raise ConanException("Signature file does not exist")
 
     # The provider is useful to choose the correct public key to verify packages with
-    expected_provider = "your-organization"
+    expected_provider = "my-organization"
     signature_provider = signature.get("provider")
     if signature_provider != expected_provider:
         raise ConanException(f"The provider does not match ({expected_provider} [expected] != {signature_provider} "

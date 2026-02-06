@@ -8,6 +8,6 @@
 
 - Learn how to create a custom deployer in Conan. [Docs](https://docs.conan.io/2/reference/extensions/deployers.html)
 
-### [Package signing plugin example with OpenSSL](extensions/plugins/sign)
+### [Package signing plugin example with OpenSSL](extensions/plugins/openssl_sign)
 
 - Learn how to create a package signing plugin in Conan. [Docs](https://docs.conan.io/2/reference/extensions/package_signing.html)

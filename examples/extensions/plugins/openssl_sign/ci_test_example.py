@@ -8,7 +8,7 @@ if conan_version < "2.26.0-dev":
     return
 
 current_dir = os.path.abspath(os.path.dirname(__file__))
-provider_folder = os.path.join(current_dir, "your-organization")
+provider_folder = os.path.join(current_dir, "my-organization")
 os.makedirs(provider_folder)
 run(f"openssl genpkey -algorithm RSA -out {provider_folder}/private_key.pem -pkeyopt rsa_keygen_bits:2048")
 run(f"openssl pkey -in {provider_folder}/private_key.pem -pubout -out {provider_folder}/public_key.pem")
