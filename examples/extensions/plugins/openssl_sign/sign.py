@@ -80,7 +80,7 @@ def verify(ref, artifacts_folder, signature_folder, files, **kwargs):
         raise ConanException("Signature file does not exist")
 
     # The provider is useful to choose the correct public key to verify packages with
-    expected_provider = "your-organization"
+    expected_provider = "my-organization"
     signature_provider = signature.get("provider")
     if signature_provider != expected_provider:
         raise ConanException(f"The provider does not match ({expected_provider} [expected] != {signature_provider} "
