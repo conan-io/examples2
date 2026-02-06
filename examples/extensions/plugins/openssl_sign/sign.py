@@ -63,7 +63,7 @@ def sign(ref, artifacts_folder, signature_folder, **kwargs):
         _run_command(openssl_sign_cmd)
         ConanOutput().success(f"Package signed for reference {ref}")
     except Exception as exc:
-        raise ConanException(f"Error signing artifact {summary_filepath}: {exc}")
+        raise ConanException(f"Error signing artifact")
     return [{"method": "openssl-dgst",
              "provider": provider,
              "sign_artifacts": {
