@@ -42,7 +42,7 @@ def _run_command(command):
 
 
 def sign(ref, artifacts_folder, signature_folder, **kwargs):
-    provider = "your-organization"  # This maps to the folder containing the signing keys (for simplicity)
+    provider = "my-organization"  # This maps to the folder containing the signing keys (for simplicity)
     manifest_filepath = os.path.join(signature_folder, "pkgsign-manifest.json")
     signature_filename = "pkgsign-manifest.json.sig"
     signature_filepath = os.path.join(signature_folder, signature_filename)
