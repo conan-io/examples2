@@ -73,8 +73,8 @@ def find_affected_directories(base_ref) -> list:
         selected = None
 
         while str(current) != "." and not selected:
-            # Check if this directory contains any ci_test_example files
-            has_example = any(current.glob("**/ci_test_example.*"))
+            # Check if this directory directly contains any ci_test_example files
+            has_example = any(current.glob("ci_test_example.*"))
             if has_example:
                 selected = str(current)
                 break
@@ -118,24 +118,6 @@ def filter_examples_by_dirs(examples, affected_dirs) -> list:
 
     return sorted(set(filtered))
 
-def filter_exclusions(examples, is_pr) -> list:
-    """
-    FIXME: Filter out broken examples after GitHub Actions migration
-
-    :param examples: list of example file paths
-    :param is_pr: bool - whether this is a pull request
-    :returns: filtered list of example file paths
-    """
-    filtered = []
-
-    for example in examples:
-        # FIXME: Filter out tensorflow examples in PRs
-        if is_pr and "tensorflow" in example:
-            continue
-
-        filtered.append(example)
-
-    return filtered
 
 def run_example(example, workspace, runner_os) -> None:
     """
@@ -198,9 +180,6 @@ def main():
         print("\nFiltered to affected directories only:")
         for example in examples:
             print(example)
-
-    # FIXME: Filter out some non-working examples in GitHub Actions
-    examples = filter_exclusions(examples, is_pr)
 
     print("\nExamples to run:")
     for example in examples:
