@@ -1,8 +1,11 @@
 import os
 import shutil
 
+from conan import conan_version
 from test.examples_tools import run
 
+if conan_version < "2.26.0-dev":
+    return
 
 current_dir = os.path.abspath(os.path.dirname(__file__))
 provider_folder = os.path.join(current_dir, "your-organization")
