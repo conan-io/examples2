@@ -10,4 +10,4 @@ Steps to test the example:
 - Create the package: ``conan create``.
 - Sign the package: ``conan cache sign hello/1.0``.
 - Verify the package signature: ```conan cache verify hello/1.0```.
-- You can also use the ``conan install`` command, and the packages should be verified automatically.
+- You can also use the ``conan install`` command, and the packages should be verified automatically when they are downloaded from a remote.
