@@ -14,7 +14,7 @@ And extract the public key:
 
 The private_key.pem and public_key.pem files should be placed inside a folder named with the the provider's name
 ('my-organization' for this example). The 'my-organization' folder should be next to this plugins's file sign.py
-(inside the CONAN_HOME/extensions/plugins/sing folder).
+(inside the CONAN_HOME/extensions/plugins/sign folder).
 """
 
 import os
