@@ -13,7 +13,7 @@ And extract the public key:
     $ openssl pkey -in private_key.pem -pubout -out public_key.pem
 
 The private_key.pem and public_key.pem files should be placed inside a folder named with the the provider's name
-('my-organization' for this example). The 'my-organization' folder should be next to this plugins's file sign.py
+('my-organization' for this example). The 'my-organization' folder should be next to this plugins' file sign.py
 (inside the CONAN_HOME/extensions/plugins/sign folder).
 """
 
