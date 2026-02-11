@@ -1,6 +1,11 @@
 
 ## Package signing plugin example with Openssl
 
+> **_SECURITY NOTE:_**  This example stores a private key next to the plugin for simplicity. **Do not do this in production**.
+> Instead, load the signing key from environment variables or a secret manager, or delegate signing to a remote signing service.
+> **Always keep the private key out of the Conan cache and out of source control**.
+
+
 Steps to test the example:
 
 - Copy the ``sign.py`` file to your Conan home at ```CONAN_HOME/extensions/plugins/sign/sign.py```.
