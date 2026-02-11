@@ -76,7 +76,8 @@ def verify(ref, artifacts_folder, signature_folder, files, **kwargs):
     try:
         signatures = json.loads(open(signatures).read()).get("signatures")
     except Exception:
-        raise ConanException("Could not verify unsigned package")
+        ConanOutput().warning("Could not verify unsigned package")
+        return
 
     for signature in signatures:
         signature_filename = signature.get("sign_artifacts").get("signature")
