@@ -4,7 +4,7 @@ Plugin to sign/verify Conan packages with OpenSSL.
 Requirements: The following executables should be installed and in the PATH.
     - openssl
 
-To use this sigstore plugins, first generate a compatible keypair and define the environment variables for the keys:
+To use this plugin, first generate a compatible keypair:
 
     $ openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:2048
 
@@ -73,36 +73,39 @@ def sign(ref, artifacts_folder, signature_folder, **kwargs):
 
 def verify(ref, artifacts_folder, signature_folder, files, **kwargs):
     signatures = os.path.join(signature_folder, "pkgsign-signatures.json")
-    signature = json.loads(open(signatures).read()).get("signatures")[0]
-    signature_filename = signature.get("sign_artifacts").get("signature")
-    signature_filepath = os.path.join(signature_folder, signature_filename)
-    if not os.path.isfile(signature_filepath):
-        raise ConanException("Signature file does not exist")
+    try:
+        signatures = json.loads(open(signatures).read()).get("signatures")
+    except Exception:
+        raise ConanException("Could not verify unsigned package")
 
-    # The provider is useful to choose the correct public key to verify packages with
-    expected_provider = "my-organization"
-    signature_provider = signature.get("provider")
-    if signature_provider != expected_provider:
-        raise ConanException(f"The provider does not match ({expected_provider} [expected] != {signature_provider} "
-                              "[actual]). Cannot get a public key to verify the package")
-    pubkey_filepath = os.path.join(os.path.dirname(__file__), expected_provider, "public_key.pem")
+    for signature in signatures:
+        signature_filename = signature.get("sign_artifacts").get("signature")
+        signature_filepath = os.path.join(signature_folder, signature_filename)
+        if not os.path.isfile(signature_filepath):
+            raise ConanException(f"Signature file does not exist at {signature_filepath}")
 
-    manifest_filepath =os.path.join(signature_folder, "pkgsign-manifest.json")
-    signature_method = signature.get("method")
-    if signature_method == "openssl-dgst":
-        # openssl dgst -sha256 -verify public_key.pem -signature document.sig document.txt
-        openssl_verify_cmd = [
-            "openssl",
-            "dgst",
-            "-sha256",
-            "-verify", pubkey_filepath,
-            "-signature", signature_filepath,
-            manifest_filepath,
-        ]
-        try:
-            _run_command(openssl_verify_cmd)
-            ConanOutput().success(f"Package verified for reference {ref}")
-        except Exception as exc:
-            raise ConanException(f"Error verifying signature {signature_filepath}: {exc}")
-    else:
-        raise ConanException(f"Sign method {signature_method} not supported. Cannot verify package")
+        # The provider is useful to choose the correct public key to verify packages with
+        provider = signature.get("provider")
+        pubkey_filepath = os.path.join(os.path.dirname(__file__), provider, "public_key.pem")
+        if not os.path.isfile(pubkey_filepath):
+            raise ConanException(f"Public key not found for provider '{provider}'")
+
+        manifest_filepath =os.path.join(signature_folder, "pkgsign-manifest.json")
+        signature_method = signature.get("method")
+        if signature_method == "openssl-dgst":
+            # openssl dgst -sha256 -verify public_key.pem -signature document.sig document.txt
+            openssl_verify_cmd = [
+                "openssl",
+                "dgst",
+                "-sha256",
+                "-verify", pubkey_filepath,
+                "-signature", signature_filepath,
+                manifest_filepath,
+            ]
+            try:
+                _run_command(openssl_verify_cmd)
+                ConanOutput().success(f"Package verified for reference {ref}")
+            except Exception as exc:
+                raise ConanException(f"Error verifying signature {signature_filepath}: {exc}")
+        else:
+            raise ConanException(f"Sign method {signature_method} not supported. Cannot verify package")
