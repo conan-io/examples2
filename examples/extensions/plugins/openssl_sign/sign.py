@@ -72,9 +72,10 @@ def sign(ref, artifacts_folder, signature_folder, **kwargs):
 
 
 def verify(ref, artifacts_folder, signature_folder, files, **kwargs):
-    signatures = os.path.join(signature_folder, "pkgsign-signatures.json")
+    signatures_path = os.path.join(signature_folder, "pkgsign-signatures.json")
     try:
-        signatures = json.loads(open(signatures).read()).get("signatures")
+        with open(signatures_path, "r", encoding="utf-8") as f:
+            signatures = json.loads(f.read()).get("signatures")
     except Exception:
         ConanOutput().warning("Could not verify unsigned package")
         return
@@ -91,7 +92,7 @@ def verify(ref, artifacts_folder, signature_folder, files, **kwargs):
         if not os.path.isfile(pubkey_filepath):
             raise ConanException(f"Public key not found for provider '{provider}'")
 
-        manifest_filepath =os.path.join(signature_folder, "pkgsign-manifest.json")
+        manifest_filepath = os.path.join(signature_folder, "pkgsign-manifest.json")
         signature_method = signature.get("method")
         if signature_method == "openssl-dgst":
             # openssl dgst -sha256 -verify public_key.pem -signature document.sig document.txt
