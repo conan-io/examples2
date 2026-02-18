@@ -1,5 +1,5 @@
 
-## Package signing plugin example with Openssl
+## Package signing plugin example with OpenSSL
 
 > **_SECURITY NOTE:_**  This example stores a private key next to the plugin for simplicity. **Do not do this in production**.
 > Instead, load the signing key from environment variables or a secret manager, or delegate signing to a remote signing service.
