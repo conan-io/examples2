@@ -1,8 +1,7 @@
 """
 Plugin to sign/verify Conan packages with OpenSSL.
 
-Requirements: The following executables should be installed and in the PATH.
-    - openssl
+You will need to have ``openssl`` installed at the system level and available in your ``PATH``.
 
 To use this plugin, first generate a compatible keypair:
 
