@@ -7,11 +7,11 @@ we use [the official PyTorch examples repository](https://github.com/pytorch/exa
 so make sure to clone it first and then navigate to the `cpp/regression` folder:
 
 ```bash
-$ git clone https://github.com/pytorch/examples/tree/main/cpp/regression
+$ git clone https://github.com/pytorch/examples
 $ cd cpp/regression
 ```
 
-Then, copy the `conanfile.txt` from this directory to the `cpp/regression` folder,
+Then, copy the `conanfile.txt` and the `conan.lock` from this directory to the `cpp/regression` folder,
 and finally run Conan and CMake as usual:
 
 ```bash

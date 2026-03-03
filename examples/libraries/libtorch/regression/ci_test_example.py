@@ -7,6 +7,7 @@ print("Libtorch regression example with Conan")
 
 run("git clone --depth 1 https://github.com/pytorch/examples.git")
 shutil.copy("conanfile.txt", "examples/cpp/regression/conanfile.txt")
+shutil.copy("conan.lock", "examples/cpp/regression/conan.lock")
 
 with chdir("examples/cpp/regression"):
     cppstd = "17" if platform.system() == "Windows" else "gnu17"
