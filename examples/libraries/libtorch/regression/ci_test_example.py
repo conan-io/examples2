@@ -11,7 +11,7 @@ shutil.copy("conan.lock", "examples/cpp/regression/conan.lock")
 
 with chdir("examples/cpp/regression"):
     cppstd = "17" if platform.system() == "Windows" else "gnu17"
-    run(f"conan install -b=missing -s:a compiler.cppstd={cppstd} --update")
+    run(f"conan install -b=missing -b=libtorch/* -s:a compiler.cppstd={cppstd} --update")
 
     if platform.system() == "Windows":
         run("cmake --preset conan-default")
