@@ -32,10 +32,14 @@ jobs:
           sudo apt-get install -y gcc-12-arm-linux-gnueabihf g++-12-arm-linux-gnueabihf
 
       - name: Set up Python
+        id: setup_python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
           update-environment: false
+
+      - name: Prepend Python to System PATH
+        run: echo "$(dirname ${{ steps.setup_python.outputs.python-path }})" >> $GITHUB_PATH
 
       - name: Install CMake
         uses: jwlawson/actions-setup-cmake@v1.14
