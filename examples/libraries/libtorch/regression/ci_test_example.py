@@ -7,7 +7,7 @@ print("Libtorch regression example with Conan")
 
 run("git clone --depth 1 https://github.com/pytorch/examples.git")
 shutil.copy("conanfile.txt", "examples/cpp/regression/conanfile.txt")
-shutil.copy("conan.lock", "examples/cpp/regression/conan.lock")
+#shutil.copy("conan.lock", "examples/cpp/regression/conan.lock")
 
 run("git clone https://github.com/danimtb/conan-center-index.git --branch danimtb/fix-libtorch-windows-pyenv")
 run("conan export conan-center-index/recipes/libtorch/all --version 2.9.1")
