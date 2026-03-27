@@ -8,6 +8,14 @@
 
 - Learn how to create a custom deployer in Conan. [Docs](https://docs.conan.io/2/reference/extensions/deployers.html)
 
-### [Package signing plugin example with OpenSSL](plugins/openssl_sign)
+### Package signing plugin examples
 
-- Learn how to create a package signing plugin in Conan. [Docs](https://docs.conan.io/2/reference/extensions/package_signing.html)
+- Learn how to implement Conan's package signing plugin. [Docs](https://docs.conan.io/2/reference/extensions/package_signing.html)
+
+#### [OpenSSL](plugins/openssl_sign)
+
+- Sign and verify with `openssl dgst` and PEM keys.
+
+#### [Sigstore (cosign)](plugins/sigstore_sign)
+
+- Sign and verify packages with [Sigstore](https://www.sigstore.dev/) using [cosign](https://github.com/sigstore/cosign).
