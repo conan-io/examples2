@@ -9,17 +9,11 @@ if conan_version >= "2.26.0-dev":
     current_dir = os.path.abspath(os.path.dirname(__file__))
     provider_folder = os.path.join(current_dir, "my-organization")
     os.makedirs(provider_folder, exist_ok=True)
+    os.chdir(provider_folder)
 
-    subprocess.run(
-        "cosign generate-key-pair --output-key-prefix signing",
-        shell=True,
-        cwd=provider_folder,
-        env={**os.environ, "COSIGN_PASSWORD": ""},
-        check=True,
-        env=os.environ.copy()
-    )
+    run("cosign generate-key-pair --output-key-prefix signing")
 
-    os.environ["COSIGN_PASSWORD"] = ""
+    os.chdir("..")
 
     run(f"conan config install {current_dir} -t dir --target-folder extensions/plugins/sign")
 
