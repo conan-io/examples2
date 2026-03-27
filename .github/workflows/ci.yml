@@ -55,6 +55,11 @@ jobs:
         if: runner.os == 'macOS'
         run: brew install automake autoconf
 
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.8.2
+        with:
+          cosign-release: v3.0.0
+
       - name: Install Conan
         shell: bash
         run: |
