@@ -16,6 +16,7 @@ if conan_version >= "2.26.0-dev":
         cwd=provider_folder,
         env={**os.environ, "COSIGN_PASSWORD": ""},
         check=True,
+        env=os.environ.copy()
     )
 
     os.environ["COSIGN_PASSWORD"] = ""
