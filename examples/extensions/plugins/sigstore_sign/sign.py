@@ -30,7 +30,7 @@ from conan.api.output import ConanOutput
 from conan.errors import ConanException
 
 # Stored in pkgsign-signatures.json as ``method``; use a stable, distinctive name across your org/ecosystem.
-SIGNING_METHOD = "sigstore-cosign"
+SIGNING_METHOD = "sigstore"
 BUNDLE_FILENAME = "artifact.sigstore.json"
 
 

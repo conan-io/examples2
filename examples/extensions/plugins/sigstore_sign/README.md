@@ -17,7 +17,7 @@ This example implements Conan’s signing hook with [cosign](https://github.com/
 
 ### Signing method name
 
-The plugin records **`method`: `sigstore-cosign`** in signature metadata (`pkgsign-signatures.json`). That string is the convention for this cosign-based backend: keep it stable so verifiers and other tooling can recognize and handle this format alongside other methods (`openssl-dgst`, `gpg`, etc.).
+The plugin records **`method`: `sigstore`** in signature metadata (`pkgsign-signatures.json`). That string is the convention for this cosign-based backend: keep it stable so verifiers and other tooling can recognize and handle this format alongside other methods (`openssl-dgst`, `gpg`, etc.).
 
 ### Try it
 
