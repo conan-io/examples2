@@ -75,4 +75,5 @@ jobs:
         shell: bash
         env:
           PYTHONPATH: ${{ github.workspace }}
+          COSIGN_PASSWORD: ""
         run: python -u "${{ github.workspace }}/.github/run_ci_tests.py"
