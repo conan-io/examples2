@@ -15,7 +15,7 @@ example), next to this file under ``CONAN_HOME/extensions/plugins/sign/``.
 For non-interactive signing (CI, automation), set ``COSIGN_PASSWORD`` to the key password (empty string if the
 key has no password).
 
-This plugin explicitly disables the usage of Rekor public log by disabling it in the signining and verify processes
+This plugin explicitly disables the usage of Rekor public log by disabling it in the signing and verification processes
 
 SECURITY NOTE:
     This example keeps keys beside the plugin for clarity only. **Do not do this in production** — use a
