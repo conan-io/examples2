@@ -5,7 +5,7 @@ import subprocess
 from conan import conan_version
 from test.examples_tools import run
 
-if conan_version >= "2.26.0-dev":
+if conan_version >= "2.26.0":
     current_dir = os.path.abspath(os.path.dirname(__file__))
     provider_folder = os.path.join(current_dir, "my-organization")
     os.makedirs(provider_folder, exist_ok=True)
