@@ -18,7 +18,7 @@ Sources for the [examples section](https://docs.conan.io/2/examples.html) of the
 
 ### [Conanfile methods](examples/conanfile)
 
-### [Conan extensions](examples/consuming_packages)
+### [Conan extensions](examples/extensions)
 
 ### [Conan recipe tools](examples/tools)
 
