@@ -3,7 +3,8 @@ from test.examples_tools import run
 
 print("SDL2 getting started with Game Development and Conan")
 
-run("conan install . -c tools.system.package_manager:mode=install "
+ninja = "-c tools.cmake.cmaketoolchain:generator=Ninja " if platform.system() == "Windows" else ""
+run(f"conan install . {ninja}-c tools.system.package_manager:mode=install "
     "-c tools.system.package_manager:sudo=True --build=missing")
 
 # with presets
