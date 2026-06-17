@@ -42,9 +42,9 @@ jobs:
         run: echo "$(dirname ${{ steps.setup_python.outputs.python-path }})" >> $GITHUB_PATH
 
       - name: Install CMake
-        uses: jwlawson/actions-setup-cmake@v1.14
+        uses: jwlawson/actions-setup-cmake@v2
         with:
-          cmake-version: "3.23"
+          cmake-version: "latest"
 
       - name: Install Bazel
         uses: bazel-contrib/setup-bazel@0.15.0
