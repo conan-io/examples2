@@ -12,11 +12,9 @@ with chdir("examples/cpp/regression"):
     cppstd = "17" if platform.system() == "Windows" else "gnu17"
     run(f"conan install -b=missing -s:a compiler.cppstd={cppstd} --update")
 
-    if platform.system() == "Windows":
-        run("cmake --preset conan-default")
+    run("cmake --preset conan-release")
+    if platform.system() != "Windows":
         # Don't build on Windows. CI's msvc can't build this
-    else:
-        run("cmake --preset conan-release")
         run("cmake --build --preset conan-release")
 
     # Only execute this in macos in the CI, there are some issues with the generated binary and the
