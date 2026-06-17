@@ -9,26 +9,19 @@ run(f"conan install . {ninja}-c tools.system.package_manager:mode=install "
 
 # with presets
 
-if platform.system() == "Windows":
-    run("cmake --preset conan-default")
-    run("cmake --build --preset conan-release")
-else:
-    run("cmake --preset conan-release")
-    run("cmake --build --preset conan-release")
+# Ninja (single-config) only generates conan-release; conan-default is multi-config (VS) only
+run("cmake --preset conan-release")
+run("cmake --build --preset conan-release")
 
 if platform.system() == "Windows":
     run("rd /s /q build")
 else:
     run("rm -rf build")
 
-run("conan install . -c tools.system.package_manager:mode=install "
+run(f"conan install . {ninja}-c tools.system.package_manager:mode=install "
     "-c tools.system.package_manager:sudo=True")
 
 # calling CMake directly
 
-if platform.system() == "Windows":
-    run("cmake --preset conan-default")
-    run("cmake --build --preset conan-release")
-else:
-    run("cmake --preset conan-release")
-    run("cmake --build --preset conan-release")
+run("cmake --preset conan-release")
+run("cmake --build --preset conan-release")
