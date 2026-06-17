@@ -59,6 +59,10 @@ def find_affected_directories(base_ref) -> list:
         if file:
             print(file)
 
+    if any(".github/workflows/ci.yml" in f for f in changed_files):
+        print("\nCI workflow changed - running all examples")
+        return []
+
     affected_dirs = set()
 
     for file_path in changed_files:
