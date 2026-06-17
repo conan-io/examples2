@@ -7,6 +7,3 @@ CMakeDeps
 
 [layout]
 cmake_layout
-
-[conf]
-tools.cmake.cmaketoolchain:generator=Ninja
