@@ -27,11 +27,10 @@ shutil.move(folder, new_folder)
 
 with chdir(new_folder):
     if platform.system() == "Windows":
-        with chdir("build"):
-            run("generators\conanbuild.bat && cmake --version")
-            run("generators\conanbuild.bat && cmake .. -G \"Visual Studio 17 2022\" -DCMAKE_TOOLCHAIN_FILE=generators/conan_toolchain.cmake")
-            run("generators\conanbuild.bat && cmake --build . --config Release")
-            cmd_out = run("Release\\compressor.exe")
+        run(r"build\generators\conanbuild.bat && cmake --version")
+        run(r"build\generators\conanbuild.bat && cmake --preset conan-default")
+        run(r"build\generators\conanbuild.bat && cmake --build build --config Release")
+        cmd_out = run(r"build\Release\compressor.exe")
     else: 
         with chdir("build/Release"):
             # TODO: This is still necessary in Linux
