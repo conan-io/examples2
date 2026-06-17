@@ -67,9 +67,12 @@ jobs:
           else
             pip install conan --upgrade
           fi
-          pip install meson
+          pip install meson ninja
           conan --version
           conan profile detect --force
+          if [[ "$RUNNER_OS" == "Windows" ]]; then
+            echo "tools.cmake.cmaketoolchain:generator=Ninja" >> ~/.conan2/global.conf
+          fi
 
       - name: Find and run examples
         shell: bash
