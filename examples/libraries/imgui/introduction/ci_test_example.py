@@ -29,8 +29,8 @@ run("conan install . -c tools.system.package_manager:mode=install "
 # calling CMake directly
 
 if platform.system() == "Windows":
-    run("cmake . -DCMAKE_TOOLCHAIN_FILE=./build/generators/conan_toolchain.cmake -DCMAKE_POLICY_DEFAULT_CMP0091=NEW")
-    run("cmake --build . --config Release")
+    run("cmake --preset conan-default")
+    run("cmake --build --preset conan-release")
 else:
-    run("cmake . -G \"Unix Makefiles\" -DCMAKE_TOOLCHAIN_FILE=build/Release/generators/conan_toolchain.cmake -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_BUILD_TYPE=Release")
-    run("cmake --build .")
+    run("cmake --preset conan-release")
+    run("cmake --build --preset conan-release")
