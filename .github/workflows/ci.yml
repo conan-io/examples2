@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-2022]
         conan-version: [release, develop]
     runs-on: ${{ matrix.os }}
     steps:
@@ -45,6 +45,12 @@ jobs:
         uses: jwlawson/actions-setup-cmake@v1.14
         with:
           cmake-version: "3.23"
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
 
       - name: Install Bazel
         uses: bazel-contrib/setup-bazel@0.15.0
