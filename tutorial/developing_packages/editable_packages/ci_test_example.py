@@ -49,11 +49,11 @@ with chdir("hello"):
 
 with chdir("say"):
     replace(os.path.join("src", "say.cpp"), "Hello World", "Bye World")
-    if platform.system() == "Windows":        
-        run(f"cmake --build --preset {prefix_preset_name}release")
-        run(f"cmake --build --preset {prefix_preset_name}debug")
+    if platform.system() == "Windows":
+        run(f"cmake --build --preset {prefix_preset_name}release --clean-first")
+        run(f"cmake --build --preset {prefix_preset_name}debug --clean-first")
     else:
-        run(f"cmake --build --preset {prefix_preset_name}release")
+        run(f"cmake --build --preset {prefix_preset_name}release --clean-first")
 
 with chdir("hello"):
     # Clean hello build to ensure it uses the updated say library
