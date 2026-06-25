@@ -13,11 +13,7 @@ consumer_output = run("conan create consumer")
 assert "Running generate method" in consumer_output
 assert re.search("Dependency package_folder: (.*)f", consumer_output)
 
-package_folder_content = """
-consumer/1.0: Content in dependency package_folder:
-['file1.txt']
-"""  
-assert package_folder_content in consumer_output
+assert re.search(r"Content in dependency package_folder:\n\['file1\.txt'\]", consumer_output)
 
 assert re.search("Dependency immutable_package_folder: (.*)p", consumer_output)
 
