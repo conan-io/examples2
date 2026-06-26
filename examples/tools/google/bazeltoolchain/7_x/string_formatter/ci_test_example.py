@@ -13,9 +13,9 @@ if conan_version <= "2.3.2":
 # ############# Example ################
 print("\n- Use the BazelToolchain and BazelDeps generators -\n")
 
-path_mapping = {'Linux': '/usr/share/bazel-7.4.1/bin',
-                'Windows': 'C:/bazel-7.4.1/bin',
-                'Darwin': '/Users/jenkins/bazel-7.4.1/bin'}
+path_mapping = {'Linux': '/usr/share/bazel-7.6.2/bin',
+                'Windows': 'C:/bazel-7.6.2/bin',
+                'Darwin': '/Users/jenkins/bazel-7.6.2/bin'}
 # Add bazel path
 os.environ["PATH"] += os.pathsep + path_mapping.get(platform.system())
 
