@@ -7,7 +7,7 @@ class PoseEstimationRecipe(ConanFile):
     generators = "CMakeDeps", "CMakeToolchain"
 
     def requirements(self):
-        self.requires("tensorflow-lite/2.12.0")
+        self.requires("tensorflow-lite/2.15.0")
         self.requires("opencv/4.12.0")
 
     def layout(self):
