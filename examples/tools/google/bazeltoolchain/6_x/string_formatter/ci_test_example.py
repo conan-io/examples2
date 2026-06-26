@@ -4,12 +4,20 @@ import shutil
 
 from test.examples_tools import run
 
+# Bazel 6.x bundles a pre-compiled wrapped_clang binary that is missing the
+# LC_UUID load command required by dyld on macOS 26+ (Tahoe). Skip on those.
+if platform.system() == "Darwin":
+    mac_ver = platform.mac_ver()[0]
+    if mac_ver and int(mac_ver.split(".")[0]) >= 26:
+        print("SKIPPED: Bazel 6.x is not compatible with macOS 26+ (missing LC_UUID in wrapped_clang)")
+        exit(0)
+
 # ############# Example ################
 print("\n- Use the BazelToolchain and BazelDeps generators -\n")
 
-path_mapping = {'Linux': '/usr/share/bazel-6.3.2/bin',
-                'Windows': 'C:/bazel-6.3.2/bin',
-                'Darwin': '/Users/jenkins/bazel-6.3.2/bin'}
+path_mapping = {'Linux': '/usr/share/bazel-6.5.0/bin',
+                'Windows': 'C:/bazel-6.5.0/bin',
+                'Darwin': '/Users/jenkins/bazel-6.5.0/bin'}
 # Add bazel path
 os.environ["PATH"] += os.pathsep + path_mapping.get(platform.system())
 output = run("bazel --version")
