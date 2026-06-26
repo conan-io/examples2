@@ -7,9 +7,9 @@ from test.examples_tools import run
 # ############# Example ################
 print("\n- Use the BazelToolchain and BazelDeps generators -\n")
 
-path_mapping = {'Linux': '/usr/share/bazel-6.3.2/bin',
-                'Windows': 'C:/bazel-6.3.2/bin',
-                'Darwin': '/Users/jenkins/bazel-6.3.2/bin'}
+path_mapping = {'Linux': '/usr/share/bazel-6.5.0/bin',
+                'Windows': 'C:/bazel-6.5.0/bin',
+                'Darwin': '/Users/jenkins/bazel-6.5.0/bin'}
 # Add bazel path
 os.environ["PATH"] += os.pathsep + path_mapping.get(platform.system())
 output = run("bazel --version")
