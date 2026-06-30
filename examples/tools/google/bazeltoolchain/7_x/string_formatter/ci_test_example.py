@@ -6,8 +6,8 @@ from conan import conan_version
 
 from test.examples_tools import run
 
-if conan_version <= "2.3.2":
-    print("SKIPPED TEST BECAUSE OF CONAN MINIMUM REQUIRED VERSION")
+if conan_version < "2.30":
+    print("SKIPPED: requires Conan 2.30+ (BazelDeps Bazel 9.x / rules_cc support)")
     exit(0)
 
 # ############# Example ################
