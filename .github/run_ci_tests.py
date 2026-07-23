@@ -5,7 +5,11 @@ This script identifies which example files to run based on the files
 changed in a pull request. It supports filtering examples by affected
 directories and excludes certain known-broken examples.
 
-In case running in a non-PR context, all examples are executed.
+In case running in a non-PR context, all examples are executed, optionally
+restricted to a single top-level example group via the EXAMPLE_GROUP env var
+(used to split the matrix into groups, since `examples/libraries` alone
+dominates the Windows job duration by compiling heavy C++ dependencies from
+source).
 """
 
 import os
@@ -123,6 +127,26 @@ def filter_examples_by_dirs(examples, affected_dirs) -> list:
     return sorted(set(filtered))
 
 
+def filter_examples_by_group(examples, group) -> list:
+    """
+    Filter examples to a single top-level example group.
+
+    :param examples: list of example file paths
+    :param group: str - "libraries" or "other"
+    :returns: filtered list of example file paths
+    """
+    def is_libraries_example(example) -> bool:
+        parts = Path(example).parts
+        return len(parts) > 1 and parts[0] == "examples" and parts[1] == "libraries"
+
+    if group == "libraries":
+        return [e for e in examples if is_libraries_example(e)]
+    elif group == "other":
+        return [e for e in examples if not is_libraries_example(e)]
+    else:
+        raise ValueError(f"Unknown EXAMPLE_GROUP: {group!r}")
+
+
 def run_example(example, workspace, runner_os) -> None:
     """
     Run a single example file.
@@ -168,6 +192,7 @@ def main():
     base_ref = os.environ.get("GITHUB_BASE_REF", "main")
     workspace = Path(os.environ.get("GITHUB_WORKSPACE", "."))
     runner_os = os.environ.get("RUNNER_OS", platform.system())
+    example_group = os.environ.get("EXAMPLE_GROUP", "")
 
     is_pr = event_name == "pull_request"
 
@@ -182,6 +207,12 @@ def main():
     if is_pr and affected_dirs:
         examples = filter_examples_by_dirs(examples, affected_dirs)
         print("\nFiltered to affected directories only:")
+        for example in examples:
+            print(example)
+
+    if example_group:
+        examples = filter_examples_by_group(examples, example_group)
+        print(f"\nFiltered to example group '{example_group}':")
         for example in examples:
             print(example)
 
