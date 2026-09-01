@@ -1,5 +1,5 @@
-#include "raylib.h"
 #include <vector>
+#include "raylib.h"
 
 int main() {
     // --- Initialization ---
@@ -39,7 +39,7 @@ int main() {
 
         if (!gameOver) {
             // Jump logic
-            if (IsKeyPressed(KEY_SPACE) && player.y + player.height >= groundY) {
+            if ((IsKeyPressed(KEY_SPACE) || IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) && player.y + player.height >= groundY) {
                 vy = jumpImpulse;
             }
             vy += gravity * dt;
@@ -74,7 +74,7 @@ int main() {
             }
         }
         else {
-            if (IsKeyPressed(KEY_R)) {
+            if (IsKeyPressed(KEY_R) || IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
                 // reset everything
                 player.y = screenH - 80;
                 vy = 0;
@@ -97,7 +97,7 @@ int main() {
         DrawText(TextFormat("Score: %d", score), 10, 10, 20, BLACK);
 
         if (gameOver) {
-            DrawText("GAME OVER! Press R to restart", 200, screenH/2 - 20, 20, MAROON);
+            DrawText("GAME OVER! Press R or left click to restart", 180, screenH/2 - 20, 20, MAROON);
         }
 
         EndDrawing();
