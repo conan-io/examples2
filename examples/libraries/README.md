@@ -11,3 +11,5 @@
 ### [Using libcurl to download an image and stb to read it (color version with fmt)](libcurl/ascii_art_color)
 
 ### [Using libtorch](libtorch/regression)
+
+### [Writing a Godot GDExtension in C++ with godot-cpp and flecs](godot-cpp/gdextension)

@@ -1,0 +1,5 @@
+# Godot editor cache
+demo/.godot/
+# Libraries built by "conan build"
+demo/bin/*
+!demo/bin/gdexample.gdextension
