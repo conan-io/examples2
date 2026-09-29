@@ -1,0 +1,13 @@
+[configuration]
+
+entry_symbol = "gdexample_library_init"
+compatibility_minimum = "4.7"
+
+[libraries]
+
+macos.debug = "res://bin/libgdexample.template_debug.dylib"
+macos.release = "res://bin/libgdexample.template_release.dylib"
+linux.debug = "res://bin/libgdexample.template_debug.so"
+linux.release = "res://bin/libgdexample.template_release.so"
+windows.debug = "res://bin/libgdexample.template_debug.dll"
+windows.release = "res://bin/libgdexample.template_release.dll"
