@@ -36,7 +36,10 @@ with chdir(new_folder):
         with chdir("build/Release"):
             # TODO: This is still necessary in Linux
             sed_args = "-i ''" if platform.system() == "Darwin" else "-i"
-            run(f"cd generators && sed {sed_args} 's,{folder},{new_folder},g' *")
+            # Since Conan 2.34.0 the generators folder also has UTF-16 .ps1 scripts, and macOS sed
+            # fails on them with a UTF-8 locale ("illegal byte sequence"). LC_ALL=C avoids it. The
+            # .ps1 files don't need the replacement, as they use paths relative to $PSScriptRoot.
+            run(f"cd generators && LC_ALL=C sed {sed_args} 's,{folder},{new_folder},g' *")
             run(". generators/conanbuild.sh && cmake --version")
             run(". generators/conanbuild.sh && cmake ../.. -DCMAKE_TOOLCHAIN_FILE=generators/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release")
             run(". generators/conanbuild.sh && cmake --build .")
