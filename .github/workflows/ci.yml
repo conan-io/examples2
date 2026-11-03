@@ -17,7 +17,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-2022]
+        # TODO: Go back to ubuntu-latest once ConanCenter moves the `gettext/[<1]` ranges
+        # (pulseaudio, used by sdl) to gettext 1.x. gettext/0.26 does not build with the
+        # glibc 2.43 and gcc 15 of Ubuntu 26.04. See conan-center-index#29681.
+        os: [ubuntu-24.04, macos-latest, windows-2022]
         conan-version: [release, develop]
         example-group: [libraries, other]
     runs-on: ${{ matrix.os }}
