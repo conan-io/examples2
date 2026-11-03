@@ -3,8 +3,10 @@ from test.examples_tools import run
 
 print("Pose estimation example with Tensorflow Lite and OpenCV")
 
+# tensorflow-lite requires C++17, but MSVC defaults to C++14 (the other compilers default to gnu17)
+cppstd = "-s compiler.cppstd=17 " if platform.system() == "Windows" else ""
 install_cmd = "conan install . -c tools.system.package_manager:mode=install " \
-              "-c tools.system.package_manager:sudo=true -s compiler.cppstd=17 --build=missing "
+              f"-c tools.system.package_manager:sudo=true {cppstd}--build=missing "
 
 run(install_cmd)
 
