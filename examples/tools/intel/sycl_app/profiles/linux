@@ -1,0 +1,16 @@
+[settings]
+os=Linux
+arch=x86_64
+compiler=intel-cc
+compiler.mode=icx
+compiler.version=2026.0
+compiler.cppstd=17
+compiler.libcxx=libstdc++
+build_type=Release
+
+[conf]
+tools.build:cxxflags=["-fsycl"]
+tools.build:exelinkflags=["-fsycl"]
+tools.build:sharedlinkflags=["-fsycl"]
+tools.intel:installation_path=/opt/intel/oneapi
+
