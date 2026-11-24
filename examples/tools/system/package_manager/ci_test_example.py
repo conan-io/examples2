@@ -15,8 +15,8 @@ confs = ["tools.system.package_manager:mode=install",
 
 out = run("conan create . {}".format(" ".join(["-c " + conf for conf in confs])))
 
-assert "ncurses/system: System requirements"
-assert "package(): WARN: No files in this package" in out
+assert "ncurses/system: System requirements" in out
+assert "No files in this package" in out
 
 print("- Consuming Conan package ncurses/system -")
 
