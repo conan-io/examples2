@@ -190,7 +190,11 @@ int main(int argc, char *argv[]) {
         // crop + resize the input image
         cv::resize(frame(cv::Rect(delta_width, delta_height, square_dim, square_dim)), resized_image, cv::Size(input_width, input_height));
 
-        memcpy(interpreter->typed_input_tensor<unsigned char>(0), resized_image.data, resized_image.total() * resized_image.elemSize());
+        // OpenCV decodes images as BGR, but the model expects RGB
+        cv::Mat rgb_image;
+        cv::cvtColor(resized_image, rgb_image, cv::COLOR_BGR2RGB);
+
+        memcpy(interpreter->typed_input_tensor<unsigned char>(0), rgb_image.data, rgb_image.total() * rgb_image.elemSize());
 
         // inference
         std::chrono::steady_clock::time_point start, end;
@@ -216,9 +220,9 @@ int main(int argc, char *argv[]) {
             break;
         }
 
-        // render at 30 fps
+        // render at 30 fps (waitKey(<= 0) would wait forever for a key press)
         int waitTime = processing_time<33 ? 33-processing_time : 1;
-        if (cv::waitKey(33-processing_time) >= 0) {
+        if (cv::waitKey(waitTime) >= 0) {
             break;
         }
     }
